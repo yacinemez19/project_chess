@@ -5,6 +5,3 @@ class piece:
 
     def recuperer_nom(self):
         pass
-
-    def vect_deplacement(self):
-        pass
