@@ -7,5 +7,5 @@ class piece:
     def recuperer_nom(self):
         pass
 
-    def coups_possible(self) -> list:
+    def coups_possibles(self) -> list:
         pass
