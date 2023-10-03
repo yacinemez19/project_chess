@@ -54,12 +54,14 @@ def charger(chemin):
     fichier = open(chemin, 'r')
     etatTxt = fichier.read()
     etatTxt = etatTxt.split()
-    plateau = []
+    plateau = dict()
     for i, ligne in enumerate(etatTxt):
+        print(i)
         plateau.append([])
         for j, p in enumerate(ligne):
+            print(j)
             if p != '.':
-                plateau[i, j] = strEnPiece(p, [j, i])
+                plateau[j, i] = strEnPiece(p, [j, i])
     return plateau
 
 print(charger('test.txt'))

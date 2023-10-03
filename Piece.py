@@ -7,10 +7,6 @@ class Piece(ABC):
         self.est_blanc = est_blanc
 
     @abstractmethod
-    def recuperer_nom(self):
-        pass
-
-    @abstractmethod
     def coups_possibles(self) -> list:
         pass
 
