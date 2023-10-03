@@ -1,3 +1,7 @@
+from Piece import *
+from EtatJeu import *
+from Jeu import *
+
 class Roi(Piece):
 
   def __init__(self,position,est_blanc,est_echec) : 

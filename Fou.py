@@ -1,6 +1,6 @@
 from Piece import *
-from EtatJeu import *
-from Jeu import *
+from EtatEchecs import *
+from Echecs import *
 
 
 class Fou(Piece):
@@ -13,8 +13,10 @@ class Fou(Piece):
         y = self.position[1]
         coups = []
         
-        
-        if etat.plateau[(x+i,y+i) for i in range(7)] is None:
-            coups.append()
+        for i, j in [(1,1),(-1,1),(-1,-1),(1,-1)]:
+            while 0 <= x <= 7 or 0 <= y <= 7 and not (x,y) in etat.plateau:
+                coups.append(x + i,y + j)
+
+
                 
         

@@ -1,6 +1,6 @@
 from Piece import *
-from EtatJeu import *
-from Jeu import *
+from EtatEchecs import *
+from Echecs import *
 
 
 class Fou(Piece):
