@@ -13,13 +13,13 @@ class Pion(Piece):
         y = self.position[1]
         coups = []
 
-        if y == 1 and not etat.plateau.haskey([x, y + 2]):
+        if y == 1 and not etat.plateau.has_key([x, y + 2]):
             coups.append((x,y+2))
 
         if y != 7 and y != 0 :
-            if etat.plateau.haskey((x, y+1)):
+            if etat.plateau.has_key((x, y+1)):
                 coups.append((x, y+1))
-            if etat.plateau.haskey((x+1, y+1)) and etat.plateau(x+1,y+1).est_blanc != self.est_blanc:
+            if etat.plateau.has_key((x+1, y+1)) and etat.plateau(x+1,y+1).est_blanc != self.est_blanc:
                 coups.append((x+1,y+1))
-            if etat.plateau.haskey((x+1,y-1)) and etat.plateau(x+1,y-1).est_blanc != self.est_blanc:
+            if etat.plateau.has_key((x+1,y-1)) and etat.plateau(x+1,y-1).est_blanc != self.est_blanc:
                 coups.append((x+1,y-1))
