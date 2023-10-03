@@ -3,8 +3,10 @@ from Pion import *
 
 class Etatchess(EtatJeu):
     def __init__(self, Joueur, Valeur, Plateau, Mouvements):
-        super().__init__(Joueur, Valeur, Plateau, Mouvements)
-
+        self.est_blanc = Joueur
+        self.Valeur = Valeur
+        self.plateau = Plateau
+        Mouvements = self.mouvements = [(x,y) for x in range(8) for y in range (8)]
 
     
     def __str__(self) -> str:
@@ -18,7 +20,10 @@ class Etatchess(EtatJeu):
             txt += '\n'
         txt += '  abcdefgh'
         return txt
+
+def liste_coups_possibles(self) : 
     
+
 def strEnPiece(c : str, pos : [int, int]) -> Piece:
     '''
     Prend en argument le nom d'une piece et sa position et renvoie la piece
