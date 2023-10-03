@@ -1,6 +1,6 @@
-from Pieces import *
-from EtatJeu import *
-from Jeu import *
+from Piece import *
+from EtatEchecs import *
+from Echecs import *
 
 
 class Pion(Piece):
