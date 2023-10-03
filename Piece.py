@@ -1,4 +1,4 @@
-class piece:
+class Piece:
     def __init__(self, position, est_blanc) -> None:
         self.position = position #prend None si la piece n'est pas sur le plateau
         self.est_blanc = est_blanc
