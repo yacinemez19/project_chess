@@ -1,15 +1,13 @@
 from Piece import *
-<<<<<<< Updated upstream
 from EtatEchecs import *
 from Echecs import *
-=======
->>>>>>> Stashed changes
 
 class Cavalier(Piece):
 
   def __init__(self,position,est_blanc) : 
     super().__init__(position,est_blanc)
     self.nom = 'C' if est_blanc else 'c'
+    self.valeur = 3
 
   def coups_possibles(self,etat) -> list:
     x = self.position[0]

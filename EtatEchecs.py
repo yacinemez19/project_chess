@@ -1,5 +1,5 @@
 from EtatJeu import *
-
+from Pieces import *
 
 class Etatchess(EtatJeu):
     def __init__(self, Joueur, Valeur, Plateau, Mouvements):
@@ -34,7 +34,7 @@ def strEnPiece(c : str, pos : [int, int]) -> Piece:
     if c == 'p':
         return Pion(pos, est_blanc)
     if c == 't':
-        pass
+        return Tour(pos, est_blanc)
     if c == 'c':
         pass
     if c == 'f':

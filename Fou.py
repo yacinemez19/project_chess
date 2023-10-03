@@ -7,6 +7,7 @@ class Fou(Piece):
     def __init__(self, position, est_blanc) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'F' if est_blanc else 'f'
+        self.valeur = 3
 
     def coups_possibles(self, etat) -> list:
         x = self.position[0]

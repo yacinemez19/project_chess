@@ -1,3 +1,5 @@
+from Jeu import *
+
 class Echecs(Jeu) : 
 
   

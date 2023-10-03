@@ -6,6 +6,7 @@ class Pion(Piece):
     def __init__(self, position, est_blanc) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'T' if est_blanc else 't'
+        self.valeur = 5
 
     def coups_possibles(self, etat) -> list:
         x = self.position[0]
