@@ -3,10 +3,10 @@ from EtatEchecs import *
 from Echecs import *
 
 
-class Fou(Piece):
+class Dame(Piece):
     def __init__(self, position, est_blanc) -> None:
         super().__init__(position, est_blanc)
-        self.nom = 'F' if est_blanc else 'f'
+        self.nom = 'D' if est_blanc else 'd'
         self.valeur = 9
 
     def coups_possibles(self, etat) -> list:

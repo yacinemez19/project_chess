@@ -1,5 +1,11 @@
 from EtatJeu import *
 from Pieces import *
+from Pion import *
+from Tour import *
+from Fou import *
+from Dame import *
+from Roi import *
+from Cavalier import *
 
 class Etatchess(EtatJeu):
     def __init__(self, Joueur, Valeur, Plateau, Mouvements):
@@ -24,7 +30,7 @@ class Etatchess(EtatJeu):
 def liste_coups_possibles(self) : 
     pass
 
-def strEnPiece(c : str, pos : [int, int]) -> Piece:
+def strEnPiece(c : str, pos : [int, int]):
     '''
     Prend en argument le nom d'une piece et sa position et renvoie la piece
     '''
@@ -36,19 +42,26 @@ def strEnPiece(c : str, pos : [int, int]) -> Piece:
     if c == 't':
         return Tour(pos, est_blanc)
     if c == 'c':
-        pass
+        return Cavalier(pos, est_blanc)
     if c == 'f':
-        pass
+        return Fou(pos, est_blanc)
     if c == 'd':
-        pass
+        return Dame(pos, est_blanc)
     if c == 'r':
-        pass
+        return Roi(pos, est_blanc)
 
 def charger(chemin):
-    etatTxt = open(chemin, 'r')
+    fichier = open(chemin, 'r')
+    etatTxt = fichier.read()
     etatTxt = etatTxt.split()
     plateau = []
     for i, ligne in enumerate(etatTxt):
         plateau.append([])
         for j, p in enumerate(ligne):
-            plateau[i].append(strEnPiece(p, [j, i]))
+            if p != '.':
+                plateau[i, j] = strEnPiece(p, [j, i])
+    return plateau
+
+print(charger('test.txt'))
+
+

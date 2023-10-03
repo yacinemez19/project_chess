@@ -2,7 +2,7 @@ from Piece import *
 from EtatEchecs import *
 from Echecs import *
 
-class Pion(Piece):
+class Tour(Piece):
     def __init__(self, position, est_blanc) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'T' if est_blanc else 't'
