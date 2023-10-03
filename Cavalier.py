@@ -21,5 +21,5 @@ class Cavalier(Piece):
     return coups
     
 
-  def est_possible(self,position) : 
+  def est_possible(self,etat) : 
     return position in coups_possibles(self,etat)
