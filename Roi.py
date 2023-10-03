@@ -12,12 +12,12 @@ class Roi(Piece):
 
     for a in [x-1,x,x+1] : 
       for b in [y-1,y,y+1] : 
-        mouv = etat.plateau[[a,b]]
+        mouv = etat.plateau[(a,b)]
         if mouv is None or mouv.est_blanc != self.est_blanc:
       coups.append((a,b))
 
     return coups
     
 
-  def est_possible(self,position) : 
-    return position in coups_possibles(self)
+  def est_possible(self, etat) : 
+    return position in coups_possibles(self, etat)
