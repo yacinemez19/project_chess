@@ -7,8 +7,8 @@ from Dame import *
 from Roi import *
 from Cavalier import *
 
-class Etatchess(EtatJeu):
-    def __init__(self, Joueur, Valeur, Plateau, Mouvements):
+class EtatEchecs(EtatJeu):
+    def __init__(self, Joueur: bool, Valeur: int, Plateau: dict, Mouvements: list):
         self.est_blanc = Joueur
         self.Valeur = Valeur
         self.plateau = Plateau
