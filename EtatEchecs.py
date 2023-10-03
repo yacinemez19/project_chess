@@ -23,7 +23,7 @@ def strEnPiece(c : str, pos : [int, int]) -> Piece:
     '''
     Prend en argument le nom d'une piece et sa position et renvoie la piece
     '''
-    est_blanc = c.isupper() #les pieces blanches sont ecrires en majuscule
+    est_blanc = c.isupper() #les pieces blanches sont ecrites en majuscule
     c = c.lower()
 
     if c == 'p':
