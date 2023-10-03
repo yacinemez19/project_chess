@@ -17,9 +17,9 @@ class Pion(Piece):
             coups.append((x,y+2))
 
         if y != 7 and y != 0 :
-            if etat.plateau.has_key((x, y+1)):
+            if (x, y+1) in etat.plateau:
                 coups.append((x, y+1))
-            if etat.plateau.has_key((x+1, y+1)) and etat.plateau(x+1,y+1).est_blanc != self.est_blanc:
+            if (x+1, y+1) in etat.plateau and etat.plateau(x+1,y+1).est_blanc != self.est_blanc:
                 coups.append((x+1,y+1))
-            if etat.plateau.has_key((x+1,y-1)) and etat.plateau(x+1,y-1).est_blanc != self.est_blanc:
+            if (x+1, y-1) in etat.plateau and etat.plateau(x+1,y-1).est_blanc != self.est_blanc:
                 coups.append((x+1,y-1))

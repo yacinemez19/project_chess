@@ -1,5 +1,5 @@
 from EtatJeu import *
-from Pion import *
+
 
 class Etatchess(EtatJeu):
     def __init__(self, Joueur, Valeur, Plateau, Mouvements):
@@ -22,7 +22,7 @@ class Etatchess(EtatJeu):
         return txt
 
 def liste_coups_possibles(self) : 
-    
+    pass
 
 def strEnPiece(c : str, pos : [int, int]) -> Piece:
     '''

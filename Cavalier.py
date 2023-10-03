@@ -1,6 +1,9 @@
 from Piece import *
+<<<<<<< Updated upstream
 from EtatEchecs import *
 from Echecs import *
+=======
+>>>>>>> Stashed changes
 
 class Cavalier(Piece):
 
@@ -15,15 +18,11 @@ class Cavalier(Piece):
 
     for a in [-1,1] : 
       for b in [-2,2] : 
-        mouv1 = etat.plateau[(x+a,y+b)]
-        mouv2 = etat.plateau[(x+b,y+a)]
+        mouv1 = etat.plateau.get([(x+a,y+b)], None)
+        mouv2 = etat.plateau.get([(x+b,y+a)], None)
         if mouv1 is None or mouv1.est_blanc != self.est_blanc:
           coups.append((x+a,y+2))
         if mouv2 is None or mouv2.est_blanc != self.est_blanc:
           coups.append((x+2,y+a))
 
     return coups
-    
-
-  def est_possible(self,etat) : 
-    return position in coups_possibles(self,etat)
