@@ -39,7 +39,41 @@ class Echecs(Jeu) :
           for (a,b) in self.liste_coups_possibles(joueur, etat)[x,y] : 
             mouvs.append((a,b),(x,y))
 
-      return mouvs    
+      return mouvs
+        
+    def valeur(self, etat, joueur) :
+        sum_valeur = 0
+        for piece in etat.plateau : 
+            if piece.est_blanc == joueur :
+                sum_valeur += piece.valeur
+
+        return sum_valeur
+                
+    def etat_final(self, etat) : 
+        
+        for piece in etat.plateau.values() : 
+            if isinstance(piece, Roi) :
+                etat_final = piece.est_echec and piece.coups_possibles == []
+                
+        etat_final = self.mouvements_autorises(etat, joueur) == None
+        
+        if len(etat.plateau.keys()) <= 4 : 
+            compteur_blanc = 0
+            for x in etat.plateau.keys() : 
+                if x.est_blanc : 
+                    compteur_blanc += 1
+                    
+            if compteur_blanc <= 2 : 
+                for a in etat.plateau.values():
+                    liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
+                etat_final = False not in liste
+                
+            couleurs_C = []
+            for a in etat.plateau.values():
+                if isinstance(a, Cavalier) : 
+                    couleurs_C.append(a.est_blanc)
+            if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
+                etat_final = True
 
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
@@ -83,10 +117,4 @@ class Echecs(Jeu) :
                     plateau[j, i] = self.strEnPiece(p, [j, i])
         etat = EtatEchecs(True, 3, plateau, [])
         return etat
-
-
-Partie = Echecs()
-
-pion = Pion((0,7), True)
-print(Partie.charger('test.txt'))
       
