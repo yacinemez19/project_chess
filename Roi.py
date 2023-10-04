@@ -1,12 +1,12 @@
 from Piece import *
 from EtatJeu import *
-from Jeu import *
+
 
 class Roi(Piece):
 
-  def __init__(self,position,est_blanc,est_echec) : 
+  def __init__(self,position,est_blanc) : 
     super().__init__(position,est_blanc)
-    self.est_echec = est_echec
+    #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
 
   def coups_possibles(self,etat) -> list:

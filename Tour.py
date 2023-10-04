@@ -1,6 +1,5 @@
 from Piece import *
 from EtatEchecs import *
-from Echecs import *
 
 class Tour(Piece):
     def __init__(self, position, est_blanc) -> None:

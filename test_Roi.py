@@ -1,8 +1,8 @@
 import pytest
 
-from Roi import *
-from EtatEchecs import *
-from Echecs import *
+import Roi 
+import EtatEchecs 
+import Echecs 
 
 def test_coups_possibles():
     etat = EtatEchecs()

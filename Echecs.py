@@ -1,7 +1,13 @@
 from Jeu import *
+from EtatEchecs import *
+from Pion import *
+from Tour import *
+from Fou import *
+from Dame import *
+from Roi import *
+from Cavalier import *
 
 class Echecs(Jeu) : 
-
     def traduire(self, mouvement) : 
       colonnes =  {'a' : 0, 'b' : 1, 'c' : 2, 'd' : 3, 'e' : 4, 'f' : 5, 'g' : 6, 'h' : 7}
       mouv_str = [x.strip() for x in mouvement.split()]
@@ -33,11 +39,9 @@ class Echecs(Jeu) :
           for (a,b) in self.liste_coups_possibles(joueur, etat)[x,y] : 
             mouvs.append((a,b),(x,y))
 
-      return mouvs
-        
-    
+      return mouvs    
 
-    def liste_coups_possibles(self, est_blanc) :
+    def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
       for position, piece in self.plateau.items() : 
         if piece.est_blanc == est_blanc : 
@@ -47,3 +51,42 @@ class Echecs(Jeu) :
 
       return coups
     
+    @staticmethod
+    def strEnPiece(c : str, pos : [int, int]):
+      '''
+      Prend en argument le nom d'une piece et sa position et renvoie la piece
+      '''
+      est_blanc = c.isupper() #les pieces blanches sont ecrites en majuscule
+      c = c.lower()
+
+      if c == 'p':
+          return Pion(pos, est_blanc)
+      if c == 't':
+          return Tour(pos, est_blanc)
+      if c == 'c':
+          return Cavalier(pos, est_blanc)
+      if c == 'f':
+          return Fou(pos, est_blanc)
+      if c == 'd':
+          return Dame(pos, est_blanc)
+      if c == 'r':
+          return Roi(pos, est_blanc)
+
+    def charger(self, chemin):
+        fichier = open(chemin, 'r')
+        etatTxt = fichier.read()
+        etatTxt = etatTxt.split()
+        plateau = dict()
+        for i, ligne in enumerate(etatTxt):
+            for j, p in enumerate(ligne):
+                if p != '.':
+                    plateau[j, i] = self.strEnPiece(p, [j, i])
+        etat = EtatEchecs(True, 3, plateau, [])
+        return etat
+
+
+Partie = Echecs()
+
+pion = Pion((0,7), True)
+print(Partie.charger('test.txt'))
+      
