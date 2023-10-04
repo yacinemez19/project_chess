@@ -13,9 +13,11 @@ class Fou(Piece):
         coups = []
         
         for i, j in [(1,1),(-1,1),(-1,-1),(1,-1)]:
-            while 0 <= x <= 7 or 0 <= y <= 7 and not (x,y) in etat.plateau:
-                coups.append(x + i,y + j)
-
+            n = 1
+            while etat.est_dans_plateau(x+(i*n),y+(j*n)) and not (x+(i*n),y+(j*n)) in etat.plateau:
+                coups.append((x+(i*n),y+(j*n)))
+                n+=1
+        return coups
 
                 
         

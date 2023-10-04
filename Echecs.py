@@ -114,7 +114,9 @@ class Echecs(Jeu) :
         for i, ligne in enumerate(etatTxt):
             for j, p in enumerate(ligne):
                 if p != '.':
-                    plateau[j, i] = self.strEnPiece(p, [j, i])
+                    x = j
+                    y = 7 - i
+                    plateau[x, y] = self.strEnPiece(p, [x, y])
         etat = EtatEchecs(True, 3, plateau, [])
         return etat
       

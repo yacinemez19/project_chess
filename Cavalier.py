@@ -2,7 +2,6 @@ from Piece import *
 from EtatEchecs import *
 
 class Cavalier(Piece):
-
   def __init__(self,position,est_blanc) : 
     super().__init__(position,est_blanc)
     self.nom = 'C' if est_blanc else 'c'
@@ -15,11 +14,13 @@ class Cavalier(Piece):
 
     for a in [-1,1] : 
       for b in [-2,2] : 
-        mouv1 = etat.plateau.get([(x+a,y+b)], None)
-        mouv2 = etat.plateau.get([(x+b,y+a)], None)
+        mouv1 = etat.plateau.get((x+a,y+b), None)
+        mouv2 = etat.plateau.get((x+b,y+a), None)
         if mouv1 is None or mouv1.est_blanc != self.est_blanc:
-          coups.append((x+a,y+2))
+          if etat.est_dans_plateau(x+a,y+b):
+            coups.append((x+a,y+b))
         if mouv2 is None or mouv2.est_blanc != self.est_blanc:
-          coups.append((x+2,y+a))
+          if etat.est_dans_plateau(x+b,y+a):
+            coups.append((x+b,y+a))
 
     return coups

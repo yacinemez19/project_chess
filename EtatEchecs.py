@@ -25,6 +25,13 @@ class EtatEchecs(EtatJeu):
         txt += '\n'
       txt += '  abcdefgh'
       return txt
+    
+    @staticmethod
+    def est_dans_plateau(x,y):
+       '''
+       retourne vrai si (x,y) representent les coordonnees d'une case sur le plateau
+       '''
+       return 0<=x<=7 and 0 <= y <= 7
 
     def liste_coups_possibles(self) : 
         pass
