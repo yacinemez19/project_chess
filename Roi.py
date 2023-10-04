@@ -14,7 +14,6 @@ class Roi(Piece):
     y = self.position[1]
     coups = []
 
-
     '''
     Yacine : g mit ton code en commentaire puisque en le testant ce ne fonctionne pas, g mit a la place le code de la reine 
              si tarrive a ameliorer le tiens pour quil puisse marcher ou si tu penses que ya des choses a ameliorer dit le moi 
@@ -26,7 +25,7 @@ class Roi(Piece):
     '''
     
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
-      if etat.est_dans_plateau(x+i,y+j) and not (x+i,y+j) in etat.plateau:
+      if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
         coups.append((x+i,y+j))
 
     return coups

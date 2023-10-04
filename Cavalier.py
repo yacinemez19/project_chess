@@ -17,10 +17,10 @@ class Cavalier(Piece):
         mouv1 = etat.plateau.get((x+a,y+b), None)
         mouv2 = etat.plateau.get((x+b,y+a), None)
         if mouv1 is None or mouv1.est_blanc != self.est_blanc:
-          if etat.est_dans_plateau(x+a,y+b):
+          if etat.est_case(x+a,y+b):
             coups.append((x+a,y+b))
         if mouv2 is None or mouv2.est_blanc != self.est_blanc:
-          if etat.est_dans_plateau(x+b,y+a):
+          if etat.est_case(x+b,y+a):
             coups.append((x+b,y+a))
 
     return coups
