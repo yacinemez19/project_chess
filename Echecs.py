@@ -75,6 +75,8 @@ class Echecs(Jeu) :
             if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
                 etat_final = True
 
+          
+
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
       for position, piece in self.plateau.items() : 
@@ -86,7 +88,7 @@ class Echecs(Jeu) :
       return coups
     
     @staticmethod
-    def strEnPiece(c : str, pos : [int, int]):
+    def str_en_piece(c : str, pos : [int, int]):
       '''
       Prend en argument le nom d'une piece et sa position et renvoie la piece
       '''
@@ -116,7 +118,7 @@ class Echecs(Jeu) :
                 if p != '.':
                     x = j
                     y = 7 - i
-                    plateau[x, y] = self.strEnPiece(p, [x, y])
+                    plateau[x, y] = self.str_en_piece(p, [x, y])
         etat = EtatEchecs(True, 3, plateau, [])
         return etat
       

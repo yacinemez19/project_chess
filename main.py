@@ -1,12 +1,11 @@
 from Echecs import *
 
-Partie = Echecs()
+partie = Echecs()
 
-etat = Partie.charger('test.txt')
+etat = partie.charger('test.txt')
 
 print(etat)
 
 for i, j in etat.plateau.items():
     print(i,j, j.est_blanc)
     print(j.coups_possibles(etat))
-
