@@ -1,5 +1,5 @@
 from Piece import *
-from EtatJeu import *
+from EtatEchecs import *
 
 
 class Roi(Piece):
@@ -29,3 +29,8 @@ class Roi(Piece):
         coups.append((x+i,y+j))
 
     return coups
+  
+  def est_echec(self, etat):
+    '''verifie si le roi est en echec'''
+    if self.position in []:
+      pass
