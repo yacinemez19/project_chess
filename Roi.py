@@ -26,7 +26,7 @@ class Roi(Piece):
     
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
       if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
-        if not self.met_en_echec(self.position, x+i, y+j):
+        if not self.met_en_echec(etat ,self.position, (x+i, y+j)):
           coups.add((x+i,y+j))
 
     return coups
