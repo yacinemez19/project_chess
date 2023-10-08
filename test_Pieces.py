@@ -20,5 +20,8 @@ def test_coups_possibles():
         if piece.est_blanc and type(piece) == Fou:
             fou = piece
     assert fou.coups_possibles(etat) == {}
+<<<<<<< Updated upstream
 
 test_coups_possibles()
+=======
+>>>>>>> Stashed changes
