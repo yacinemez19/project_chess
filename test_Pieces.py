@@ -7,6 +7,7 @@ from Fou import Fou
 
 
 def test_coups_possibles():
+<<<<<<< Updated upstream
     partie = Echecs()
     etat = partie.charger('test.txt')
     roi = None
@@ -20,3 +21,10 @@ def test_coups_possibles():
         if piece.est_blanc and type(piece) == Fou:
             fou = piece
     assert fou.coups_possibles(etat) == {}
+=======
+    etat = EtatEchecs()
+    roi = Roi((1,2),True,False)
+    assert Roi.coups_possibles(etat) == [(2,2),(2,3),(1,3),(0,3),(0,2),(0,1),(1,1),(2,1)]
+
+test_coups_possibles()
+>>>>>>> Stashed changes

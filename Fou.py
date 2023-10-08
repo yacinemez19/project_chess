@@ -1,5 +1,6 @@
 from Piece import *
 from EtatEchecs import *
+from Roi import *
 
 class Fou(Piece):
     def __init__(self, position : tuple, est_blanc) -> None:
@@ -15,6 +16,7 @@ class Fou(Piece):
         for i, j in [(1,1),(-1,1),(-1,-1),(1,-1)]:
             n = 1
             while etat.est_case(x+(i*n),y+(j*n)) and not (x+(i*n),y+(j*n)) in etat.plateau:
+                
                 coups.add((x+(i*n),y+(j*n)))
                 n+=1
         return coups
