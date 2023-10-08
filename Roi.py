@@ -36,7 +36,7 @@ class Roi(Piece):
     methode utile qui renvoie les coups adverses possibles, utile pour la methode est echec
     :param etat: etat du jeu
 
-    :retrun: set avec tous les coups adverses possibles
+    :return: set avec tous les coups adverses possibles
     '''
     coups = set()
     for piece in etat.plateau.values() : 
