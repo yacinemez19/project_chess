@@ -2,7 +2,7 @@ from Piece import *
 from EtatEchecs import *
 
 class Pion(Piece):
-    def __init__(self, position : tuple(int,int), est_blanc : bool) -> None:
+    def __init__(self, position, est_blanc : bool) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'P' if est_blanc else 'p'
         self.valeur = 1

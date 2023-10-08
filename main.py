@@ -16,7 +16,5 @@ for a in c:
     i+=1
 print(c)
 
-
-print(c)
 a = partie.liste_coups_possibles(etat, True)
 print(a)

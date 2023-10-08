@@ -46,5 +46,5 @@ class Roi(Piece):
 
   def est_echec(self, etat):
     '''verifie si le roi est en echec'''
-    if self.position in []:
-      pass
+    if self.position in self.coups_adverses(etat):
+      return True
