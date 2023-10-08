@@ -19,9 +19,14 @@ def test_coups_possibles():
     for piece in etat.plateau.values():
         if piece.est_blanc and type(piece) == Fou:
             fou = piece
-    assert fou.coups_possibles(etat) == {}
-<<<<<<< Updated upstream
-
-test_coups_possibles()
-=======
->>>>>>> Stashed changes
+    assert fou.position == [5,0]
+    assert fou.coups_possibles(etat) == set()
+    
+def test_echec():
+    partie = Echecs()
+    etat = partie.charger('testechec.txt')
+    roi = None
+    for piece in etat.plateau.values():
+        if piece.est_blanc and type(piece) == Roi:
+            roi = piece
+    assert roi.coups_possibles(etat) == set()
