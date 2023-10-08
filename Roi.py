@@ -26,7 +26,8 @@ class Roi(Piece):
     
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
       if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
-        coups.add((x+i,y+j))
+        if not self.met_en_echec(self.position, x+i, y+j):
+          coups.add((x+i,y+j))
 
     return coups
   
@@ -50,12 +51,12 @@ class Roi(Piece):
     
   def met_en_echec(self, etat : EtatEchecs, old_pos : tuple, new_pos : tuple):
     '''
-    methode qui verifie si un coup joue par un joueur son propre roi en echec
+    methode qui verifie si un coup joue par un joueur met son propre roi en echec
     :param etat: etat du jeu
     :param old_pos: ancienne position de la piece
     :param new_pos: nouvelle position de la piece
 
-    :return: vrai si le roi est mit en echec par le coup
+    :return: vrai si le roi est mis en echec par le coup
     '''
     etat1 = copy.deepcopy(etat)
     piece = etat1.plateau.pop(old_pos)
