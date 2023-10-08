@@ -9,7 +9,7 @@ from Cavalier import *
 import copy
 
 class Echecs(Jeu) : 
-    def traduire(self, mouvement) : 
+    def traduire(self, mouvement) :
       colonnes =  {'a' : 0, 'b' : 1, 'c' : 2, 'd' : 3, 'e' : 4, 'f' : 5, 'g' : 6, 'h' : 7}
       mouv_str = [x.strip() for x in mouvement.split('')]
       
@@ -132,13 +132,15 @@ class Echecs(Jeu) :
         etat = EtatEchecs(True, 3, plateau, [])
         return etat
     
-    def afficher(self, etat):
+    def afficher(self, etat) -> None:
       '''
       affiche le plateau suivant l'etat donne 
       '''
+      etat += '\n'
+      etat += 'abcdefgh'
       print(etat)
-      return 
-    
+      return None
+
     def enregister(self, etat, nom) -> None:
       '''
       sauvegarde l'etat de la partie dans un fichier donne
