@@ -4,7 +4,7 @@ from EtatEchecs import *
 
 class Roi(Piece):
 
-  def __init__(self,position,est_blanc) : 
+  def __init__(self,position : tuple,est_blanc) : 
     super().__init__(position,est_blanc)
     #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
@@ -12,7 +12,7 @@ class Roi(Piece):
   def coups_possibles(self,etat) -> list:
     x = self.position[0]
     y = self.position[1]
-    coups = []
+    coups = set()
 
     '''
     Yacine : g mit ton code en commentaire puisque en le testant ce ne fonctionne pas, g mit a la place le code de la reine 
@@ -26,10 +26,24 @@ class Roi(Piece):
     
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
       if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
-        coups.append((x+i,y+j))
+        coups.add((x+i,y+j))
 
     return coups
   
+  def coups_adverses(self, etat):
+    '''
+    methode utile qui renvoie les coups adverses possibles, utile pour la methode est echec
+    :param etat: etat du jeu
+
+    :retrun: set avec tous les coups adverses possibles
+    '''
+
+    coups = set()
+    for piece in etat.plateau.values() : 
+      if piece.est_blanc != self.est_blanc : 
+        coups = coups | piece.coups_possibles(etat)
+    return coups  
+
   def est_echec(self, etat):
     '''verifie si le roi est en echec'''
     if self.position in []:
