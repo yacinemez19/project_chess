@@ -7,7 +7,7 @@ class EtatEchecs(EtatJeu):
         self.plateau = Plateau
         Mouvements = self.mouvements = [(x,y) for x in range(8) for y in range (8)]
 
-    def __repr__(self):
+    def __str__(self):
       txt = ''
       for x in range(8):
         for y in range(8):
@@ -15,6 +15,7 @@ class EtatEchecs(EtatJeu):
           txt += str(p)
       return txt
 
+    '''
     def __str__(self):
       txt = ''
       for y in range(7, -1, -1):
@@ -25,7 +26,8 @@ class EtatEchecs(EtatJeu):
         txt += '\n'
       txt += '  abcdefgh'
       return txt
-    
+    '''
+
     @staticmethod
     def est_case(x,y):
        '''
