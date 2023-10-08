@@ -1,10 +1,16 @@
 import pytest
 
-import Roi 
-import EtatEchecs 
-import Echecs 
+from Echecs import Echecs
+from EtatEchecs import EtatEchecs
+from Roi import Roi
+
 
 def test_coups_possibles():
-    etat = EtatEchecs()
-    roi = Roi((1,2),True,False)
-    assert Roi.coups_possibles(etat) == [(2,2),(2,3),(1,3),(0,3),(0,2),(0,1),(1,1),(2,1)]
+    partie = Echecs()
+    etat = partie.charger('test.txt')
+    roi = None
+    for piece in etat.plateau.values():
+        if piece.est_blanc and type(piece) == Roi:
+            roi = piece
+            
+    assert roi.coups_possibles(etat) == {(3,1)}

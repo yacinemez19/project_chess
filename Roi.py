@@ -9,7 +9,7 @@ class Roi(Piece):
     #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
 
-  def coups_possibles(self,etat) -> list:
+  def coups_possibles(self,etat) -> set:
     x = self.position[0]
     y = self.position[1]
     coups = set()

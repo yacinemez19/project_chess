@@ -129,7 +129,7 @@ class Echecs(Jeu) :
                     x = j
                     y = 7 - i
                     plateau[x, y] = self.str_en_piece(p, [x, y])
-        etat = EtatEchecs(True, 3, plateau, [])
+        etat = EtatEchecs(True, 3, plateau, []) #True car quand on charge la partie on sait pas si blanc ou noir commence
         return etat
     
     def afficher(self, etat) -> None:
