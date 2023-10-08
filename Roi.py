@@ -1,6 +1,6 @@
 from Piece import *
 from EtatEchecs import *
-
+import copy
 
 class Roi(Piece):
 
@@ -37,14 +37,29 @@ class Roi(Piece):
 
     :retrun: set avec tous les coups adverses possibles
     '''
-
     coups = set()
     for piece in etat.plateau.values() : 
       if piece.est_blanc != self.est_blanc : 
         coups = coups | piece.coups_possibles(etat)
     return coups  
 
-  def est_echec(self, etat):
+  def est_echec(self, etat : EtatEchecs):
     '''verifie si le roi est en echec'''
     if self.position in self.coups_adverses(etat):
       return True
+    
+  def met_en_echec(self, etat : EtatEchecs, old_pos : tuple, new_pos : tuple):
+    '''
+    methode qui verifie si un coup joue par un joueur son propre roi en echec
+    :param etat: etat du jeu
+    :param old_pos: ancienne position de la piece
+    :param new_pos: nouvelle position de la piece
+
+    :return: vrai si le roi est mit en echec par le coup
+    '''
+    etat1 = copy.deepcopy(etat)
+    piece = etat1.plateau.pop(old_pos)
+    etat1.plateau[new_pos] = piece
+    return self.est_echec(etat1)
+    
+
