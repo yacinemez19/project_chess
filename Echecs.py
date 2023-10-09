@@ -82,7 +82,7 @@ class Echecs(Jeu) :
         if piece.est_blanc == est_blanc : 
           if position in piece.coups_possibles(etat) : 
             coups[position] = set()
-            coups[position].append(piece.nom)
+            coups[position].add(piece.nom)
 
       return coups  
 
