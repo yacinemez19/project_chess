@@ -51,8 +51,6 @@ class Roi(Piece):
     etat1 = copy.deepcopy(etat)
     piece = etat1.plateau.pop(old_pos)
     etat1.plateau[new_pos] = piece
-    if old_pos not in etat.plateau:
-      print('depression')
     return self.est_echec(etat1)
     
 
