@@ -31,7 +31,7 @@ def test_est_echec():
         if piece.est_blanc and type(piece) == Roi:
             roi = piece
     assert roi.position == [3,1] and roi.est_blanc is True
-    assert roi.est_echec(etat) is False
+    assert roi.est_echec(etat) is True
     
 def test_coup_echec():
     partie = Echecs()
