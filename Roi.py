@@ -58,6 +58,8 @@ class Roi(Piece):
 
     :return: vrai si le roi est mis en echec par le coup
     '''
+    if old_pos not in etat.plateau:
+      raise AttributeError('Erreur dans la position de la piece')
     etat1 = copy.deepcopy(etat)
     piece = etat1.plateau.pop(old_pos)
     etat1.plateau[new_pos] = piece
