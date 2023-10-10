@@ -34,11 +34,10 @@ def test_est_echec():
     etat = partie.charger('testechec.txt')
     roi = None
     for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Roi:
+        if piece.est_blanc and isinstance(piece,Roi):
             roi = piece
     assert roi.position == [3,1] and roi.est_blanc is True
     assert roi.est_echec(etat) is True
-test_est_echec()
 
 def test_coup_echec():
     partie = Echecs()
