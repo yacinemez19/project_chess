@@ -59,33 +59,42 @@ class Echecs(Jeu) :
         return sum_valeur
                 
     def etat_final(self, etat) : 
+        
         raison = None
+
+        # vérifie s'il y a échec et mat
         for piece in etat.plateau.values() : 
             if isinstance(piece, Roi) :
                 etat_final = piece.est_echec and piece.coups_possibles == []
                 if etat_final == True :
                     couleur = piece.est_blanc
+
+        # La raison de l'état final est que le roi est en échec et mat
         if etat_final == True and raison == None:
             if couleur : 
                 raison = "Echec et mat blanc"
             else : 
                 raison = "Echec et mat noir"
-                
+
+        # etat_final car plus de mouvements autorisés
         etat_final = self.mouvements_autorises(etat, etat.joueur) == None
         if etat_final == True and raison == None:
             raison = "Match nul"
-                
+
+        # état final par manque de matériel
         if len(etat.plateau.keys()) <= 4 : 
             compteur_blanc = 0
             for x in etat.plateau.keys() : 
                 if x.est_blanc : 
                     compteur_blanc += 1
-                    
+
+            # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
             if compteur_blanc <= 2 : 
                 for a in etat.plateau.values():
                     liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
                 etat_final = False not in liste
-                
+
+            # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
             couleurs_C = []
             for a in etat.plateau.values():
                 if isinstance(a, Cavalier) : 
@@ -93,6 +102,7 @@ class Echecs(Jeu) :
             if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
                 etat_final = True
 
+        # Si fin de partie par manque de matériel, match nul
         if etat_final == True and raison == None:
                 raison = "Match nul"
         return [etat_final,raison]
