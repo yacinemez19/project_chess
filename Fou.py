@@ -12,6 +12,9 @@ class Fou(Piece):
         x = self.position[0]
         y = self.position[1]
         coups = set()
+        for p in etat.values :
+            if type(p) == Roi and p.est_blanc == self.est_blanc:
+                break
         
         for i, j in [(1,1),(-1,1),(-1,-1),(1,-1)]:
             n = 1
