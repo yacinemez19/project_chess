@@ -27,7 +27,7 @@ class Echecs(Jeu) :
                 assert int(mouv_str[2]) < 8 and int(mouv_str[5]) < 8  
             
         except: 
-            return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture. Pour plus d'informations sur le format, appeler help"   
+            return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
         
         return [position1, position2]
   
