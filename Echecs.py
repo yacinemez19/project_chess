@@ -18,13 +18,15 @@ class Echecs(Jeu) :
             if mouv_str[0] in colonnes : 
                 position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1]))
                 position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4]))
-                assert int(mouv_str[1]) < 8 and int(mouv_str[4]) < 8
+                if int(mouv_str[1]) < 8 and int(mouv_str[4]) < 8 :
+                    raise IndexError
                 
             # sinon, si le mouvement est valide, il d'agit d'une capture de pièce
             else :  
                 position1 = (colonnes.index(mouv_str[1]),int(mouv_str[2]))
                 position2 = (colonnes.index(mouv_str[4]),int(mouv_str[5]))
-                assert int(mouv_str[2]) < 8 and int(mouv_str[5]) < 8  
+                if int(mouv_str[2]) < 8 and int(mouv_str[5]) < 8  :
+                    raise IndexError
             
         except: 
             return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
