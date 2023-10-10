@@ -23,8 +23,8 @@ class Pion(Piece):
                 coups.add((x, y+dir))
 
             for i in [-1, 1] :
-                if (x+dir, y+i) in etat.plateau and etat.plateau[x+dir,y+i].est_blanc != self.est_blanc:
-                    coups.add((x+dir,y+i))
+                if (x+i, y+dir) in etat.plateau and etat.plateau[x+i,y+dir].est_blanc != self.est_blanc:
+                    coups.add((x+i,y+dir))
             #if (x+1, y-1) in etat.plateau and etat.plateau[x+1,y-1].est_blanc != self.est_blanc:
             #    coups.append((x+1,y-1))
 
