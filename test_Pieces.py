@@ -32,7 +32,8 @@ def test_est_echec():
             roi = piece
     assert roi.position == [3,1] and roi.est_blanc is True
     assert roi.est_echec(etat) is True
-    
+test_est_echec()
+
 def test_coup_echec():
     partie = Echecs()
     etat = partie.charger('test_coup_echec.txt')

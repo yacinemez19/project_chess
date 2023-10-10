@@ -5,6 +5,8 @@ class EtatEchecs(EtatJeu):
         self.est_blanc = Joueur
         self.Valeur = Valeur
         self.plateau = Plateau
+        self.blanc_en_echec = False
+        self.noir_en_echec = False
         Mouvements = self.mouvements = [(x,y) for x in range(8) for y in range (8)]
 
     def __str__(self):

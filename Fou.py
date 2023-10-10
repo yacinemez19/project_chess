@@ -12,16 +12,16 @@ class Fou(Piece):
         x = self.position[0]
         y = self.position[1]
         coups = set()
-        for p in etat.values :
-            if type(p) == Roi and p.est_blanc == self.est_blanc:
-                break
-        
+
+        #fait un while
         for i, j in [(1,1),(-1,1),(-1,-1),(1,-1)]:
             n = 1
             while etat.est_case(x+(i*n),y+(j*n)) and not (x+(i*n),y+(j*n)) in etat.plateau:
-                
                 coups.add((x+(i*n),y+(j*n)))
                 n+=1
+            piece_en_prise = etat.plateau.get((x+(i*n),y+(j*n)), None)
+            if piece_en_prise is not None and piece_en_prise.est_blanc != self.est_blanc:
+                coups.add((x+(i*n),y+(j*n))) 
         return coups
 
                 
