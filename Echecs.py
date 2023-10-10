@@ -63,8 +63,13 @@ class Echecs(Jeu) :
         for piece in etat.plateau.values() : 
             if isinstance(piece, Roi) :
                 etat_final = piece.est_echec and piece.coups_possibles == []
+                if etat_final == True :
+                    couleur = piece.est_blanc
         if etat_final == True and raison == None:
-            raison = "Echec et mat"
+            if couleur : 
+                raison = "Echec et mat blanc"
+            else : 
+                raison = "Echec et mat noir"
                 
         etat_final = self.mouvements_autorises(etat, etat.joueur) == None
         if etat_final == True and raison == None:
