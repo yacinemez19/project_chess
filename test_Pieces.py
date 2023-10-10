@@ -4,7 +4,7 @@ from Echecs import Echecs
 from EtatEchecs import EtatEchecs
 from Roi import Roi
 from Fou import Fou
-
+from Pion import Pion
 
 def test_coups_possibles():
     partie = Echecs()
