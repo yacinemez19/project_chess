@@ -57,12 +57,17 @@ class Echecs(Jeu) :
         return sum_valeur
                 
     def etat_final(self, etat) : 
+        raison = None
         for piece in etat.plateau.values() : 
             if isinstance(piece, Roi) :
                 etat_final = piece.est_echec and piece.coups_possibles == []
+        if etat_final == True and raison == None:
+            raison = "Echec et mat"
                 
         etat_final = self.mouvements_autorises(etat, etat.joueur) == None
-        
+        if etat_final == True and raison == None:
+            raison = "Match nul"
+                
         if len(etat.plateau.keys()) <= 4 : 
             compteur_blanc = 0
             for x in etat.plateau.keys() : 
@@ -80,6 +85,10 @@ class Echecs(Jeu) :
                     couleurs_C.append(a.est_blanc)
             if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
                 etat_final = True
+
+        if etat_final == True and raison == None:
+                raison = "Match nul"
+        return [etat_final,raison]
 
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
