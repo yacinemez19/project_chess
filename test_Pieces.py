@@ -4,17 +4,18 @@ from Echecs import Echecs
 from EtatEchecs import EtatEchecs
 from Roi import Roi
 from Fou import Fou
-
+from Pion import Pion
 
 def test_coups_possibles():
     partie = Echecs()
     etat = partie.charger('test.txt')
+    
     roi = None
     for piece in etat.plateau.values():
         if piece.est_blanc and type(piece) == Roi:
             roi = piece
     assert roi.position == [4,0] and roi.est_blanc is True
-    assert roi.coups_possibles(etat) == {(3,1)}
+    assert roi.coups_possibles(etat) == {(3,1),(5,1)}
     
     fou = None
     for piece in etat.plateau.values():
@@ -22,6 +23,11 @@ def test_coups_possibles():
             fou = piece
     assert fou.position == [5,0]
     assert fou.coups_possibles(etat) == set()
+    
+    pion = None
+    pion = etat.plateau[(5,2)]
+    assert pion.position == [5,2]
+    assert pion.coups_possibles(etat) == {(5,3),(4,3)}
     
 def test_est_echec():
     partie = Echecs()

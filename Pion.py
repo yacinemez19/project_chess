@@ -1,5 +1,6 @@
 from Piece import *
 from EtatEchecs import *
+from Roi import Roi
 
 class Pion(Piece):
     def __init__(self, position, est_blanc : bool) -> None:
@@ -23,9 +24,9 @@ class Pion(Piece):
                 coups.add((x, y+dir))
 
             for i in [-1, 1] :
-                if (x+dir, y+i) in etat.plateau and etat.plateau[x+dir,y+i].est_blanc != self.est_blanc:
-                    coups.add((x+dir,y+i))
-            #if (x+1, y-1) in etat.plateau and etat.plateau[x+1,y-1].est_blanc != self.est_blanc:
-            #    coups.append((x+1,y-1))
+                if (x+i, y+dir) in etat.plateau and etat.plateau[x+i,y+dir].est_blanc != self.est_blanc:
+                    if isinstance(etat.plateau[x+i,y+dir], Roi):
+                        print("le roi peut être mangé")
+                    coups.add((x+i,y+dir))
 
         return coups
