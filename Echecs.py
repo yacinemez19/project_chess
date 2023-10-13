@@ -62,6 +62,7 @@ class Echecs(Jeu) :
         
         raison = None
 
+        # vérifie si le joueur a abandonné
         if a == True : 
             etat_final = True
             raison = "abandon"
@@ -230,7 +231,7 @@ class Echecs(Jeu) :
                 except :
                     print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
                     debut_partie()
-                fin_partie(etat_final(EtatEchecs, abandon)
+                fin_partie(etat_final(EtatEchecs, abandon))
                   
             # affiche le mode d'emploi
             elif choix1 == help : 
@@ -279,10 +280,13 @@ class Echecs(Jeu) :
             elif mouv == "quit" : 
                 menu()
             elif mouv == "abondon" : 
-                abandon = True
+                return True
             else :
-                Echecs.deplacer(traduire(mouv))
-        
+                if EtatEchecs.joueur == True :
+                    Echecs.strategie(joueur1)
+                else : 
+                    Echecs.strategie(joueur2)
+            
     
     # fin de partie
     def fin_partie(raison_etat_final) : 
