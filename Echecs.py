@@ -282,7 +282,7 @@ class Echecs(Jeu) :
             elif mouv == "abondon" : 
                 return True
             else :
-                if EtatEchecs.joueur == True :
+                if EtatEchecs.est_blanc == True :
                     Echecs.strategie(joueur1)
                 else : 
                     Echecs.strategie(joueur2)
