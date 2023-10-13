@@ -58,7 +58,7 @@ class Echecs(Jeu) :
 
         return sum_valeur
                 
-    def etat_final(self, etat, a) : 
+    def etat_final(self, etat, a, h) : 
         
         raison = None
 
@@ -93,25 +93,27 @@ class Echecs(Jeu) :
                 if x.est_blanc : 
                     compteur_blanc += 1
 
-            # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
-            if compteur_blanc <= 2 : 
-                liste = []
-                for a in etat.plateau.values():
-                    liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
-                etat_final = False not in liste
-
-            # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
-            couleurs_C = []
+        # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
+        if compteur_blanc <= 2 : 
+            liste = []
             for a in etat.plateau.values():
-                if isinstance(a, Cavalier) : 
-                    couleurs_C.append(a.est_blanc)
-            if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
-                etat_final = True
+                liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
+            etat_final = False not in liste
+
+        # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
+        couleurs_C = []
+        for a in etat.plateau.values():
+            if isinstance(a, Cavalier) : 
+                couleurs_C.append(a.est_blanc)
+        if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
+            etat_final = True
 
         # Si fin de partie par manque de matériel, match nul
         if etat_final == True and raison == None:
                 raison = "Match nul"
         return [etat_final,raison]
+
+        if historique[-1] == 
 
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
@@ -219,7 +221,7 @@ class Echecs(Jeu) :
             if choix1 == 'n' : 
             Etat = self.charger(Nouvelle_partie)
             abandon = self.choisir_partie(choix2)
-            self.fin_partie(etat_final(EtatEchecs, abandon)
+            self.fin_partie(etat_final(EtatEchecs, abandon, historique))
 
             # partie chargée
             elif choix1 == 'a' : 
@@ -231,7 +233,7 @@ class Echecs(Jeu) :
                 except :
                     print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
                     self.debut_partie()
-                self.fin_partie(etat_final(EtatEchecs, abandon))
+                self.fin_partie(etat_final(EtatEchecs, abandon, historique))
                   
             # affiche le mode d'emploi
             elif choix1 == help : 
@@ -270,9 +272,11 @@ class Echecs(Jeu) :
 
     # déroulé de la partie
     def partie(self,joueur1, joueur2) : 
-
+        historique = []
         # déroulé de la partie
-        while not(Echecs.etat_final(EtatEchecs,abandon)[0]) :
+        while not(Echecs.etat_final(EtatEchecs,abandon, historique)[0]) :
+            if len(historique) > 50 :
+                historique.pop(0)
             abandon = False
             mouv = input("Quel mouvement voulez-vous jouer ?")
             if mouv == "help" : 
@@ -286,6 +290,7 @@ class Echecs(Jeu) :
                     self.strategie(joueur1)
                 else : 
                     self.strategie(joueur2)
+                historique.append(mouv)
             
     
     # fin de partie
