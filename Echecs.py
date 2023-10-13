@@ -283,7 +283,21 @@ class Echecs(Jeu) :
       for ligne in f : 
         print(ligne)
 
-
+def strategie(joueur) : 
+  if joueur == "humain" : 
+    abandon = False
+    mouv = input("Quel mouvement voulez-vous jouer ?")
+    if mouv == "help" : 
+      self.afficher_aide() 
+    elif mouv == "quit" : 
+      self.menu()
+    elif mouv == "abondon" : 
+      return True
+    else :  
+      return mouv
+  if joueur == "IA" : 
+      pass
+    
   # déroulé de la partie
   def partie(self,joueur1, joueur2) : 
     historique = []
@@ -291,21 +305,13 @@ class Echecs(Jeu) :
     while not(Echecs.etat_final(EtatEchecs,abandon, historique)[0]) :
       if len(historique) > 50 :
         historique.pop(0)
-      abandon = False
-      mouv = input("Quel mouvement voulez-vous jouer ?")
-      if mouv == "help" : 
-        self.afficher_aide() 
-      elif mouv == "quit" : 
-        self.menu()
-      elif mouv == "abondon" : 
-        return True
-      else :
-        if EtatEchecs.est_blanc == True :
-          self.strategie(joueur1)
-        else : 
-          self.strategie(joueur2)
-        piece_jouee = EtatEchecs.plateau[self.traduire(mouv)[0]]
-        historique.append([mouv, piece_jouee])
+      
+      if EtatEchecs.est_blanc == True :
+        self.strategie(joueur1)
+      else : 
+        self.strategie(joueur2)
+      piece_jouee = EtatEchecs.plateau[self.traduire(mouv)[0]]
+      historique.append([mouv, piece_jouee])
           
   
   # fin de partie
