@@ -9,10 +9,11 @@ class EtatEchecs(EtatJeu):
 
     def __str__(self):
       txt = ''
-      for x in range(8):
-        for y in range(8):
+      for y in range(8):
+        for x in range(8):
           p = self.plateau.get((x,y), '.')
           txt += str(p)
+        txt += '\n'
       return txt
 
     '''
