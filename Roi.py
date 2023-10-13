@@ -13,17 +13,10 @@ class Roi(Piece):
     x = self.position[0]
     y = self.position[1]
     coups = set()
-    for i,j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
-      #vérification que la case existe (sortie du plateau impossible)
-      if etat.est_case(x+i,y+j):
-        piece_en_prise = etat.plateau.get((x+i,y+j), None)
-        #cas où rien n'est dans les cases adjacentes
-        if piece_en_prise is None:
-          coups.add((x+i,y+j))
-        else:
-          # vérification, la pièce en prise est adverse
-          if piece_en_prise.est_blanc is not self.est_blanc:
-            coups.add((x+i,y+j))
+    for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
+      if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
+        coups.add((x+i,y+j))
+
     return coups
   
   def coups_adverses(self, etat):
@@ -54,11 +47,10 @@ class Roi(Piece):
     :return: vrai si le roi est mis en echec par le coup
     '''
     if old_pos not in etat.plateau:
-      print(etat)
       raise AttributeError('Erreur dans la position de la piece')
-    copie_etat = copy.deepcopy(etat)
-    copie_piece = copie_etat.plateau.pop(old_pos)
-    copie_etat.plateau[new_pos] = copie_piece
-    return self.est_echec(copie_etat)
-    
-
+    etat1 = copy.deepcopy(etat)
+    piece = etat1.plateau.pop(old_pos)
+    etat1.plateau[new_pos] = piece
+    if old_pos not in etat.plateau:
+      print('depression')
+    return self.est_echec(etat1)
