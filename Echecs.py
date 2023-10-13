@@ -233,15 +233,15 @@ class Echecs(Jeu) :
     try : 
       # nouvelle partie
       if choix1 == 'n' : 
-        Etat = self.charger(Nouvelle_partie)
+        etat = self.charger('Nouvelle_partie.txt')
         abandon = self.choisir_partie(choix2)
-        self.fin_partie(etat_final(EtatEchecs, abandon, historique))
+        self.fin_partie(self.etat_final(etat, abandon, historique))
 
       # partie chargée
       elif choix1 == 'a' : 
         try : 
             fichier = input("Donnez le chemin du fichier à charger.")
-            Etat = self.charger(fichier)
+            etat = self.charger(fichier)
             abandon = self.choisir_partie(choix2)
         
         except :
@@ -268,6 +268,7 @@ class Echecs(Jeu) :
 
   # démarre la partie avec les joueurs choisis par l'utilisateur
   def choisir_partie(self,choix) : 
+    p = None
     if choix == 'j' : 
         p = self.partie('humain', 'humain')
     elif choix == 'i' : 
@@ -313,6 +314,7 @@ class Echecs(Jeu) :
         abandon = self.strategie(joueur2)
       piece_jouee = EtatEchecs.plateau[self.traduire(mouv)[0]]
       historique.append([mouv, piece_jouee])
+    return historique
           
   
   # fin de partie
