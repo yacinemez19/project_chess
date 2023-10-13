@@ -185,97 +185,97 @@ class Echecs(Jeu) :
       
       return None
 
-# crée des erreurs pour les deux interactions avec l'utilisateur
-class InputError1(Exception) : 
-  pass
+    # crée des erreurs pour les deux interactions avec l'utilisateur
+    class InputError1(Exception) : 
+      pass
 
-class InputError2(Exception) : 
-  pass
+    class InputError2(Exception) : 
+      pass
 
-# recueille les choix de l'utilisateur en début de partie
-def menu() :
-  print("Menu du jeu d'échecs : ")
-  print("Si vous voulez commencer une nouvelle partie, entrez n.")
-  print("Si vous voulez reprendre une ancienne partie, entrez a.")
-  print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
-  choix1 = input()
-  if choix1 == "n" or choix1 == "a" : 
-    choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
-    print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
-  return [choix1, choix2]
+    # recueille les choix de l'utilisateur en début de partie
+    def menu() :
+        print("Menu du jeu d'échecs : ")
+        print("Si vous voulez commencer une nouvelle partie, entrez n.")
+        print("Si vous voulez reprendre une ancienne partie, entrez a.")
+        print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
+        choix1 = input()
+        if choix1 == "n" or choix1 == "a" : 
+            choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
+            print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
+        return [choix1, choix2]
 
-# le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
-def debut_partie():
-  choix1, choix2 = menu()
-  try : 
-
-    # nouvelle partie
-    if choix1 == 'n' : 
-      Etat = Echecs.charger(Nouvelle_partie)
-      choisir_partie(choix2)
-
-    # partie chargée
-    elif choix1 == 'a' : 
+    # le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
+    def debut_partie():
+        choix1, choix2 = menu()
         try : 
-            fichier = input("Donnez le chemin du fichier à charger.")
-            Etat = Echecs.charger(fichier)
+
+            # nouvelle partie
+            if choix1 == 'n' : 
+            Etat = Echecs.charger(Nouvelle_partie)
             choisir_partie(choix2)
-        except :
-            print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
-            debut_partie()
+
+            # partie chargée
+            elif choix1 == 'a' : 
+                try : 
+                    fichier = input("Donnez le chemin du fichier à charger.")
+                    Etat = Echecs.charger(fichier)
+                    choisir_partie(choix2)
+                except :
+                    print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
+                    debut_partie()
                   
-    # affiche le mode d'emploi
-    elif choix1 == help : 
-      afficher_aide()
+            # affiche le mode d'emploi
+            elif choix1 == help : 
+                afficher_aide()
 
-    # Si l'input ne fait pas partie des choix, lève une erreur
-    else :
-      raise InputError1
+            # Si l'input ne fait pas partie des choix, lève une erreur
+            else :
+                raise InputError1
 
-    # ramène l'utilisateur au menu initial si son choix n'est pas valide
-  except InputError1 : 
-    print("Votre choix ne fait pas partie des options. Il faut choisir entre n, a et help.")
-    debut_partie()
-  except InputError2 :
-    print("Votre choix ne fait pas partie des options. Il faut choisir entre j, i et ii.")
-    debut_partie()
+        # ramène l'utilisateur au menu initial si son choix n'est pas valide
+        except InputError1 : 
+            print("Votre choix ne fait pas partie des options. Il faut choisir entre n, a et help.")
+            debut_partie()
+        except InputError2 :
+            print("Votre choix ne fait pas partie des options. Il faut choisir entre j, i et ii.")
+            debut_partie()
 
 
-# démarre la partie avec les joueurs choisis par l'utilisateur
-def choisir_partie(choix) : 
-  if choix2 == 'j' : 
-    partie('humain', 'humain')
-  elif choix2 == 'i' : 
-    partie('humain','IA')
-  elif choix2 == 'ii' : 
-    partie('IA','IA')
-  else :
-    raise InputError2
+    # démarre la partie avec les joueurs choisis par l'utilisateur
+    def choisir_partie(choix) : 
+        if choix2 == 'j' : 
+            partie('humain', 'humain')
+        elif choix2 == 'i' : 
+            partie('humain','IA')
+        elif choix2 == 'ii' : 
+            partie('IA','IA')
+        else :
+            raise InputError2
         
-def afficher_aide() : 
-  with open("mode_d'emploi.txt",r) as f: 
-    for ligne in f : 
-      print(ligne)
+    def afficher_aide() : 
+        with open("mode_d'emploi.txt",r) as f: 
+            for ligne in f : 
+                print(ligne)
 
 
-# déroulé de la partie et fin de partie
-def partie(joueur1, joueur2) : 
+    # déroulé de la partie et fin de partie
+    def partie(joueur1, joueur2) : 
 
-    # déroulé de la partie
-  while not(Echecs.etat_final[0]) : 
-    mouv = input("Quel mouvement voulez-vous jouer ?")
-    if mouv == "help" : 
-      afficher_aide() 
-    elif mouv == "quit" : 
-      menu()
-    else :
-      Echecs.deplacer(traduire(mouv))
+        # déroulé de la partie
+        while not(Echecs.etat_final[0]) : 
+            mouv = input("Quel mouvement voulez-vous jouer ?")
+            if mouv == "help" : 
+                afficher_aide() 
+            elif mouv == "quit" : 
+                menu()
+            elif mouv == "abondon" : 
+                return "abandon"
+            else :
+                Echecs.deplacer(traduire(mouv))
 
+    
     # fin de partie
-  print("La partie est terminée.")
-  if Echecs.etat_final[1] == 'Echec et mat blanc' :
-    print("Le joueur blanc a gagné la partie.")
-  elif Echecs.etat_final[1] == 'Echec et mat noir' :
-    print("Le joueur noir a gagné la partie.")
-  elif Echecs.etat_final[1] == 'Match nul' :
-    print("Cette partie se termine par un match nul.")
+    def fin_partie() : 
+        print("La partie est terminée.")
+        if Echecs.etat_final[1] == 'Echec et mat blanc' :
+            print("Le joueur blanc a gagné la partie.")
