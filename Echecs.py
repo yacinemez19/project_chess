@@ -90,6 +90,7 @@ class Echecs(Jeu) :
 
             # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
             if compteur_blanc <= 2 : 
+                liste = []
                 for a in etat.plateau.values():
                     liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
                 etat_final = False not in liste
