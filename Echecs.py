@@ -114,11 +114,23 @@ class Echecs(Jeu) :
       if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
         etat_final = True
         
+
         #règle des trois coups
-        for a in historique[::2]:
-          for b in historique[1::2] :
-            if historique[-1] == historique[a] :
+        for a in historique[::2] and b in historique[1::2] : 
+            if historique[-1],historique[-2] == a,b :
                 etat_final == True
+
+        # règle des 50 coups
+        coups = []
+        for coup,c in historique :
+            if coup.lower() != coup :
+                coups.append(coup)
+                
+            elif isinstance(c,Pion) :
+                coup.append(coup)
+        if coups = [] :
+            etat_final = True
+            
 
         if etat_final == True and raison == None:
           raison = "Match nul"
@@ -291,7 +303,8 @@ class Echecs(Jeu) :
           self.strategie(joueur1)
         else : 
           self.strategie(joueur2)
-        historique.append(mouv)
+        piece_jouee = EtatEchecs.plateau[self.traduire(mouv)[0]]
+        historique.append([mouv, piece_jouee])
           
   
   # fin de partie
