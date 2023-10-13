@@ -234,7 +234,7 @@ class Echecs(Jeu) :
       # nouvelle partie
       if choix1 == 'n' : 
         Etat = self.charger(Nouvelle_partie)
-        abandon = self.choisir_partie(choix2)
+        abandon = self.choisir_partie(choix2)[-1]
         self.fin_partie(etat_final(EtatEchecs, abandon, historique))
 
       # partie chargée
@@ -242,7 +242,7 @@ class Echecs(Jeu) :
         try : 
             fichier = input("Donnez le chemin du fichier à charger.")
             Etat = self.charger(fichier)
-            abandon = self.choisir_partie(choix2)
+            abandon = self.choisir_partie(choix2)[-1]
         
         except :
             print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
@@ -292,7 +292,7 @@ class Echecs(Jeu) :
       elif mouv == "quit" : 
         self.menu()
       elif mouv == "abondon" : 
-        return True
+        return None
       else :  
         return mouv
     if joueur == "IA" : 
@@ -301,19 +301,18 @@ class Echecs(Jeu) :
   # déroulé de la partie
   def partie(self,joueur1, joueur2) : 
     historique = []
-    abandon = 0
     # déroulé de la partie
-    while not(Echecs.etat_final(EtatEchecs, abandon, historique)[0]) :
+    while not(Echecs.etat_final(EtatEchecs, mouv, historique)[0]) :
       # règle des 50
       if len(historique) > 50 :
         historique.pop(0)
       if EtatEchecs.est_blanc == True :
-        abandon = self.strategie(joueur1)
+        mouv = self.strategie(joueur1)
       else : 
-        abandon = self.strategie(joueur2)
+        mouv = self.strategie(joueur2)
       piece_jouee = EtatEchecs.plateau[self.traduire(mouv)[0]]
       historique.append([mouv, piece_jouee])
-          
+      return historique
   
   # fin de partie
   def fin_partie(self,raison_etat_final) : 
