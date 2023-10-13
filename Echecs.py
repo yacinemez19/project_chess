@@ -9,29 +9,29 @@ from Cavalier import *
 import copy
 
 class Echecs(Jeu) : 
-    def traduire(self, mouvement) :
-        colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
-        mouv_str = [x.strip() for x in mouvement]
-      
-        try: 
-            # vérifie qu'il s'agit d'un déplacement
-            if mouv_str[0] in colonnes : 
-                position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1]))
-                position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4]))
-                if int(mouv_str[1]) < 8 and int(mouv_str[4]) < 8 :
-                    raise IndexError
-                
-            # sinon, si le mouvement est valide, il d'agit d'une capture de pièce
-            else :  
-                position1 = (colonnes.index(mouv_str[1]),int(mouv_str[2]))
-                position2 = (colonnes.index(mouv_str[4]),int(mouv_str[5]))
-                if int(mouv_str[2]) < 8 and int(mouv_str[5]) < 8  :
-                    raise IndexError
-            
-        except: 
-            return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
+  def traduire(self, mouvement) :
+    colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+    mouv_str = [x.strip() for x in mouvement]
+    
+    try: 
+      # vérifie qu'il s'agit d'un déplacement
+      if mouv_str[0] in colonnes : 
+        position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1]))
+        position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4]))
+        if int(mouv_str[1]) < 8 and int(mouv_str[4]) < 8 :
+          raise IndexError
+          
+      # sinon, si le mouvement est valide, il d'agit d'une capture de pièce
+      else :  
+        position1 = (colonnes.index(mouv_str[1]),int(mouv_str[2]))
+        position2 = (colonnes.index(mouv_str[4]),int(mouv_str[5]))
+        if int(mouv_str[2]) < 8 and int(mouv_str[5]) < 8  :
+          raise IndexError
         
-        return [position1, position2]
+    except: 
+      return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
+    
+    return [position1, position2]
   
     def deplacer(self, mouvement, etat) : 
       e1 = copy.deepcopy(etat)
@@ -51,66 +51,66 @@ class Echecs(Jeu) :
       return mouvs
         
     def valeur(self, etat, joueur) :
-        sum_valeur = 0
-        for piece in etat.plateau : 
-            if piece.est_blanc == joueur :
-                sum_valeur += piece.valeur
+      sum_valeur = 0
+      for piece in etat.plateau : 
+        if piece.est_blanc == joueur :
+          sum_valeur += piece.valeur
 
-        return sum_valeur
+      return sum_valeur
                 
     def etat_final(self, etat, a, h) : 
         
-        raison = None
+      raison = None
 
-        # vérifie si le joueur a abandonné
-        if a == True : 
-            etat_final = True
-            raison = "abandon"
+      # vérifie si le joueur a abandonné
+      if a == True : 
+        etat_final = True
+        raison = "abandon"
 
         # vérifie s'il y a échec et mat
         for piece in etat.plateau.values() : 
-            if isinstance(piece, Roi) :
-                etat_final = piece.est_echec and piece.coups_possibles == []
-                if etat_final == True :
-                    couleur = piece.est_blanc
+          if isinstance(piece, Roi) :
+            etat_final = piece.est_echec and piece.coups_possibles == []
+            if etat_final == True :
+              couleur = piece.est_blanc
 
         # La raison de l'état final est que le roi est en échec et mat
         if etat_final == True and raison == None:
-            if couleur : 
-                raison = "Echec et mat blanc"
-            else : 
-                raison = "Echec et mat noir"
+          if couleur : 
+            raison = "Echec et mat blanc"
+          else : 
+            raison = "Echec et mat noir"
 
         # etat_final car plus de mouvements autorisés
         etat_final = self.mouvements_autorises(etat, etat.joueur) == None
         if etat_final == True and raison == None:
-            raison = "Match nul"
+          raison = "Match nul"
 
         # état final par manque de matériel
         if len(etat.plateau.keys()) <= 4 : 
-            compteur_blanc = 0
-            for x in etat.plateau.keys() : 
-                if x.est_blanc : 
-                    compteur_blanc += 1
+          compteur_blanc = 0
+          for x in etat.plateau.keys() : 
+            if x.est_blanc : 
+              compteur_blanc += 1
 
         # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
         if compteur_blanc <= 2 : 
-            liste = []
-            for a in etat.plateau.values():
-                liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
-            etat_final = False not in liste
+          liste = []
+          for a in etat.plateau.values():
+            liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
+          etat_final = False not in liste
 
         # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
         couleurs_C = []
         for a in etat.plateau.values():
-            if isinstance(a, Cavalier) : 
-                couleurs_C.append(a.est_blanc)
+          if isinstance(a, Cavalier) : 
+            couleurs_C.append(a.est_blanc)
         if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
-            etat_final = True
+          etat_final = True
 
         # Si fin de partie par manque de matériel, match nul
         if etat_final == True and raison == None:
-                raison = "Match nul"
+          raison = "Match nul"
         return [etat_final,raison]
 
         if historique[-1] == 
@@ -201,16 +201,16 @@ class Echecs(Jeu) :
 
     # recueille les choix de l'utilisateur en début de partie
     def menu(self) :
-        print("Menu du jeu d'échecs : ")
-        print("Si vous voulez commencer une nouvelle partie, entrez n.")
-        print("Si vous voulez reprendre une ancienne partie, entrez a.")
-        print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
-        choix1 = input()
-        choix2 = 0
-        if choix1 == "n" or choix1 == "a" : 
-            choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
-            print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
-        return [choix1, choix2]
+      print("Menu du jeu d'échecs : ")
+      print("Si vous voulez commencer une nouvelle partie, entrez n.")
+      print("Si vous voulez reprendre une ancienne partie, entrez a.")
+      print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
+      choix1 = input()
+      choix2 = 0
+      if choix1 == "n" or choix1 == "a" : 
+        choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
+        print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
+      return [choix1, choix2]
 
     # le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
     def debut_partie(self):
@@ -231,7 +231,7 @@ class Echecs(Jeu) :
                     abandon = self.choisir_partie(choix2)
                 
                 except :
-                    print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
+                    print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
                     self.debut_partie()
                 self.fin_partie(etat_final(EtatEchecs, abandon, historique))
                   
