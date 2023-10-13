@@ -113,8 +113,17 @@ class Echecs(Jeu) :
                 raison = "Match nul"
         return [etat_final,raison]
 
-        if historique[-1] == 
+        #règle des trois coups
+        for a in historique[::2] and b in historique[1::2] : 
+            if historique[-1] == historique[a] and coups_possibles :
+                etat_final == True
 
+        # 
+
+        if etat_final == True and raison == None:
+                raison = "Match nul"
+        return [etat_final,raison]
+        
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
       for position, piece in etat.plateau.items() : 
