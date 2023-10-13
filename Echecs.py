@@ -64,8 +64,8 @@ class Echecs(Jeu) :
 
     return sum_valeur
               
-  def etat_final(self, etat, a, h) : 
-      
+  def etat_final(self, etat, a, historique) : 
+
     raison = None
 
     # vérifie si le joueur a abandonné
@@ -113,13 +113,16 @@ class Echecs(Jeu) :
           couleurs_C.append(a.est_blanc)
       if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
         etat_final = True
+        
+        #règle des trois coups
+        for a in historique[::2]:
+          for b in historique[1::2] :
+            if historique[-1] == historique[a] :
+                etat_final == True
 
-      # Si fin de partie par manque de matériel, match nul
-      if etat_final == True and raison == None:
-        raison = "Match nul"
-      return [etat_final,raison]
-
-      if historique[-1] == 
+        if etat_final == True and raison == None:
+          raison = "Match nul"
+        return [etat_final,raison]
 
   def liste_coups_possibles(self, etat, est_blanc) :
     coups = {}

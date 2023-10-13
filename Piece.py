@@ -8,7 +8,7 @@ class Piece(ABC):
         self.nom = None
 
     @abstractmethod
-    def coups_possibles(self, etat) -> list:
+    def coups_possibles(self, etat) -> set:
         pass
 
     def coup_est_possible(self, etat, position) -> bool : 
