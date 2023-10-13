@@ -50,10 +50,8 @@ class Echecs(Jeu) :
   def deplacer(self, mouvement, etat) : 
     e1 = copy.deepcopy(etat)
     mouv = self.traduire(mouvement)
-    print(self.mouvements_autorises(e1, e1.est_blanc))
-    print(mouv)
-    #if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
-    #  raise MovementError
+    if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
+      raise MovementError
     piece = e1.plateau.pop(mouv[0])
     e1.plateau[(mouv[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
@@ -61,7 +59,6 @@ class Echecs(Jeu) :
       
   def mouvements_autorises(self, etat, joueur) : 
     mouvs = []
-    print(self.liste_coups_possibles(etat, joueur))
     for (x,y) in self.liste_coups_possibles(etat, joueur) : 
       for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
         mouvs.append([(a,b),(x,y)])
