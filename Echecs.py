@@ -22,6 +22,7 @@ class MovementError(Exception):
 class Echecs(Jeu) : 
   def traduire(self, mouvement) :
     '''
+    :mouvement: "mouvement"
     :return: [ancienne position, nouvelle postion]
     '''
     colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -47,7 +48,11 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouvement, etat) : 
+  def deplacer(self, mouvement, etat) :
+    """
+    :mouvement: [position1,position2]
+    :return: état modifié
+    """
     e1 = copy.deepcopy(etat)
     mouv = self.traduire(mouvement)
     if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
@@ -58,6 +63,10 @@ class Echecs(Jeu) :
     return e1
       
   def mouvements_autorises(self, etat, joueur) : 
+    ''' 
+    :joueur: est_blanc:
+    :return: [[position1, position2]] si [position1,position2] mouvement possible pour ce joueur
+    '''
     mouvs = []
     for (x,y) in self.liste_coups_possibles(etat, joueur) : 
       for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
@@ -74,6 +83,10 @@ class Echecs(Jeu) :
     return sum_valeur
               
   def etat_final(self, etat, historique) : 
+    '''
+    :historique: ["mouvement"] pour les mouvements déjà joués moins de 50 tours auparavant
+    :return: si l'état final est atteint (match nul ou victoire) ou pas, bool
+    '''
 
     raison = None
       # vérifie s'il y a échec et mat
@@ -141,7 +154,9 @@ class Echecs(Jeu) :
     return [etat_final,raison]
 
   def liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict :
-    
+    '''
+    :return: dict[tuple,set(tuple)], associe à chaque case du plateau où un coup peut être joué les coups qui peuvent y être joués
+    '''
     coups = {} 
     for piece in etat.plateau.values() :
       if piece.est_blanc == est_blanc : 
@@ -217,6 +232,9 @@ class Echecs(Jeu) :
 
   # recueille les choix de l'utilisateur en début de partie
   def menu(self) :
+    ''' affiche le menu du jeu et récupère les choix du joueurs pour sa partie.
+    :return: [choix1,choix2]
+    '''
     print("Menu du jeu d'échecs : ")
     print("Si vous voulez commencer une nouvelle partie, entrez n.")
     print("Si vous voulez reprendre une ancienne partie, entrez a.")
@@ -230,6 +248,8 @@ class Echecs(Jeu) :
 
   # le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
   def debut_partie(self):
+    ''' lance la partie et la finit'''
+    
     choix1, choix2 = self.menu()
     try : 
       # nouvelle partie
@@ -268,6 +288,10 @@ class Echecs(Jeu) :
 
   # démarre la partie avec les joueurs choisis par l'utilisateur
   def choisir_partie(self,etat, choix) : 
+    '''commence la partie selon les choix de joueur (choix2) de l'utilisateur
+    :choix: choix2 du menu, str == 'j', 'i' ou 'ii'
+    :return: p, historique des mouvements, list[list[tuple]]
+    '''
     p = None
     if choix == 'j' : 
         p = self.partie('humain', 'humain', etat)
@@ -280,11 +304,17 @@ class Echecs(Jeu) :
     return p
       
   def afficher_aide() : 
+    ''' affiche le manuel d'utilisation du jeu'''
     with open("mode_d'emploi.txt", 'r') as f: 
       for ligne in f : 
         print(ligne)
 
   def strategie(self, etat, joueur) : 
+    '''traite le mouvement du joueur selon son type
+    :joueur: "humain" ou "IA"
+    :return: mouvement effectué par le joueur, str
+    '''
+    
     if joueur == "humain" : 
       mouv = input("Quel mouvement voulez-vous jouer ?")
       if mouv == "help" : 
@@ -298,10 +328,16 @@ class Echecs(Jeu) :
           self.fin_partie('abandon noir')
       else :  
         return mouv
+        
     if joueur == "IA" : 
         pass
   
   def jouer_coup(self, joueur1, joueur2, etat):
+    ''' joue le coup choisi pour ce tour par le joueur selon sa stratégie (son type).
+    :joueur1: str, "humain" ou "IA"
+    :joueur2: str, "humain" ou "IA"
+    :return: mouvement joué (str)
+    '''
     try : 
       if etat.est_blanc == True :
         mouv = self.strategie(etat,joueur1)
@@ -315,9 +351,13 @@ class Echecs(Jeu) :
       
 
   # déroulé de la partie
-  def partie(self,joueur1, joueur2, etat) : 
+  def partie(self,joueur1, joueur2, etat) :
+    ''' déroule la partie de son commencement à l'état final
+    :joueur1: str, "humain" ou "IA"
+    :joueur2: str, "humain" ou "IA"
+    :return: historique des mouvements, list[list[tuple]]
+    '''
     historique = []
-    abandon = 0
     # déroulé de la partie
     while not(self.etat_final(etat, historique)[0]) :
       # règle des 50
@@ -331,6 +371,10 @@ class Echecs(Jeu) :
   
   # fin de partie
   def fin_partie(self,raison_etat_final) :
+    ''' met fin à la partie quand l'état final est atteint ou qu'il y a un abandon.
+    :raison_etat_final: self.etat_final[1], str
+    '''
+    
     print("La partie est terminée.")
     if raison_etat_final == 'Echec et mat blanc' :
       print("Le joueur blanc a gagné la partie.")
