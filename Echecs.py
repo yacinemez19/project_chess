@@ -116,8 +116,9 @@ class Echecs(Jeu) :
         
 
         #règle des trois coups
-        for a in historique[::2] and b in historique[1::2] : 
-            if historique[-1],historique[-2] == a,b :
+        for a in historique[::2]:
+          for b in historique[1::2] : 
+            if (historique[-1],historique[-2]) == (a,b) :
                 etat_final == True
 
         # règle des 50 coups
