@@ -25,8 +25,5 @@ class Pion(Piece):
 
             for i in [-1, 1] :
                 if (x+i, y+dir) in etat.plateau and etat.plateau[x+i,y+dir].est_blanc != self.est_blanc:
-                    if isinstance(etat.plateau[x+i,y+dir], Roi):
-                        print("le roi peut être mangé")
                     coups.add((x+i,y+dir))
-
         return coups

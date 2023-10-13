@@ -14,9 +14,13 @@ class Roi(Piece):
     y = self.position[1]
     coups = set()
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
+      #cas où rien n'est dans les cases adjacentes
       if etat.est_case(x+i,y+j) and not (x+i,y+j) in etat.plateau:
         coups.add((x+i,y+j))
-
+      #cas où une pièce "mangeable" se situe dans une case adjacente
+      piece_en_prise = etat.plateau.get((x+i,y+j), None)
+      if piece_en_prise is not None and piece_en_prise.est_blanc != self.est_blanc:
+        coups.add((x+i,y+j))
     return coups
   
   def coups_adverses(self, etat):

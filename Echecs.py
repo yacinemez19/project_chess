@@ -58,45 +58,72 @@ class Echecs(Jeu) :
 
         return sum_valeur
                 
-    def etat_final(self, etat) : 
+    def etat_final(self, etat, a, h) : 
+        
         raison = None
+
+        # vérifie si le joueur a abandonné
+        if a == True : 
+            etat_final = True
+            raison = "abandon"
+
+        # vérifie s'il y a échec et mat
         for piece in etat.plateau.values() : 
             if isinstance(piece, Roi) :
                 etat_final = piece.est_echec and piece.coups_possibles == []
                 if etat_final == True :
                     couleur = piece.est_blanc
+
+        # La raison de l'état final est que le roi est en échec et mat
         if etat_final == True and raison == None:
             if couleur : 
                 raison = "Echec et mat blanc"
             else : 
                 raison = "Echec et mat noir"
-                
+
+        # etat_final car plus de mouvements autorisés
         etat_final = self.mouvements_autorises(etat, etat.joueur) == None
         if etat_final == True and raison == None:
             raison = "Match nul"
-                
+
+        # état final par manque de matériel
         if len(etat.plateau.keys()) <= 4 : 
             compteur_blanc = 0
             for x in etat.plateau.keys() : 
                 if x.est_blanc : 
                     compteur_blanc += 1
-                    
-            if compteur_blanc <= 2 : 
-                for a in etat.plateau.values():
-                    liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
-                etat_final = False not in liste
-                
-            couleurs_C = []
-            for a in etat.plateau.values():
-                if isinstance(a, Cavalier) : 
-                    couleurs_C.append(a.est_blanc)
-            if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
-                etat_final = True
 
+        # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
+        if compteur_blanc <= 2 : 
+            liste = []
+            for a in etat.plateau.values():
+                liste = isinstance(a, Roi) or isinstance(a, Cavalier) or isinstance(a, Fou)
+            etat_final = False not in liste
+
+        # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
+        couleurs_C = []
+        for a in etat.plateau.values():
+            if isinstance(a, Cavalier) : 
+                couleurs_C.append(a.est_blanc)
+        if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
+            etat_final = True
+
+        # Si fin de partie par manque de matériel, match nul
         if etat_final == True and raison == None:
                 raison = "Match nul"
         return [etat_final,raison]
 
+        #règle des trois coups
+        for a in historique[::2] and b in historique[1::2] : 
+            if historique[-1] == historique[a] and coups_possibles :
+                etat_final == True
+
+        # 
+
+        if etat_final == True and raison == None:
+                raison = "Match nul"
+        return [etat_final,raison]
+        
     def liste_coups_possibles(self, etat, est_blanc) :
       coups = {}
       for position, piece in etat.plateau.items() : 
@@ -174,77 +201,117 @@ class Echecs(Jeu) :
       
       return None
 
-class InputError1(Exception) : 
-  pass
+    # crée des erreurs pour les deux interactions avec l'utilisateur
+    class InputError1(Exception) : 
+      pass
 
-class InputError2(Exception) : 
-  pass
-  
-def menu() :
-  print("Menu du jeu d'échecs : ")
-  print("Si vous voulez commencer une nouvelle partie, entrez n.")
-  print("Si vous voulez reprendre une ancienne partie, entrez a.")
-  print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
-  choix1 = input()
-  if choix1 == "n" or choix1 == "a" : 
-    choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
-    print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
-  return [choix1, choix2]
+    class InputError2(Exception) : 
+      pass
 
-def debut_partie():
-  choix1 = menu()[0]
-  choix2 = menu()[1]
-  try : 
-    if choix1 == 'n' : 
-      Etat = Echecs.charger(Nouvelle_partie)
-      choisir_partie(choix2)
+    # recueille les choix de l'utilisateur en début de partie
+    def menu(self) :
+        print("Menu du jeu d'échecs : ")
+        print("Si vous voulez commencer une nouvelle partie, entrez n.")
+        print("Si vous voulez reprendre une ancienne partie, entrez a.")
+        print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
+        choix1 = input()
+        choix2 = 0
+        if choix1 == "n" or choix1 == "a" : 
+            choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
+            print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
+        return [choix1, choix2]
+
+    # le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
+    def debut_partie(self):
+        choix1, choix2 = self.menu()
+        try : 
+
+            # nouvelle partie
+            if choix1 == 'n' : 
+            Etat = self.charger(Nouvelle_partie)
+            abandon = self.choisir_partie(choix2)
+            self.fin_partie(etat_final(EtatEchecs, abandon, historique))
+
+            # partie chargée
+            elif choix1 == 'a' : 
+                try : 
+                    fichier = input("Donnez le chemin du fichier à charger.")
+                    Etat = self.charger(fichier)
+                    abandon = self.choisir_partie(choix2)
+                
+                except :
+                    print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
+                    self.debut_partie()
+                self.fin_partie(etat_final(EtatEchecs, abandon, historique))
+                  
+            # affiche le mode d'emploi
+            elif choix1 == help : 
+                self.afficher_aide()
+
+            # Si l'input ne fait pas partie des choix, lève une erreur
+            else :
+                raise InputError1
+
+        # ramène l'utilisateur au menu initial si son choix n'est pas valide
+        except InputError1 : 
+            print("Votre choix ne fait pas partie des options. Il faut choisir entre n, a et help.")
+            self.debut_partie()
+        except InputError2 :
+            print("Votre choix ne fait pas partie des options. Il faut choisir entre j, i et ii.")
+            self.debut_partie()
+
+
+    # démarre la partie avec les joueurs choisis par l'utilisateur
+    def choisir_partie(self,choix) : 
+        if choix2 == 'j' : 
+            p = self.partie('humain', 'humain')
+        elif choix2 == 'i' : 
+            p = self.partie('humain','IA')
+        elif choix2 == 'ii' : 
+            p = self.partie('IA','IA')
+        else :
+            raise InputError2
+        return p
         
-    elif choix1 == 'a' : 
-      fichier = input("Donnez le chemin du fichier à charger.")
-      Etat = Echecs.charger(fichier)
-      choisir_partie(choix2)
-      
-    elif choix1 == help : 
-      afficher_aide()
+    def afficher_aide() : 
+        with open("mode_d'emploi.txt",r) as f: 
+            for ligne in f : 
+                print(ligne)
 
-    else :
-      raise InputError1
 
-  except InputError1 : 
-    print("Votre choix ne fait pas partie des options. Il faut choisir entre n, a et help.")
-    menu()
-  except InputError2 :
-    print("Votre choix ne fait pas partie des options. Il faut choisir entre j, i et ii.")
-    menu()
-
-def choisir_partie(choix) : 
-  if choix2 == 'j' : 
-    partie('humain', 'humain')
-  elif choix2 == 'i' : 
-    partie('humain','IA')
-  elif choix2 == 'ii' : 
-    partie('IA','IA')
-  else :
-    raise InputError2
-        
-def afficher_aide() : 
-  with open("mode_d'emploi.txt",r) as f: 
-    for ligne in f : 
-      print(ligne)
-
-def partie(joueur1, joueur2) : 
-  while not(Echecs.etat_final[0]) : 
-    mouv = input("Quel mouvement voulez-vous jouer ?")
-    if mouv == "help" : 
-      afficher_aide() 
-    elif mouv == "quit" : 
-      menu()
-    else :
-      Echecs.deplacer(traduire(mouv))
-  print("La partie est terminée.")
-  if Echecs.etat_final[1] == 'Echec et mat blanc' :
-    print("Le joueur blanc a gagné la partie.")
-  elif Echecs.etat_final[1] == 'Echec et mat noir' :
-    print("Le joueur noir a gagné la partie.")
-  elif Echecs.etat_final[1] == 'Match nul' :
-    print("Cette partie se termine par un match nul.")
+    # déroulé de la partie
+    def partie(self,joueur1, joueur2) : 
+        historique = []
+        # déroulé de la partie
+        while not(Echecs.etat_final(EtatEchecs,abandon, historique)[0]) :
+            if len(historique) > 50 :
+                historique.pop(0)
+            abandon = False
+            mouv = input("Quel mouvement voulez-vous jouer ?")
+            if mouv == "help" : 
+                self.afficher_aide() 
+            elif mouv == "quit" : 
+                self.menu()
+            elif mouv == "abondon" : 
+                return True
+            else :
+                if EtatEchecs.est_blanc == True :
+                    self.strategie(joueur1)
+                else : 
+                    self.strategie(joueur2)
+                historique.append(mouv)
+            
+    
+    # fin de partie
+    def fin_partie(self,raison_etat_final) : 
+        print("La partie est terminée.")
+        if raison_etat_final == 'Echec et mat blanc' :
+            print("Le joueur blanc a gagné la partie.")
+        elif raison_etat_final == 'Echec et mat noir' :
+            print("Le joueur noir a gagné la partie.")
+        elif raison_etat_final == 'Match nul' :
+            print("Cette partie se termine par un match nul.")
+        elif raison_etat_final == "abandon blanc" :
+            print("Le joueur noir a gagné la partie par abandon.")
+        elif raison_etat_final == "abandon noir" :
+            print("Le joueur blanc a gagné la partie par abandon.")
