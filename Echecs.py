@@ -184,11 +184,11 @@ class Echecs(Jeu) :
     etatTxt = etatTxt.split()
     plateau = dict()
     for i, ligne in enumerate(etatTxt):
-        for j, p in enumerate(ligne):
-            if p != '.':
-                x = j
-                y = 7 - i
-                plateau[x, y] = self.str_en_piece(p, [x, y])
+      for j, p in enumerate(ligne):
+        if p != '.':
+          x = j
+          y = 7 - i
+          plateau[x, y] = self.str_en_piece(p, [x, y])
     etat = EtatEchecs(True, 3, plateau, []) #True car quand on charge la partie on sait pas si blanc ou noir commence
     return etat
   
