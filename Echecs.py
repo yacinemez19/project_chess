@@ -205,8 +205,7 @@ def menu() :
 
 # le plus important, la méthode à lancer au démarrage du programme pour lancer et mener la partie.
 def debut_partie():
-  choix1 = menu()[0]
-  choix2 = menu()[1]
+  choix1, choix2 = menu()
   try : 
 
     # nouvelle partie
