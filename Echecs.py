@@ -221,7 +221,7 @@ def debut_partie():
             choisir_partie(choix2)
         except :
             print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
-            menu()
+            debut_partie()
                   
     # affiche le mode d'emploi
     elif choix1 == help : 
@@ -234,10 +234,10 @@ def debut_partie():
     # ramène l'utilisateur au menu initial si son choix n'est pas valide
   except InputError1 : 
     print("Votre choix ne fait pas partie des options. Il faut choisir entre n, a et help.")
-    menu()
+    debut_partie()
   except InputError2 :
     print("Votre choix ne fait pas partie des options. Il faut choisir entre j, i et ii.")
-    menu()
+    debut_partie()
 
 
 # démarre la partie avec les joueurs choisis par l'utilisateur
