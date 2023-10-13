@@ -69,7 +69,7 @@ class Echecs(Jeu) :
     raison = None
 
     # vérifie si le joueur a abandonné
-    if a == True : 
+    if a == None : 
       etat_final = True
       raison = "abandon"
 
