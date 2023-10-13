@@ -224,7 +224,7 @@ class Echecs(Jeu) :
     print("Menu du jeu d'échecs : ")
     print("Si vous voulez commencer une nouvelle partie, entrez n.")
     print("Si vous voulez reprendre une ancienne partie, entrez a.")
-    print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
+    print("Si vous voulez plus d'informations sur l'utilisation de ce programme, entrez help.")
     choix1 = input()
     choix2 = 0
     if choix1 == "n" or choix1 == "a" : 
@@ -321,6 +321,7 @@ class Echecs(Jeu) :
   # déroulé de la partie
   def partie(self,joueur1, joueur2, etat) : 
     historique = []
+    abandon = 0
     # déroulé de la partie
     while not(self.etat_final(etat, historique)[0]) :
       # règle des 50
@@ -333,7 +334,7 @@ class Echecs(Jeu) :
     return historique
   
   # fin de partie
-  def fin_partie(self,raison_etat_final) : 
+  def fin_partie(self,raison_etat_final) :
     print("La partie est terminée.")
     if raison_etat_final == 'Echec et mat blanc' :
       print("Le joueur blanc a gagné la partie.")
