@@ -215,10 +215,14 @@ def debut_partie():
 
     # partie chargée
     elif choix1 == 'a' : 
-      fichier = input("Donnez le chemin du fichier à charger.")
-      Etat = Echecs.charger(fichier)
-      choisir_partie(choix2)
-
+        try : 
+            fichier = input("Donnez le chemin du fichier à charger.")
+            Etat = Echecs.charger(fichier)
+            choisir_partie(choix2)
+        except :
+            print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
+            menu()
+                  
     # affiche le mode d'emploi
     elif choix1 == help : 
       afficher_aide()
