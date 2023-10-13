@@ -64,7 +64,7 @@ class Echecs(Jeu) :
     print(self.liste_coups_possibles(etat, joueur))
     for (x,y) in self.liste_coups_possibles(etat, joueur) : 
       for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
-        mouvs.append((a,b),(x,y))
+        mouvs.append([(a,b),(x,y)])
 
     return mouvs
         
@@ -144,14 +144,13 @@ class Echecs(Jeu) :
     return [etat_final,raison]
 
   def liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict :
-    coups = {}
-    for position, piece in etat.plateau.items() : 
+    
+    coups = {} 
+    for piece in etat.plateau.values() :
       if piece.est_blanc == est_blanc : 
-        if position in piece.coups_possibles(etat) : 
-          coups[position] = set()
-          coups[position].add(piece.nom)
-
-    return coups  
+        for coup in piece.coups_possibles(etat): 
+          coups.setdefault(coup,set()).add(tuple(piece.position))
+    return coups 
 
   @staticmethod
   def str_en_piece(c : str, pos : [int, int]):
