@@ -58,9 +58,13 @@ class Echecs(Jeu) :
 
         return sum_valeur
                 
-    def etat_final(self, etat) : 
+    def etat_final(self, etat, a) : 
         
         raison = None
+
+        if a == True : 
+            etat_final = True
+            raison = "abandon"
 
         # vérifie s'il y a échec et mat
         for piece in etat.plateau.values() : 
@@ -199,6 +203,7 @@ class Echecs(Jeu) :
         print("Si vous voulez reprendre une ancienne partie, entrez a.")
         print("Si vous voulez plus dinformations sur l'utilisation de ce programme, entrez help.")
         choix1 = input()
+        choix2 = 0
         if choix1 == "n" or choix1 == "a" : 
             choix2 = input("Voulez-vous jouer contre un autre joueur(entrer j), jouer contre une IA (entrer i) ou faire s'afffronter deux IAs (entrer ii) ?")
             print("La partie va commencer. Si vous voulez quitter sans sauvegarder, entrez quit. Si vous voulez sauvegarder votre partie, entrez save. Si vous voulez plus d'informations sur le programme, entrez help.")
@@ -212,17 +217,20 @@ class Echecs(Jeu) :
             # nouvelle partie
             if choix1 == 'n' : 
             Etat = Echecs.charger(Nouvelle_partie)
-            choisir_partie(choix2)
+            abandon = choisir_partie(choix2)
+            fin_partie(etat_final(EtatEchecs, abandon)
 
             # partie chargée
             elif choix1 == 'a' : 
                 try : 
                     fichier = input("Donnez le chemin du fichier à charger.")
                     Etat = Echecs.charger(fichier)
-                    choisir_partie(choix2)
+                    abandon = choisir_partie(choix2)
+                
                 except :
                     print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
                     debut_partie()
+                fin_partie(etat_final(EtatEchecs, abandon)
                   
             # affiche le mode d'emploi
             elif choix1 == help : 
@@ -244,13 +252,14 @@ class Echecs(Jeu) :
     # démarre la partie avec les joueurs choisis par l'utilisateur
     def choisir_partie(choix) : 
         if choix2 == 'j' : 
-            partie('humain', 'humain')
+            p = partie('humain', 'humain')
         elif choix2 == 'i' : 
-            partie('humain','IA')
+            p = partie('humain','IA')
         elif choix2 == 'ii' : 
-            partie('IA','IA')
+            p = partie('IA','IA')
         else :
             raise InputError2
+        return p
         
     def afficher_aide() : 
         with open("mode_d'emploi.txt",r) as f: 
@@ -258,24 +267,33 @@ class Echecs(Jeu) :
                 print(ligne)
 
 
-    # déroulé de la partie et fin de partie
+    # déroulé de la partie
     def partie(joueur1, joueur2) : 
 
         # déroulé de la partie
-        while not(Echecs.etat_final[0]) : 
+        while not(Echecs.etat_final(EtatEchecs,abandon)[0]) :
+            abandon = False
             mouv = input("Quel mouvement voulez-vous jouer ?")
             if mouv == "help" : 
                 afficher_aide() 
             elif mouv == "quit" : 
                 menu()
             elif mouv == "abondon" : 
-                return "abandon"
+                abandon = True
             else :
                 Echecs.deplacer(traduire(mouv))
-
+        
     
     # fin de partie
-    def fin_partie() : 
+    def fin_partie(raison_etat_final) : 
         print("La partie est terminée.")
-        if Echecs.etat_final[1] == 'Echec et mat blanc' :
+        if raison_etat_final == 'Echec et mat blanc' :
             print("Le joueur blanc a gagné la partie.")
+        elif raison_etat_final == 'Echec et mat noir' :
+            print("Le joueur noir a gagné la partie.")
+        elif raison_etat_final == 'Match nul' :
+            print("Cette partie se termine par un match nul.")
+        elif raison_etat_final == "abandon blanc" :
+            print("Le joueur noir a gagné la partie par abandon.")
+        elif raison_etat_final == "abandon noir" :
+            print("Le joueur blanc a gagné la partie par abandon.")
