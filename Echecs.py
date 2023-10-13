@@ -221,7 +221,7 @@ def debut_partie():
             Etat = Echecs.charger(fichier)
             choisir_partie(choix2)
         except :
-            print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help."
+            print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
             debut_partie()
                   
     # affiche le mode d'emploi
