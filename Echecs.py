@@ -129,7 +129,7 @@ class Echecs(Jeu) :
                 
             elif isinstance(c,Pion) :
                 coup.append(coup)
-        if coups = [] :
+        if coups == [] :
             etat_final = True
             
 
