@@ -93,10 +93,10 @@ class Echecs(Jeu) :
       raison = "Match nul"
 
     # état final par manque de matériel
-    if len(etat.plateau.keys()) <= 4 : 
+    if len(etat.plateau.values()) <= 4 : 
       compteur_blanc = 0
-      for x in etat.plateau.keys() : 
-        if x.est_blanc : 
+      for piece in etat.plateau.values() : 
+        if piece.est_blanc : 
           compteur_blanc += 1
 
     # s'il reste moins de 2 pièces au blanc, vérifie la nature des pièces
