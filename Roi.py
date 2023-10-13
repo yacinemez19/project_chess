@@ -15,6 +15,9 @@ class Roi(Piece):
     coups = set()
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
       if etat.est_case(x+i,y+j):
+        piece_en_prise = etat.plateau.get((x+i,y+j), None)
+        if piece_en_prise is not None and piece_en_prise.est_blanc != self.est_blanc:
+          coups.add((x+i,y+j))
         coups.add((x+i,y+j))
 
     return coups
