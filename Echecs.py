@@ -55,15 +55,10 @@ class Echecs(Jeu) :
     """
     e1 = copy.deepcopy(etat)
     mouv = self.traduire(mouvement)
-<<<<<<< Updated upstream
-    if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
-      raise MovementError
-=======
     print(self.mouvements_autorises(e1, e1.est_blanc))
     print(mouv)
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
->>>>>>> Stashed changes
     piece = e1.plateau.pop(mouv[0])
     e1.plateau[(mouv[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
@@ -161,7 +156,6 @@ class Echecs(Jeu) :
     return [etat_final,raison]
 
   def liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict :
-<<<<<<< Updated upstream
     '''
     :return: dict[tuple,set(tuple)], associe à chaque case du plateau où un coup peut être joué les coups qui peuvent y être joués
     '''
@@ -171,17 +165,6 @@ class Echecs(Jeu) :
         for coup in piece.coups_possibles(etat): 
           coups.setdefault(coup,set()).add(tuple(piece.position))
     return coups 
-=======
-    coups = {}
-    for position in etat.plateau :
-      coups[position] = set()
-    for position, piece in etat.plateau.items() : 
-      if piece.est_blanc == est_blanc : 
-        if position in piece.coups_possibles(etat) : 
-          coups[position].add(piece.nom)
-
-    return coups  
->>>>>>> Stashed changes
 
   @staticmethod
   def str_en_piece(c : str, pos : [int, int]):
