@@ -388,5 +388,9 @@ class Echecs(Jeu) :
       print("Le joueur noir a gagné la partie par abandon.")
     elif raison_etat_final == "abandon noir" :
       print("Le joueur blanc a gagné la partie par abandon.")
+    elif raison_etat_final == "pat blanc":
+      print("Pat au joueur blanc")
+    elif raison_etat_final == "pat noir":
+      print("Pat au joueur noir")
     sys.exit()
     
