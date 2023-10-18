@@ -47,7 +47,7 @@ def test_coup_echec():
             roi = piece
     assert roi.position == [4,0] and roi.est_blanc is True
     assert (3, 1) in etat.plateau[(4,2)].coups_possibles(etat) 
-    assert roi.coups_possibles_echec(etat) == set()
+    assert roi.coups_possibles(etat, True) == set()
 
 def test_coups_adverses():
     partie = Echecs()

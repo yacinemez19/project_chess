@@ -266,7 +266,7 @@ class Echecs(Jeu) :
             fichier = input("Donnez le chemin du fichier à charger.")
             etat = self.charger(fichier)
         except :
-            print("Votre chemin n'est pas valide. Si le fichier eset dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
+            print("Votre chemin n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
             self.debut_partie()
           
         self.fin_partie(self.etat_final(etat, historique))
@@ -323,7 +323,7 @@ class Echecs(Jeu) :
         self.afficher_aide() 
       elif mouv == "quit" : 
         sys.exit()
-      elif mouv == "abondon" : 
+      elif mouv == "abandon" : 
         if etat.est_blanc:
           self.fin_partie('abandon blanc')
         else :

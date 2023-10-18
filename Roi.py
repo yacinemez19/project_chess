@@ -34,7 +34,7 @@ class Roi(Piece):
     coups = set()
     for piece in etat.plateau.values() : 
       if piece.est_blanc != self.est_blanc : 
-        coups = coups | piece.coups_possibles(etat)
+        coups = coups | piece.coups_possibles(etat, False)
     return coups  
 
   def est_echec(self, etat : EtatEchecs):

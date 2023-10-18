@@ -1,5 +1,6 @@
 from Piece import *
 from EtatEchecs import *
+from Roi import Roi
 
 class Cavalier(Piece):
   def __init__(self,position : tuple,est_blanc) : 
@@ -7,7 +8,7 @@ class Cavalier(Piece):
     self.nom = 'C' if est_blanc else 'c'
     self.valeur = 3
 
-  def coups_possibles(self,etat) -> set:
+  def coups_possibles(self,etat, verif_echec) -> set:
     x = self.position[0]
     y = self.position[1]
     coups = set()
@@ -17,7 +18,8 @@ class Cavalier(Piece):
         mouv1 = etat.plateau.get((x+a,y+b), None)
         mouv2 = etat.plateau.get((x+b,y+a), None)
         if mouv1 is None or mouv1.est_blanc != self.est_blanc:
-          if etat.est_case(x+a,y+b):
+          piece_en_prise = etat.plateau.get((x+a,y+b), None)
+          if etat.est_case(x+a,y+b) and (piece_en_prise is None or piece_en_prise.est_blanc != self.est_blanc):
             coups.add((x+a,y+b))
         if mouv2 is None or mouv2.est_blanc != self.est_blanc:
           if etat.est_case(x+b,y+a):
