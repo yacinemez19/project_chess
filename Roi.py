@@ -9,17 +9,7 @@ class Roi(Piece):
     #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
 
-  def coups_possibles(self,etat) -> set:
-    x = self.position[0]
-    y = self.position[1]
-    coups = set()
-    for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
-      piece_en_prise = etat.plateau.get((x+i,y+j), None)
-      if etat.est_case(x+i,y+j) and (piece_en_prise is None or piece_en_prise.est_blanc != self.est_blanc):
-        coups.add((x+i,y+j))
-    return coups
-  
-  def coups_possibles_echec(self, etat) -> set:
+  def coups_possibles(self, etat, verif_echec : bool) -> set:
     '''
     methode qui test les coups possibles en testant si cela met le roi en echec
     '''
@@ -29,7 +19,7 @@ class Roi(Piece):
     for i, j in [(1,1),(-1,1),(-1,-1),(1,-1),(1,0),(0,1),(-1,0),(0,-1)]:
       piece_en_prise = etat.plateau.get((x+i,y+j), None)
       if etat.est_case(x+i,y+j) and (piece_en_prise is None or piece_en_prise.est_blanc != self.est_blanc):   
-        if self.met_en_echec(etat,tuple(self.position), (x+i,y+j)):
+        if not verif_echec or self.met_en_echec(etat,tuple(self.position), (x+i,y+j)):
           coups.add((x+i,y+j))
 
     return coups
