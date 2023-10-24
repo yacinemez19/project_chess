@@ -52,13 +52,12 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouvement, etat) :
+  def deplacer(self, mouv, etat) :
     """
     :mouvement: [position1,position2]
     :return: état modifié
     """
     e1 = copy.deepcopy(etat)
-    mouv = self.traduire(mouvement)
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
     piece = e1.plateau.pop(mouv[0], None)
@@ -352,7 +351,7 @@ class Echecs(Jeu) :
         mouv = self.strategie(etat,joueur1)
       else : 
         mouv = self.strategie(etat,joueur2)
-      etat = copy.deepcopy(self.deplacer(mouv, etat))
+      etat = copy.deepcopy(self.deplacer(self.traduire(mouv), etat))
     except MovementImpossibleError:
       print('Mouvement Impossible')
       self.jouer_coup(joueur1, joueur2, etat)
