@@ -44,7 +44,7 @@ class Jeu:
     def max_valeur(etat) :
       if jeu.est_final(etat):
         return jeu.valeur(etat,j)
-      v = −math.inf
+      v = (-math.inf)
       for (m,s) in jeux.suivants(etat) : 
         v = max(v , min_valeur(s))
       return v
