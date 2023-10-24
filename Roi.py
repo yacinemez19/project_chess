@@ -9,7 +9,7 @@ class Roi(Piece):
     #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
 
-  def coups_possibles(self, etat, verif_echec : bool) -> set:
+  def coups_possibles(self, etat, verif_echec : bool = False) -> set:
     '''
     methode qui test les coups possibles en testant si cela met le roi en echec
     '''

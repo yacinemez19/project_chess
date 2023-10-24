@@ -8,7 +8,7 @@ class Pion(Piece):
         self.nom = 'P' if est_blanc else 'p'
         self.valeur = 1
 
-    def coups_possibles(self, etat : EtatEchecs) -> set:
+    def coups_possibles(self, etat : EtatEchecs, verif_echec : bool = False, roi : Roi = None) -> set:
         x = self.position[0]
         y = self.position[1]
         coups = set()
@@ -21,9 +21,11 @@ class Pion(Piece):
         if y != 7 and y != 0 :
             #test si le pion peut avancer (ou reculer)
             if not (x, y+dir) in etat.plateau:
-                coups.add((x, y+dir))
+                if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x,y+dir)):
+                    coups.add((x, y+dir))
 
             for i in [-1, 1] :
                 if (x+i, y+dir) in etat.plateau and etat.plateau[x+i,y+dir].est_blanc != self.est_blanc:
-                    coups.add((x+i,y+dir))
+                    if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x+i,y+dir)):
+                        coups.add((x+i,y+dir))
         return coups

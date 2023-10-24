@@ -16,7 +16,10 @@ class InputError1(Exception) :
 class InputError2(Exception) : 
   pass
 
-class MovementError(Exception):
+class PieceNotExistError(Exception):
+  pass
+
+class MovementImpossibleError(Exception):
   pass
 
 class Echecs(Jeu) : 
@@ -31,8 +34,8 @@ class Echecs(Jeu) :
     try: 
       # vérifie qu'il s'agit d'un déplacement
       if mouv_str[0] in colonnes : 
-        position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1]-1))
-        position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4]-1))
+        position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
+        position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
         if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
           raise IndexError
           
@@ -55,11 +58,14 @@ class Echecs(Jeu) :
     """
     e1 = copy.deepcopy(etat)
     mouv = self.traduire(mouvement)
-    print(self.mouvements_autorises(e1, e1.est_blanc))
-    print(mouv)
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
-    piece = e1.plateau.pop(mouv[0])
+    piece = e1.plateau.pop(mouv[0], None)
+    if piece == None :
+      raise PieceNotExistError
+    if mouv[1] not in piece.coups_possibles(etat):
+      raise MovementImpossibleError
+    piece.position = mouv[1]
     e1.plateau[(mouv[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
     return e1
@@ -94,7 +100,7 @@ class Echecs(Jeu) :
       # vérifie s'il y a échec et mat
     for piece in etat.plateau.values() : 
       if isinstance(piece, Roi) :
-        etat_final = piece.est_echec and piece.coups_possibles == []
+        etat_final = piece.est_echec(etat) and piece.coups_possibles(etat, True) == []
         if etat_final == True :
           couleur = piece.est_blanc
 
@@ -345,11 +351,14 @@ class Echecs(Jeu) :
         mouv = self.strategie(etat,joueur1)
       else : 
         mouv = self.strategie(etat,joueur2)
-      etat = self.deplacer(mouv, etat)
-    except MovementError:
+      etat = copy.deepcopy(self.deplacer(mouv, etat))
+    except MovementImpossibleError:
       print('Mouvement Impossible')
       self.jouer_coup(joueur1, joueur2, etat)
-    return mouv
+    except PieceNotExistError:
+      print('Il n\' y a pas de piece a cet endroit')
+      self.jouer_coup(joueur1, joueur2, etat)
+    return mouv, etat
       
 
   # déroulé de la partie
@@ -366,8 +375,8 @@ class Echecs(Jeu) :
       if len(historique) > 50 :
         historique.pop(0)
       self.afficher(etat)
-      mouv = self.jouer_coup(joueur1, joueur2, etat)
-      piece_jouee = etat.plateau[self.traduire(mouv)[0]]
+      mouv, etat = self.jouer_coup(joueur1, joueur2, etat)
+      piece_jouee = etat.plateau[self.traduire(mouv)[1]]
       historique.append([mouv, piece_jouee])
     return historique
   
