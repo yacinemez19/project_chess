@@ -402,4 +402,6 @@ class Echecs(Jeu) :
     elif raison_etat_final == "pat noir":
       print("Pat au joueur noir")
     sys.exit()
-    
+
+  def suivants(etat) : 
+    return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat) ]
