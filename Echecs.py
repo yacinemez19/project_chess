@@ -6,6 +6,7 @@ from Fou import *
 from Dame import *
 from Roi import *
 from Cavalier import *
+import math
 import copy
 import sys
 
