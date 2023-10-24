@@ -9,6 +9,7 @@ class Tour(Piece):
         self.valeur = 5
 
     def coups_possibles(self, etat : EtatJeu, verif_echec : bool = False, roi : Roi = None) -> set:
+        assert not verif_echec or not roi is None
         x = self.position[0]
         y = self.position[1]
         coups = set()
@@ -16,12 +17,12 @@ class Tour(Piece):
         for i,j in [(1,0), (-1, 0), (0, 1), (0, -1)]:
             n = 1
             while etat.est_case(x+(i*n),y+(j*n)) and not (x+(i*n),y+(j*n)) in etat.plateau:
-                if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x+(i*n),y+(j*n))):
+                if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x+(i*n),y+(j*n))):
                     coups.add((x+(i*n),y+(j*n)))
                 n+=1
             piece_en_prise = etat.plateau.get((x+(i*n),y+(j*n)), None)
             if piece_en_prise is not None and piece_en_prise.est_blanc != self.est_blanc:
-                if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x+(i*n),y+(j*n))):
+                if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x+(i*n),y+(j*n))):
                     coups.add((x+(i*n),y+(j*n))) 
 
         return coups

@@ -29,9 +29,10 @@ class Jeu:
         
     def afficher(self, etat):
         pass
-
+    
+    '''
     def joueur_minimax(jeu,etat):
-      '''Etant donne un etat de jeu calcule le meilleur mouvement en cherchant en profondeur tous les etats jusqu'aux etats terminaux'''
+      #Etant donne un etat de jeu calcule le meilleur mouvement en cherchant en profondeur tous les etats jusqu'aux etats terminaux
       j = jeu.joueur(etat)
       # decision minmax #
       tab_suivants = jeu.suivants(etat)
@@ -39,7 +40,7 @@ class Jeu:
       M = max( min_suivants )
       mouvement , e = tab_suivants[min_suivants.index(M)]
       return mouvement
-
+    
     # max valeur #
     def max_valeur(etat) :
       if jeu.est_final(etat):
@@ -48,7 +49,8 @@ class Jeu:
       for (m,s) in jeux.suivants(etat) : 
         v = max(v , min_valeur(s))
       return v
-  
+    
+      
     # min valeur #
     def min_valeur(etat) :
       if jeu.est_final(etat)
@@ -57,7 +59,7 @@ class Jeu:
       for (m,s) in jeux.suivants(etat) : 
         v = min(v , min_valeur(s))
       return v
-    
+    '''
     def __repr__(self):
         pass
     def __str__(self):

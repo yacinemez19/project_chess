@@ -21,11 +21,11 @@ class Pion(Piece):
         if y != 7 and y != 0 :
             #test si le pion peut avancer (ou reculer)
             if not (x, y+dir) in etat.plateau:
-                if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x,y+dir)):
+                if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x,y+dir)):
                     coups.add((x, y+dir))
 
             for i in [-1, 1] :
                 if (x+i, y+dir) in etat.plateau and etat.plateau[x+i,y+dir].est_blanc != self.est_blanc:
-                    if not verif_echec or roi.met_en_echec(etat, tuple(self.position), (x+i,y+dir)):
+                    if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x+i,y+dir)):
                         coups.add((x+i,y+dir))
         return coups

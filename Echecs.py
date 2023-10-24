@@ -403,5 +403,5 @@ class Echecs(Jeu) :
       print("Pat au joueur noir")
     sys.exit()
 
-  def suivants(etat) : 
+  def suivants(self, etat) : 
     return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat) ]
