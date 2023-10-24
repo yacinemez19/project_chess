@@ -51,7 +51,7 @@ class Jeu:
   
     # min valeur #
     def min_valeur(etat) :
-      if jeu.est_final(etat)
+      if jeu.est_final(etat):
         return jeu.valeur(etat,j)
       v = math.inf
       for (m,s) in jeux.suivants(etat) : 
