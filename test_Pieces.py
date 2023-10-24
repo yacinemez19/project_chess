@@ -63,3 +63,10 @@ def test_pat():
     assert roi.position == [6,7] and roi.est_blanc is False
     assert roi.est_echec(etat) is None
     assert roi.coups_possibles_echec(etat) == set()
+
+def test_cloue():
+    partie = Echecs()
+    etat = partie.charger('test_cloue.txt')
+    cavalier = etat.plateau[(4,6)]
+    roi = etat.plateau[(4,7)]
+    assert cavalier.coups_possibles(etat,True,roi)
