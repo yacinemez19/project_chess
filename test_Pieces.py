@@ -60,7 +60,16 @@ def test_coups_adverses():
 def test_pat():
     partie = Echecs()
     etat = partie.charger('test_pat.txt')
+    etat.est_blanc = False
     roi = etat.plateau[(6,7)]
-    assert roi.position == [6,7] and roi.est_blanc is False
-    assert roi.est_echec(etat) is False
+    assert roi.position == [6,7] and not roi.est_blanc
+    assert not roi.est_echec(etat) 
     assert roi.coups_possibles(etat, True) == set()
+    assert partie.etat_final(etat, []) == (True, 'Match nul')
+
+def test_cloue():
+    partie = Echecs()
+    etat = partie.charger('test_cloue.txt')
+    cavalier = etat.plateau[(4,6)]
+    roi = etat.plateau[(4,7)]
+    assert cavalier.coups_possibles(etat,True,roi) == set()
