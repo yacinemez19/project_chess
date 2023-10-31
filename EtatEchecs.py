@@ -1,10 +1,12 @@
 from EtatJeu import EtatJeu
 
 class EtatEchecs(EtatJeu):
-    def __init__(self, Joueur: bool, Valeur: int, Plateau: dict, Mouvements: list):
+    def __init__(self, Joueur: bool, Valeur: int, Plateau: dict):
         self.est_blanc = Joueur
         self.Valeur = Valeur
         self.plateau = Plateau
+        self.roi_blanc = None
+        self.roi_noir = None
         #Mouvements = self.mouvements = [(x,y) for x in range(8) for y in range (8)]
 
     def __str__(self):
@@ -12,8 +14,18 @@ class EtatEchecs(EtatJeu):
       for y in range(8):
         for x in range(8):
           p = self.plateau.get((x,7-y), '.')
+          txt += str(p) + ' | '
+        txt += '\n'
+      return txt
+    
+    def __repr__(self):
+      txt = ''
+      for y in range(8):
+        for x in range(8):
+          p = self.plateau.get((x,7-y), '.')
           txt += str(p)
         txt += '\n'
+      txt += self.est_blanc
       return txt
 
     '''

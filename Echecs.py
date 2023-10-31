@@ -33,19 +33,12 @@ class Echecs(Jeu) :
     
     try: 
       # vérifie qu'il s'agit d'un déplacement
-      if mouv_str[0] in colonnes : 
-        position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
-        position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
-        if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
-          raise IndexError
-          
-      # sinon, si le mouvement est valide, il d'agit d'une capture de pièce
-      else :  
-        position1 = (colonnes.index(mouv_str[1]),int(mouv_str[2]))
-        position2 = (colonnes.index(mouv_str[4]),int(mouv_str[5]))
-        if int(mouv_str[2]) > 8 or int(mouv_str[5]) > 8  :
-          raise IndexError
-        
+      if not mouv_str[0] in colonnes : 
+        raise MovementImpossibleError
+      position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
+      position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
+      if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
+        raise IndexError
     except: 
       return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
     
@@ -61,9 +54,9 @@ class Echecs(Jeu) :
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
     piece = e1.plateau.pop(mouv[0], None)
-    if piece == None :
+    if piece == None or piece.est_blanc != etat.est_blanc:
       raise PieceNotExistError
-    if mouv[1] not in piece.coups_possibles(etat):
+    if mouv[1] not in piece.coups_possibles(etat, True):
       raise MovementImpossibleError
     piece.position = mouv[1]
     e1.plateau[(mouv[1])] = piece
@@ -79,7 +72,6 @@ class Echecs(Jeu) :
     for (x,y) in self.liste_coups_possibles(etat, joueur) : 
       for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
         mouvs.append([(a,b),(x,y)])
-
     return mouvs
         
   def valeur(self, etat, joueur) :
@@ -89,7 +81,20 @@ class Echecs(Jeu) :
         sum_valeur += piece.valeur
 
     return sum_valeur
-              
+  
+  def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool):
+    '''
+      verifie si un joueur d'une couleur donnee n'est pas en echec et mat ou en pat
+      renvoie False, False s'il n'y a ni echec ni pat
+              True, False si pat
+              True, True si echec et mat
+    '''
+    for piece in etat.plateau.values():
+      if piece.est_blanc == joueur_est_blanc and piece.coups_possibles(etat, True) != set():
+        return False, False
+    roi = self.roi_blanc if joueur_est_blanc else etat.roi_noir
+    return True, roi.est_echec(etat)
+
   def etat_final(self, etat, historique) : 
     '''
     :historique: ["mouvement"] pour les mouvements déjà joués moins de 50 tours auparavant
@@ -97,12 +102,14 @@ class Echecs(Jeu) :
     '''
 
     raison = None
-      # vérifie s'il y a échec et mat
-    for piece in etat.plateau.values() : 
+    etat_final = False
+      # vérifie s'il y a échec et mat(fonctionne pas j'ai remplace par la methode verif_echec_et_mat)
+      # mon code est temporaire juste pour les test
+    '''for piece in etat.plateau.values() : 
       if isinstance(piece, Roi) :
         etat_final = piece.est_echec(etat) and piece.coups_possibles(etat, True) == []
         if etat_final == True :
-          couleur = piece.est_blanc
+          couleur = piece.est_blanc 
 
     # La raison de l'état final est que le roi est en échec et mat
     if etat_final == True and raison == None:
@@ -110,11 +117,17 @@ class Echecs(Jeu) :
         raison = "Echec et mat blanc"
       else : 
         raison = "Echec et mat noir"
-
+        
     # etat_final car plus de mouvements autorisés
     etat_final = self.mouvements_autorises(etat, etat.est_blanc) == None
     if etat_final == True and raison == None:
-      raison = "Match nul"
+      raison = "Match nul"    
+        '''
+    if self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, False):
+      return True, 'Match nul'
+    elif self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, True):
+      raison = 'Echec et mat blanc' if etat.est_blanc else 'Echec et mat noir'
+      return True, raison
 
     # état final par manque de matériel
     if len(etat.plateau.keys()) <= 4 : 
@@ -138,7 +151,7 @@ class Echecs(Jeu) :
       if len(couleurs_C) == 2 and couleurs_C[0] == couleurs_C[1] : 
         etat_final = True
       
-    if historique != [] :
+    if len(historique) >= 6 :
         #règle des trois coups
       for a in historique[::2]:
         for b in historique[1::2] : 
@@ -155,11 +168,10 @@ class Echecs(Jeu) :
               coups.append(coup)
       if coups == [] :
           etat_final = True
-        
 
     if etat_final == True and raison == None:
       raison = "Match nul"
-    return [etat_final,raison]
+    return etat_final, raison
 
   def liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict :
     '''
@@ -215,15 +227,16 @@ class Echecs(Jeu) :
           x = j
           y = 7 - i
           plateau[x, y] = self.str_en_piece(p, [x, y])
-    etat = EtatEchecs(True, 3, plateau, []) #True car quand on charge la partie on sait pas si blanc ou noir commence
+    etat = EtatEchecs(True, 3, plateau) #True car quand on charge la partie on sait pas si blanc ou noir commence
+    etat.roi_blanc = self.recherche_roi(etat, True)
+    etat.roi_noir = self.recherche_roi(etat, False)
     return etat
   
   def afficher(self, etat) -> None:
     '''
     affiche le plateau suivant l'etat donne 
     '''
-    print(etat)
-    print('abcdefgh')
+    print(etat, '_______________________________', '\na | b | c | d | e | f | g | h |')
     return None
 
   def enregister(self, etat, nom) -> None:
@@ -263,22 +276,19 @@ class Echecs(Jeu) :
       # nouvelle partie
       if choix1 == 'n' : 
         etat = self.charger('Nouvelle_partie.txt')
-        historique = self.choisir_partie(etat, choix2)
-        self.fin_partie(self.etat_final(etat, historique))
-
+        self.choisir_partie(etat, choix2)
       # partie chargée
-      elif choix1 == 'a' : 
+      elif choix1 == 'a' :
         try : 
             fichier = input("Donnez le chemin du fichier à charger.")
             etat = self.charger(fichier)
         except :
             print("Votre chemin n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
             self.debut_partie()
-          
-        self.fin_partie(self.etat_final(etat, historique))
+        self.choisir_partie(etat, choix2)
             
       # affiche le mode d'emploi
-      elif choix1 == help : 
+      elif choix1 == 'help' : 
           self.afficher_aide()
 
       # Si l'input ne fait pas partie des choix, lève une erreur
@@ -302,14 +312,14 @@ class Echecs(Jeu) :
     '''
     p = None
     if choix == 'j' : 
-        p = self.partie('humain', 'humain', etat)
+        self.partie('humain', 'humain', etat)
     elif choix == 'i' : 
-        p = self.partie('humain','IA', etat)
+        self.partie('humain','IA', etat)
     elif choix == 'ii' : 
-        p = self.partie('IA','IA', etat)
+        self.partie('IA','IA', etat)
     else :
         raise InputError2
-    return p
+    return None
       
   def afficher_aide() : 
     ''' affiche le manuel d'utilisation du jeu'''
@@ -324,7 +334,9 @@ class Echecs(Jeu) :
     '''
     
     if joueur == "humain" : 
-      mouv = input("Quel mouvement voulez-vous jouer ?")
+      couleur = 'blancs' if etat.est_blanc else 'noirs'
+      print('Trait aux ', couleur)
+      mouv = input("Quel mouvement voulez-vous jouer ? ")
       if mouv == "help" : 
         self.afficher_aide() 
       elif mouv == "quit" : 
@@ -341,36 +353,41 @@ class Echecs(Jeu) :
         pass
   
   def jouer_coup(self, joueur1, joueur2, etat):
-    ''' joue le coup choisi pour ce tour par le joueur selon sa stratégie (son type).
+    ''' 
+    Joue le coup choisi pour ce tour par le joueur selon sa stratégie (son type).
     :joueur1: str, "humain" ou "IA"
     :joueur2: str, "humain" ou "IA"
     :return: mouvement joué (str)
     '''
     try : 
+      e1 = copy.deepcopy(etat)
       if etat.est_blanc == True :
-        mouv = self.strategie(etat,joueur1)
+        mouv = self.strategie(e1,joueur1)
       else : 
-        mouv = self.strategie(etat,joueur2)
-      etat = copy.deepcopy(self.deplacer(mouv, etat))
+        mouv = self.strategie(e1,joueur2)
+      e1 = self.deplacer(mouv, etat)
     except MovementImpossibleError:
       print('Mouvement Impossible')
-      self.jouer_coup(joueur1, joueur2, etat)
+      mouv, e1 = self.jouer_coup(joueur1, joueur2, etat)
     except PieceNotExistError:
-      print('Il n\' y a pas de piece a cet endroit')
-      self.jouer_coup(joueur1, joueur2, etat)
-    return mouv, etat
+      print('Il n\' y a pas de piece vous appartenant a cet endroit')
+      mouv, e1 = self.jouer_coup(joueur1, joueur2, etat)
+    return mouv, e1
       
 
   # déroulé de la partie
-  def partie(self,joueur1, joueur2, etat) :
-    ''' déroule la partie de son commencement à l'état final
+  def partie(self, joueur1 : str, joueur2 : str, etat : EtatEchecs) :
+    ''' 
+    Déroule la partie de son commencement à l'état final
+    :etat: etat du jeu
     :joueur1: str, "humain" ou "IA"
     :joueur2: str, "humain" ou "IA"
     :return: historique des mouvements, list[list[tuple]]
     '''
     historique = []
+    est_fin = False
     # déroulé de la partie
-    while not(self.etat_final(etat, historique)[0]) :
+    while not est_fin :
       # règle des 50
       if len(historique) > 50 :
         historique.pop(0)
@@ -378,11 +395,27 @@ class Echecs(Jeu) :
       mouv, etat = self.jouer_coup(joueur1, joueur2, etat)
       piece_jouee = etat.plateau[self.traduire(mouv)[1]]
       historique.append([mouv, piece_jouee])
-    return historique
+      etat.roi_blanc = self.recherche_roi(etat, True)
+      etat.roi_noir = self.recherche_roi(etat, False)
+      est_fin, raison = self.etat_final(etat, historique)
   
+    self.fin_partie(raison)  
+    return None
+  
+  def recherche_roi(self, etat : EtatEchecs, roi_est_blanc : bool):
+    '''
+      Retourne le roi de la coulour souhaite
+      :param etat: etat du jeu
+      :param roi_est_blanc: True si le roi a chercher est blanc, False sinon
+    '''
+    for piece in etat.plateau.values():
+      if isinstance(piece, Roi) and piece.est_blanc == roi_est_blanc:
+        return piece
+
   # fin de partie
   def fin_partie(self,raison_etat_final) :
-    ''' met fin à la partie quand l'état final est atteint ou qu'il y a un abandon.
+    ''' 
+    Met fin à la partie quand l'état final est atteint ou qu'il y a un abandon.
     :raison_etat_final: self.etat_final[1], str
     '''
     
@@ -401,6 +434,8 @@ class Echecs(Jeu) :
       print("Pat au joueur blanc")
     elif raison_etat_final == "pat noir":
       print("Pat au joueur noir")
+    else: 
+      print('prblm')
     sys.exit()
 
   def suivants(self, etat) : 

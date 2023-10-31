@@ -8,7 +8,8 @@ class Dame(Piece):
         self.nom = 'D' if est_blanc else 'd'
         self.valeur = 9
 
-    def coups_possibles(self, etat, verif_echec : bool = False, roi : Roi = None) -> set:
+    def coups_possibles(self, etat, verif_echec : bool = False) -> set:
+        roi = etat.roi_blanc if self.est_blanc else etat.roi_noir
         x = self.position[0]
         y = self.position[1]
         coups = set()

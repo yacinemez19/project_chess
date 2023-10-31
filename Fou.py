@@ -8,7 +8,8 @@ class Fou(Piece):
         self.nom = 'F' if est_blanc else 'f'
         self.valeur = 3
 
-    def coups_possibles(self, etat, verif_echec = False, roi : Roi = None) -> set:
+    def coups_possibles(self, etat, verif_echec = False) -> set:
+        roi = etat.roi_blanc if self.est_blanc else etat.roi_noir
         x = self.position[0]
         y = self.position[1]
         coups = set()

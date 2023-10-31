@@ -8,8 +8,8 @@ class Tour(Piece):
         self.nom = 'T' if est_blanc else 't'
         self.valeur = 5
 
-    def coups_possibles(self, etat : EtatJeu, verif_echec : bool = False, roi : Roi = None) -> set:
-        assert not verif_echec or not roi is None
+    def coups_possibles(self, etat : EtatJeu, verif_echec : bool = False) -> set:
+        roi = etat.roi_blanc if self.est_blanc else etat.roi_noir
         x = self.position[0]
         y = self.position[1]
         coups = set()
