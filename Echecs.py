@@ -6,6 +6,7 @@ from Fou import *
 from Dame import *
 from Roi import *
 from Cavalier import *
+import math
 import copy
 import sys
 
@@ -44,13 +45,12 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouvement, etat) :
+  def deplacer(self, mouv, etat) :
     """
     :mouvement: [position1,position2]
     :return: état modifié
     """
     e1 = copy.deepcopy(etat)
-    mouv = self.traduire(mouvement)
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
     piece = e1.plateau.pop(mouv[0], None)
@@ -438,5 +438,5 @@ class Echecs(Jeu) :
       print('prblm')
     sys.exit()
 
-  def suivants(self, etat) : 
+  def suivants(self,etat) : 
     return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat) ]
