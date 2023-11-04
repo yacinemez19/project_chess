@@ -65,7 +65,7 @@ class Echecs(Jeu) :
       
   def mouvements_autorises(self, etat, joueur) : 
     ''' 
-    :joueur: est_blanc:
+    :joueur: est_blanc
     :return: [[position1, position2]] si [position1,position2] mouvement possible pour ce joueur
     '''
     mouvs = []
@@ -443,21 +443,50 @@ class Echecs(Jeu) :
     return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat,joueur) ]
       
   def construire_dict_mouvs(self,position, prof_max,etat):
+    """renvoie dict_mouvs tel que chaque position pouvant être jouée jusqu'à la profondeur 3 soit associé à chaque posiiton pouvant être jouée à partir de cette position
+
+    Args:
+        position (tuple(int)): position à partir de laquelle on commence à remplir dict_mouvs
+          prof_max (int): profondeur à laquelle on s'arrête de remplir dict_mouvs
+          etat (EtatEchecs): etat après avoir joué position
+
+    Returns:
+        dict[tuple]: dictionnaire associant chaque position pouvant être jouée jusqu'à la profondeur 3 à chaque posiiton pouvant être jouée à partir de cette position
+    """
     dict_mouvs = {}
     
-    def nouvelle_prof(position, prof,etat):
+    def nouvelle_prof(position, prof,etat, prof_max):
+      """remplit dict_mouvs de telle sorte que chaque position pouvant être jouée jusqu'à la profondeur 3 soit associé à chaque posiiton pouvant être jouée à partir de cette position
+
+      Args:
+          position (tuple(int)): position à partir de laquelle on commence à remplir dict_mouvs
+          prof (int): profondeur à laquelle on est depuis position
+          prof_max (int): profondeur à laquelle on s'arrête de remplir dict_mouvs
+          etat (EtatEchecs): etat après avoir joué position
+
+      Returns: None
+      """
       if prof > prof_max:
           return None
       mouvs = (etat.plateau[position]).coups_possibles(etat)
       elmts_dict = ((m,self.deplacer(m,etat)) for m in mouvs)
       dict_mouvs[position] = elmts_dict
       for position_suivante in mouvs:
-          nouvelle_prof(position_suivante, prof+1, self.deplacer([position,position_suivante],etat))
+          nouvelle_prof(position_suivante, prof+1, self.deplacer([position,position_suivante],etat),prof_max)
 
-    nouvelle_prof(position, 0,etat)
+    nouvelle_prof(position, 0,etat, prof_max)
     return dict_mouvs
 
   def graphe_jeu(self,etat, position) :
+    """crée un graphe des possibilités de jeu après avoie joué à position en dernier
+
+    Args:
+        etat (EtatEchecs): état après avoir joué à position
+        position (tuple(int)): coordonées d'arrivée de la pièce déplacée en dernier
+
+    Returns:
+        Graphe: graphe des possibilités de jeu après avoie joué à position en dernier
+    """
     mouvs = self.construire_dict_mouvs(position, 3, etat)
     mouvements_graphe = set()
     for position1 in mouvs.keys():
@@ -466,7 +495,18 @@ class Echecs(Jeu) :
     return Graphe({x for x in mouvs.keys()},mouvements_graphe, position)
     
   def alphabeta_valeur(self,noeud, profondeur, alpha, beta, joueur_max) :
-    
+    """retourne la valeur d'un noeud donné selon si le joueur après ce noeud est le joueur max ou min
+
+    Args:
+        noeud (Graphe): noeud dont on veut calculer la valeur 
+        profondeur (int): profondeur à laquelle on s'arrête et donne la valeur du plateau
+        alpha (int): valeur max des autres noeuds de même profondeur que noeud
+        beta (int): valeur min des autres noeuds de même profondeur que noeud
+        joueur_max (boolean): vrai si le joueur jouant après ce noeud est le joueur maximisant ses noeuds
+
+    Returns:
+        int: valeur du noeud donné
+    """
     if profondeur == 0 or noeud.est_feuille:
       valeur0 = self.valeur(noeud.noeud_initial[1],joueur_max)-self.valeur(noeud.noeud_initial[1],not joueur_max)
       return valeur0
@@ -479,7 +519,7 @@ class Echecs(Jeu) :
         valeur_noeud = max(valeur_noeud, valeur_fils)
         alpha = max(alpha, valeur_noeud)
 
-        # si la valeur de ce noeud est superieure à celle des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
+        # si la valeur de ce noeud est superieure au minimum des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
         if beta <= alpha:
           break
       return valeur_noeud
@@ -491,14 +531,21 @@ class Echecs(Jeu) :
         valeur_fils = self.alphabeta_valeur(graphe_fils, profondeur - 1, alpha, beta, True)
         valeur_noeud = min(valeur_noeud, valeur_fils)
 
-        # si la valeur de ce noeud est inferieure à celle des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
+        # si la valeur de ce noeud est inferieure au maximum des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
         beta = min(beta, valeur_noeud)
         if beta <= alpha:
           break
       return valeur_noeud
 
   def joueur_alphabeta(self,etat):
-    '''Etant donne un etat de jeu calcule le meilleur mouvement en             cherchant en profondeur tous les etats jusqu'à la profondeur 3'''
+    """Etant donne un etat de jeu calcule le meilleur mouvement en cherchant en profondeur tous les etats jusqu'à la profondeur 3
+
+    Args:
+        etat (EtatEchecs): état du jeu au moment où le joueur alphabeta doit jouer
+
+    Returns:
+        [position1,position2]: coup joué par le joueur alphabeta
+    """
     j = etat.est_blanc
     alpha = (-math.inf)
     beta = math.inf
