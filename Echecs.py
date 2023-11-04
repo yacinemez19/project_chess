@@ -72,6 +72,7 @@ class Echecs(Jeu) :
     for (x,y) in self.liste_coups_possibles(etat, joueur) : 
       for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
         mouvs.append([(a,b),(x,y)])
+    print(mouvs)
     return mouvs
         
   def valeur(self, etat, joueur) :
@@ -438,5 +439,79 @@ class Echecs(Jeu) :
       print('prblm')
     sys.exit()
 
-  def suivants(self,etat) : 
-    return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat) ]
+  def suivants(self,etat, joueur) : 
+    return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat,joueur) ]
+      
+  def construire_dict_mouvs(self,position, prof_max,etat):
+    dict_mouvs = {}
+    
+    def nouvelle_prof(position, prof,etat):
+      if prof > prof_max:
+          return None
+      mouvs = (etat.plateau[position]).coups_possibles(etat)
+      elmts_dict = ((m,self.deplacer(m,etat)) for m in mouvs)
+      dict_mouvs[position] = elmts_dict
+      for position_suivante in mouvs:
+          nouvelle_prof(position_suivante, prof+1, self.deplacer([position,position_suivante],etat))
+
+    nouvelle_prof(position, 0,etat)
+    return dict_mouvs
+
+  def graphe_jeu(self,etat, position) :
+    mouvs = self.construire_dict_mouvs(position, 3, etat)
+    mouvements_graphe = set()
+    for position1 in mouvs.keys():
+      for position2 in mouvs[position1] : 
+        mouvements_graphe.add((position1, position2))
+    return Graphe({x for x in mouvs.keys()},mouvements_graphe, position)
+    
+  def alphabeta_valeur(self,noeud, profondeur, alpha, beta, joueur_max) :
+    
+    if profondeur == 0 or noeud.est_feuille:
+      valeur0 = self.valeur(noeud.noeud_initial[1],joueur_max)-self.valeur(noeud.noeud_initial[1],not joueur_max)
+      return valeur0
+        
+    elif joueur_max : 
+      valeur_noeud = (-math.inf)
+      for fils in noeud.adj:
+        graphe_fils =  self.graphe_jeu(fils[1],fils[0])
+        valeur_fils = self.alphabeta_valeur(graphe_fils, profondeur - 1, alpha, beta, False)
+        valeur_noeud = max(valeur_noeud, valeur_fils)
+        alpha = max(alpha, valeur_noeud)
+
+        # si la valeur de ce noeud est superieure à celle des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
+        if beta <= alpha:
+          break
+      return valeur_noeud
+        
+    else:
+      valeur_noeud = math.inf
+      for fils in noeud.adj:
+        graphe_fils =  self.graphe_jeu(fils[1],fils[0])
+        valeur_fils = self.alphabeta_valeur(graphe_fils, profondeur - 1, alpha, beta, True)
+        valeur_noeud = min(valeur_noeud, valeur_fils)
+
+        # si la valeur de ce noeud est inferieure à celle des autres noeuds de même profondeur, on s'arrête car l'ennemi n'ira pas sur ce noeud
+        beta = min(beta, valeur_noeud)
+        if beta <= alpha:
+          break
+      return valeur_noeud
+
+  def joueur_alphabeta(self,etat):
+    '''Etant donne un etat de jeu calcule le meilleur mouvement en             cherchant en profondeur tous les etats jusqu'à la profondeur 3'''
+    j = etat.est_blanc
+    alpha = (-math.inf)
+    beta = math.inf
+    valeurs = []
+    # decision alphabeta #
+    for s in self.suivants(etat,etat.est_blanc):
+      gnoeud = self.graphe_jeu(s[1],s[0][1])
+      valeurs.append(self.alphabeta_valeur(gnoeud, 3, alpha, beta, False))
+      beta = min(beta, valeurs[-1])
+    M = max(valeurs)
+    mouvement , e = self.suivants(etat,etat.est_blanc)[valeurs.index(M)]
+    return mouvement
+
+e = Echecs()
+etat = e.charger('Nouvelle_partie.txt')
+mouv = e.joueur_alphabeta(etat)
