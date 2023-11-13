@@ -29,9 +29,8 @@ class MovementImpossibleError(Exception):
 class Echecs(Jeu) : 
   _profondeur = 2
 
-  def traduire(self, mouvement) :
-    '''
-    :mouvement: "mouvement"
+  def traduire(self, mouvement:str) -> list[tuple[int,int]]:
+    ''':mouvement: "mouvement"
     :return: [ancienne position, nouvelle postion]
     '''
     colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
