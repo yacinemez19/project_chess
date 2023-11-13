@@ -1,12 +1,12 @@
 from Piece import *
 from EtatEchecs import *
-from Roi import Roi
+from Roi import *
 
 class Pion(Piece):
     def __init__(self, position, est_blanc : bool) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'P' if est_blanc else 'p'
-        self.valeur = 1
+        self.valeur = 1 if est_blanc else -1
 
 
     def coups_possibles(self, etat : EtatEchecs, verif_echec : bool = False) -> set:
@@ -17,7 +17,7 @@ class Pion(Piece):
         est_premier_coups = y == 1 if self.est_blanc else y == 6
         dir = 1 if self.est_blanc else -1
 
-        if est_premier_coups and not (x, y + 2) in etat.plateau:
+        if est_premier_coups and not (x, y+2*dir) in etat.plateau:
             if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x,y+(2*dir))):
                 coups.add((x,y+(2*dir)))
 

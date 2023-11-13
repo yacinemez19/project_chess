@@ -1,3 +1,6 @@
+from math import inf
+from functools import lru_cache
+
 class Jeu:
     """ 
       Cette classe est destinee a etre heritee par les
@@ -15,21 +18,23 @@ class Jeu:
         pass          
     def valeur(self, etat, joueur):
         "retourne la valeur de etat pour joueur "
+        pass
     def est_final(self, etat):
         return not self.mouvements_autorises(etat)
     def joueur(self, etat):
         "retourne le joueur qui doit jouer dans cet etat"
         return etat.doit_jouer
-    def suivants(self, etat):
+    def suivants(self, etat):  
         """retourne  la liste des etats suivants 
-           suite aux mouvements autorises
+           suite aux mouvements autorises 
+ 
+          :return: list[tuple[mouvement, etat_suivant]]
         """
         return [(m, self.deplacer(m, etat))
                 for m in self.mouvements_autorises(etat)]
-        
     def afficher(self, etat):
         pass
-    
+
     '''
     def joueur_minimax(jeu,etat):
       #Etant donne un etat de jeu calcule le meilleur mouvement en cherchant en profondeur tous les etats jusqu'aux etats terminaux
