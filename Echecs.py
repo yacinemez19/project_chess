@@ -69,7 +69,7 @@ class Echecs(Jeu) :
     e1.est_blanc = not(e1.est_blanc)
     return e1
       
-  def mouvements_autorises(self, etat) : 
+  def mouvements_autorises(self, etat : EtatEchecs) -> list[tuple,tuple] : 
     ''' 
     :joueur: est_blanc
     :return: [[position1, position2]] si [position1,position2] mouvement possible pour ce joueur
@@ -114,7 +114,7 @@ class Echecs(Jeu) :
     # état final par manque de matériel
     if len(etat.plateau.keys()) <= 4 : 
       compteur_blanc = 0
-      for x in etat.plateau.keys() : 
+      for x in etat.plateau.values() : 
         if x.est_blanc : 
           compteur_blanc += 1
 
@@ -122,7 +122,7 @@ class Echecs(Jeu) :
       if compteur_blanc <= 2 : 
         liste = []
         for piece in etat.plateau.values():
-          liste = isinstance(piece, Roi) or isinstance(piece, Cavalier) or isinstance(piece, Fou)
+          liste.append(isinstance(piece, Roi) or isinstance(piece, Cavalier) or isinstance(piece, Fou))
         etat_final = False not in liste
 
       # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
@@ -335,20 +335,71 @@ class Echecs(Jeu) :
     if joueur == "IA" : 
       return self.joueur_alpha_beta(etat, self._profondeur)
   
-  def joueur_alpha_beta(self, etat : EtatEchecs, profondeur : int):
+  def evaluer_coup(self, coup: tuple[list[tuple,tuple], EtatEchecs], etat: EtatEchecs) -> float:
     '''
-    retourne le meilleur coup selon minimax a une profondeur donnee
+    Évalue la qualité d'un coup en attribuant un score.
+
+    :param coup: Le coup à évaluer.
+    :type coup: Tuple[TypeMouvement, TypeEtat]
+
+    :param etat: L'état actuel du jeu.
+    :type etat: EtatEchecs
+
+    :return: Un score représentant la qualité du coup.
+    :rtype: float
     '''
-    assert profondeur > 0
-    tab_suivants = self.suivants(etat)
-    valeur_suivants = []
-    for mouv, etat_suivant in tab_suivants :
-      valeur_suivants.append(self.alpha_beta(etat_suivant, profondeur, -inf, inf, not etat.est_blanc))
-      #on arrete si on trouve un echec et mat en un coup
-      if (valeur_suivants[-1] == profondeur * 1000 and etat.est_blanc) or (valeur_suivants[-1] == -profondeur * 1000 and not etat.est_blanc):
-        break
-    meilleure_valeur = max(valeur_suivants) if etat.est_blanc else min(valeur_suivants)
-    return tab_suivants[valeur_suivants.index(meilleure_valeur)][0]
+    mouvement, etat_suivant = coup
+
+    # Récupérer la pièce qui a été déplacée
+    piece_deplacee = etat.plateau[mouvement[0]]
+
+    # Calculer la valeur de la pièce déplacée
+    valeur_piece = piece_deplacee.valeur
+
+    # Score de base en fonction de la valeur de la pièce déplacée
+    score = valeur_piece
+
+    # Bonus pour les captures
+    piece_prise = etat_suivant.plateau.get(mouvement[1])
+    if piece_prise:
+        score += piece_prise.valeur
+    return score
+
+  
+  def joueur_alpha_beta(self, etat: EtatEchecs, profondeur: int):
+      assert profondeur > 0
+      #(profondeur+1)  x 1000 correspond a un mat en 1 coup ainsi pour savoir combien de coups il reste avant le mat suffit de diviser la valeur par 1000 et lui retirer la profondeur
+      alpha = -(profondeur + 1) * 1000
+      beta = (profondeur + 1) * 1000
+      meilleur_coup = None
+
+      # Obtenez la liste des coups possibles
+      coups_possibles = list(self.suivants(etat))
+
+      # Triez les coups en fonction de leur score
+      coups_possibles.sort(key=lambda coup: self.evaluer_coup(coup, etat), reverse=True)
+
+      for mouvement, etat_suivant in coups_possibles:
+          valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, not etat.est_blanc)
+
+          if etat.est_blanc and valeur == profondeur * 1000:
+              return mouvement
+
+          elif not etat.est_blanc and valeur == -profondeur * 1000:
+              return mouvement
+
+          if etat.est_blanc and valeur > alpha:
+              alpha = valeur
+              meilleur_coup = mouvement
+
+          if not etat.est_blanc and valeur < beta:
+              beta = valeur
+              meilleur_coup = mouvement
+
+          if beta <= alpha:
+              break
+
+      return meilleur_coup
 
   def jouer_coup(self, joueur1 : str, joueur2 : str, etat : EtatEchecs) -> tuple[str, EtatEchecs]:
     ''' 
@@ -403,7 +454,18 @@ class Echecs(Jeu) :
     return None
   
   def eval_statique(self, etat : EtatEchecs):
-    return sum([piece.valeur for piece in etat.plateau.values()])
+    '''
+    retourne une evaluation station de l'etat
+    '''
+    #on somme les valeur des pieces (la valeur des pieces noires est negative)
+    valeur = sum([piece.valeur for piece in etat.plateau.values()])
+    #plus une piece est avancee, plus on considere quelle est forte donc plus cela augmentera la valeur de la position
+    for piece in etat.plateau.values():
+        if piece.est_blanc:
+            valeur += 0.1 * (4 - abs(piece.position[0] - 3.5))  # Avancement vers le centre pour les blancs
+        else:
+            valeur -= 0.1 * (4 - abs(piece.position[0] - 3.5))  # Avancement vers le centre pour les noirs
+    return valeur
 
   def recherche_roi(self, etat : EtatEchecs, roi_est_blanc : bool):
     '''
@@ -449,13 +511,17 @@ class Echecs(Jeu) :
       '''
       retourne la valeur d'un etat donne allant jusqua une pronfondeur donnee ou la fin de la partie
       '''
+      est_fin, raison = self.etat_final(etat, [])
       if profondeur == 0 :
           return self.valeur(etat, True)
-      elif self.etat_final(etat, []) :
+      elif est_fin :
+          if raison == 'Match nul':
+            return 0
+          print(etat, profondeur)
           value = (profondeur + 1) * 1000
           return -value if maximiser_joueur else value
       if maximiser_joueur:
-          valeur_max = -inf
+          valeur_max = -(profondeur + 1) * 1000
           for mouv, new_etat in self.suivants(etat):
             valeur = self.alpha_beta(new_etat, profondeur - 1, alpha, beta, False)
             valeur_max = max(valeur_max, valeur)
@@ -464,7 +530,7 @@ class Echecs(Jeu) :
                 break
           return valeur_max
       else :
-          valeur_min = inf
+          valeur_min = (profondeur + 1) * 1000
           for mouv, new_etat in self.suivants(etat):
             valeur = self.alpha_beta(new_etat, profondeur - 1, alpha, beta, False)
             valeur_min = min(valeur_min, valeur)
@@ -492,7 +558,7 @@ class Echecs(Jeu) :
           return -value if maximiser_joueur else value
         
       if maximiser_joueur:
-          valeur_max = -inf
+          valeur_max = -(profondeur + 1) * 1000
           for mouv, new_etat in self.suivants(etat):
             valeur = self.alpha_beta_cache(new_etat, profondeur - 1, alpha, beta, False, cache)
             cache[new_etat] = valeur
@@ -502,7 +568,7 @@ class Echecs(Jeu) :
                 break
           return valeur_max
       else :
-          valeur_min = inf
+          valeur_min = (profondeur + 1) * 1000
           for mouv, new_etat in self.suivants(etat):
             valeur = self.alpha_beta_cache(new_etat, profondeur - 1, alpha, beta, True, cache)
             cache[new_etat] = valeur
