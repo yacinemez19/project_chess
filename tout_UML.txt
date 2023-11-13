@@ -1,0 +1,142 @@
+@startuml
+class EtatJeu {
+    __str__()
+        joueur
+    valeur
+    plateau
+    mouvements
+    __init__()
+}
+class EtatEchecs {
+    copie_peu_profonde()
+    __str__()
+    __repr__()
+    __str__()
+    est_case()
+        est_blanc
+    Valeur
+    plateau
+    roi_blanc
+    roi_noir
+    mouvements
+    __init__()
+}
+class InputError1 {
+        __init__()
+}
+class KingNotFoundError {
+        __init__()
+}
+class InputError2 {
+        __init__()
+}
+class PieceNotExistError {
+        __init__()
+}
+class MovementImpossibleError {
+        __init__()
+}
+class Echecs {
+    traduire()
+    deplacer()
+    mouvements_autorises()
+    verif_echec_mat_pat()
+    etat_final()
+    get_liste_coups_possibles()
+    str_en_piece()
+    charger()
+    afficher()
+    enregister()
+    menu()
+    debut_partie()
+    choisir_partie()
+    afficher_aide()
+    strategie()
+    joueur_alpha_beta()
+    jouer_coup()
+    partie()
+    eval_statique()
+    recherche_roi()
+    fin_partie()
+    valeur()
+    alpha_beta()
+    alpha_beta_cache()
+    construire_dict_mouvs()
+    nouvelle_prof()
+    graphe_jeu()
+    alphabeta_valeur()
+    joueur_alphabeta()
+        __init__()
+}
+class Jeu {
+    mouvements_autorises()
+    deplacer()
+    valeur()
+    est_final()
+    joueur()
+    suivants()
+    afficher()
+    joueur_minimax()
+    max_valeur()
+    min_valeur()
+    __repr__()
+    __str__()
+        __init__()
+}
+class Piece {
+    coups_possibles()
+    coup_est_possible()
+    __str__()
+        position
+    est_blanc
+    nom
+    __init__()
+}
+class Pion {
+    coups_possibles()
+        valeur
+    __init__()
+}
+class Cavalier {
+    coups_possibles()
+        valeur
+    __init__()
+}
+class Dame {
+    coups_possibles()
+        valeur
+    __init__()
+}
+class Fou {
+    coups_possibles()
+        valeur
+    __init__()
+}
+class Roi {
+    coups_possibles()
+    coups_adverses()
+    est_echec()
+    met_en_echec()
+        valeur
+    __init__()
+}
+class Tour {
+    coups_possibles()
+        valeur
+    __init__()
+}
+EtatJeu <|-- EtatEchecs
+Exception <|-- InputError1
+Exception <|-- KingNotFoundError
+Exception <|-- InputError2
+Exception <|-- PieceNotExistError
+Exception <|-- MovementImpossibleError
+Jeu <|-- Echecs
+ABC <|-- Piece
+Piece <|-- Pion
+Piece <|-- Cavalier
+Piece <|-- Dame
+Piece <|-- Fou
+Piece <|-- Roi
+Piece <|-- Tour
+@enduml

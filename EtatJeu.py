@@ -6,4 +6,3 @@ class EtatJeu:
         self.mouvements = Mouvements # liste des mouvements autorisés à partir de la position courante
     def __str__(self) -> str:
         pass
-
