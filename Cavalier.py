@@ -1,12 +1,12 @@
 from Piece import *
 from EtatEchecs import *
-from Roi import Roi
+from Roi import *
 
 class Cavalier(Piece):
-  def __init__(self,position : tuple,est_blanc) : 
+  def __init__(self,position : tuple, est_blanc : bool)-> None : 
     super().__init__(position,est_blanc)
     self.nom = 'C' if est_blanc else 'c'
-    self.valeur = 3
+    self.valeur = 3 if est_blanc else -3
 
   def coups_possibles(self,etat, verif_echec : bool = False) -> set:
     roi = etat.roi_blanc if self.est_blanc else etat.roi_noir

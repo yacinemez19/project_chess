@@ -1,12 +1,12 @@
 from Piece import *
 from EtatEchecs import *
-from Roi import Roi
+from Roi import *
 
 class Tour(Piece):
-    def __init__(self, position : tuple, est_blanc) -> None:
+    def __init__(self, position : tuple, est_blanc : bool) -> None:
         super().__init__(position, est_blanc)
         self.nom = 'T' if est_blanc else 't'
-        self.valeur = 5
+        self.valeur = 5 if est_blanc else -5
 
     def coups_possibles(self, etat : EtatJeu, verif_echec : bool = False) -> set:
         roi = etat.roi_blanc if self.est_blanc else etat.roi_noir

@@ -1,10 +1,10 @@
 import pytest
 
 from Echecs import Echecs
-from EtatEchecs import EtatEchecs
-from Roi import Roi
-from Fou import Fou
-from Pion import Pion
+from EtatEchecs import *
+from Roi import *
+from Fou import *
+from Pion import *
 
 def test_coups_possibles():
     partie = Echecs()
@@ -21,13 +21,13 @@ def test_coups_possibles():
         if piece.est_blanc and type(piece) == Fou:
             fou = piece
     assert fou.position == [5,0]
-    assert fou.coups_possibles(etat, True, roi) == set()
+    assert fou.coups_possibles(etat, True) == set()
     
     pion = None
     pion = etat.plateau[(5,2)]
     assert pion.position == [5,2]
-    assert pion.coups_possibles(etat, True, roi) == {(5,3),(4,3)}
-    
+    assert pion.coups_possibles(etat, True) == {(5,3),(4,3)}
+
 def test_est_echec():
     partie = Echecs()
     etat = partie.charger('testechec.txt')
@@ -72,4 +72,4 @@ def test_cloue():
     etat = partie.charger('test_cloue.txt')
     cavalier = etat.plateau[(4,6)]
     roi = etat.plateau[(4,7)]
-    assert cavalier.coups_possibles(etat,True,roi) == set()
+    assert cavalier.coups_possibles(etat,True) == set()

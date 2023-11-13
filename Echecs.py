@@ -14,6 +14,9 @@ import sys
 class InputError1(Exception) : 
   pass
 
+class KingNotFoundError(Exception):
+  pass
+
 class InputError2(Exception) : 
   pass
 
@@ -24,9 +27,10 @@ class MovementImpossibleError(Exception):
   pass
 
 class Echecs(Jeu) : 
-  def traduire(self, mouvement) :
-    '''
-    :mouvement: "mouvement"
+  _profondeur = 2
+
+  def traduire(self, mouvement:str) -> list[tuple[int,int]]:
+    ''':mouvement: "mouvement"
     :return: [ancienne position, nouvelle postion]
     '''
     colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -45,16 +49,17 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouv, etat) :
+  def deplacer(self, mouv : list[tuple, tuple], etat : EtatEchecs) :
     """
-    :mouvement: [position1,position2]
+    :etat: etat du jeu
+    :mouv: [position1,position2]
     :return: état modifié
     """
-    e1 = copy.deepcopy(etat)
+    e1 = etat.copie_peu_profonde()
      # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
-    piece = e1.plateau.pop(mouv[0], None)
-    if piece == None or piece.est_blanc != etat.est_blanc:
+    piece = copy.copy(e1.plateau.pop(mouv[0], None))
+    if piece is None or piece.est_blanc != etat.est_blanc:
       raise PieceNotExistError
     if mouv[1] not in piece.coups_possibles(etat, True):
       raise MovementImpossibleError
@@ -63,25 +68,17 @@ class Echecs(Jeu) :
     e1.est_blanc = not(e1.est_blanc)
     return e1
       
-  def mouvements_autorises(self, etat, joueur) : 
+  def mouvements_autorises(self, etat) : 
     ''' 
     :joueur: est_blanc
     :return: [[position1, position2]] si [position1,position2] mouvement possible pour ce joueur
     '''
     mouvs = []
-    for (x,y) in self.liste_coups_possibles(etat, joueur) : 
-      for (a,b) in self.liste_coups_possibles(etat, joueur)[(x,y)] : 
+    liste_coups_possibles = self.get_liste_coups_possibles(etat, etat.est_blanc)
+    for (x,y) in liste_coups_possibles : 
+      for (a,b) in liste_coups_possibles[(x,y)] : 
         mouvs.append([(a,b),(x,y)])
-    print(mouvs)
     return mouvs
-        
-  def valeur(self, etat, joueur) :
-    sum_valeur = 0
-    for piece in etat.plateau : 
-      if piece.est_blanc == joueur :
-        sum_valeur += piece.valeur
-
-    return sum_valeur
   
   def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool):
     '''
@@ -91,7 +88,7 @@ class Echecs(Jeu) :
               True, True si echec et mat
     '''
     for piece in etat.plateau.values():
-      if piece.est_blanc == joueur_est_blanc and piece.coups_possibles(etat, True) != set():
+      if piece.est_blanc == joueur_est_blanc and piece.coups_possibles(etat, True):
         return False, False
     roi = self.roi_blanc if joueur_est_blanc else etat.roi_noir
     return True, roi.est_echec(etat)
@@ -106,24 +103,7 @@ class Echecs(Jeu) :
     etat_final = False
       # vérifie s'il y a échec et mat(fonctionne pas j'ai remplace par la methode verif_echec_et_mat)
       # mon code est temporaire juste pour les test
-    '''for piece in etat.plateau.values() : 
-      if isinstance(piece, Roi) :
-        etat_final = piece.est_echec(etat) and piece.coups_possibles(etat, True) == []
-        if etat_final == True :
-          couleur = piece.est_blanc 
 
-    # La raison de l'état final est que le roi est en échec et mat
-    if etat_final == True and raison == None:
-      if couleur : 
-        raison = "Echec et mat blanc"
-      else : 
-        raison = "Echec et mat noir"
-        
-    # etat_final car plus de mouvements autorisés
-    etat_final = self.mouvements_autorises(etat, etat.est_blanc) == None
-    if etat_final == True and raison == None:
-      raison = "Match nul"    
-        '''
     if self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, False):
       return True, 'Match nul'
     elif self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, True):
@@ -158,41 +138,40 @@ class Echecs(Jeu) :
         for b in historique[1::2] : 
           if (historique[-1],historique[-2]) == (a,b) :
               etat_final == True
-
+      '''
       # règle des 50 coups
       coups = []
-      for coup,c in historique :
-          if coup.lower() != coup :
+      for coup, c in historique :
+          if coup != coup :
               coups.append(coup)
               
           elif isinstance(c,Pion) :
               coups.append(coup)
       if coups == [] :
           etat_final = True
-
-    if etat_final == True and raison == None:
+    '''
+    if etat_final == True and raison is None:
       raison = "Match nul"
     return etat_final, raison
 
-  def liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict :
+  def get_liste_coups_possibles(self, etat : EtatEchecs, est_blanc : bool) -> dict[tuple,set[tuple]] :
     '''
-    :return: dict[tuple,set(tuple)], associe à chaque case du plateau où un coup peut être joué les coups qui peuvent y être joués
+    :return: associe à chaque case du plateau où un coup peut être joué les coups qui peuvent y être joués
     '''
     coups = {} 
     for piece in etat.plateau.values() :
       if piece.est_blanc == est_blanc : 
-        for coup in piece.coups_possibles(etat): 
+        for coup in piece.coups_possibles(etat, True): 
           coups.setdefault(coup,set()).add(tuple(piece.position))
     return coups 
 
   @staticmethod
-  def str_en_piece(c : str, pos : [int, int]):
+  def str_en_piece(c : str, pos : [int, int]) -> Piece:
     '''
     Prend en argument le nom d'une piece et sa position et renvoie la piece
     '''
     #on verifie que la position donnee existe bien
-    #if not etat.est_case(pos[0], pos[1]):
-    #   raise AttributeError('La case n\'existe pas')
+    assert 0 <= pos[0] < 8 and 0 <= pos[1] < 8
 
     est_blanc = c.isupper() #les pieces blanches sont ecrites en majuscule
     c = c.lower()
@@ -211,7 +190,7 @@ class Echecs(Jeu) :
     if c == 'r':
         return Roi(pos, est_blanc)
 
-  def charger(self, chemin):
+  def charger(self, chemin) -> EtatEchecs:
     '''
     renvoie l'etat d'une partie a partir du chemin du fichier txt ou elle est stockee
 
@@ -228,9 +207,11 @@ class Echecs(Jeu) :
           x = j
           y = 7 - i
           plateau[x, y] = self.str_en_piece(p, [x, y])
-    etat = EtatEchecs(True, 3, plateau) #True car quand on charge la partie on sait pas si blanc ou noir commence
+    etat = EtatEchecs(True, 0, plateau) #True car quand on charge la partie on sait pas si blanc ou noir commence
     etat.roi_blanc = self.recherche_roi(etat, True)
     etat.roi_noir = self.recherche_roi(etat, False)
+    if etat.roi_blanc is None or etat.roi_noir is None:
+      raise KingNotFoundError
     return etat
   
   def afficher(self, etat) -> None:
@@ -253,7 +234,7 @@ class Echecs(Jeu) :
     return None
 
   # recueille les choix de l'utilisateur en début de partie
-  def menu(self) :
+  def menu(self) -> list[str, str]:
     ''' affiche le menu du jeu et récupère les choix du joueurs pour sa partie.
     :return: [choix1,choix2]
     '''
@@ -281,7 +262,7 @@ class Echecs(Jeu) :
       # partie chargée
       elif choix1 == 'a' :
         try : 
-            fichier = input("Donnez le chemin du fichier à charger.")
+            fichier = input("Donnez le chemin du fichier à charger. ")
             etat = self.charger(fichier)
         except :
             print("Votre chemin n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
@@ -348,12 +329,27 @@ class Echecs(Jeu) :
         else :
           self.fin_partie('abandon noir')
       else :  
-        return mouv
+        return self.traduire(mouv)
         
     if joueur == "IA" : 
-        pass
+      return self.joueur_alpha_beta(etat, self._profondeur)
   
-  def jouer_coup(self, joueur1, joueur2, etat):
+  def joueur_alpha_beta(self, etat : EtatEchecs, profondeur : int):
+    '''
+    retourne le meilleur coup selon minimax a une profondeur donnee
+    '''
+    assert profondeur > 0
+    tab_suivants = self.suivants(etat)
+    valeur_suivants = []
+    for mouv, etat_suivant in tab_suivants :
+      valeur_suivants.append(self.alpha_beta(etat_suivant, profondeur, -inf, inf, not etat.est_blanc))
+      #on arrete si on trouve un echec et mat en un coup
+      if (valeur_suivants[-1] == profondeur * 1000 and etat.est_blanc) or (valeur_suivants[-1] == -profondeur * 1000 and not etat.est_blanc):
+        break
+    meilleure_valeur = max(valeur_suivants) if etat.est_blanc else min(valeur_suivants)
+    return tab_suivants[valeur_suivants.index(meilleure_valeur)][0]
+
+  def jouer_coup(self, joueur1 : str, joueur2 : str, etat : EtatEchecs) -> tuple[str, EtatEchecs]:
     ''' 
     Joue le coup choisi pour ce tour par le joueur selon sa stratégie (son type).
     :joueur1: str, "humain" ou "IA"
@@ -394,15 +390,20 @@ class Echecs(Jeu) :
         historique.pop(0)
       self.afficher(etat)
       mouv, etat = self.jouer_coup(joueur1, joueur2, etat)
-      piece_jouee = etat.plateau[self.traduire(mouv)[1]]
+      piece_jouee = etat.plateau[mouv[1]]
       historique.append([mouv, piece_jouee])
       etat.roi_blanc = self.recherche_roi(etat, True)
       etat.roi_noir = self.recherche_roi(etat, False)
+      etat.valeur = self.eval_statique(etat)
+      print(etat.valeur)
       est_fin, raison = self.etat_final(etat, historique)
   
     self.fin_partie(raison)  
     return None
   
+  def eval_statique(self, etat : EtatEchecs):
+    return sum([piece.valeur for piece in etat.plateau.values()])
+
   def recherche_roi(self, etat : EtatEchecs, roi_est_blanc : bool):
     '''
       Retourne le roi de la coulour souhaite
@@ -438,10 +439,80 @@ class Echecs(Jeu) :
     else: 
       print('prblm')
     sys.exit()
-
-  def suivants(self,etat, joueur) : 
-    return [ (m, self.deplacer(m,etat)) for m in self.mouvements_autorises(etat,joueur) ]
       
+  def valeur(self, etat, joueur):
+    return self.eval_statique(etat)
+  
+  @lru_cache(maxsize=None)
+  def alpha_beta(self, etat, profondeur, alpha, beta, maximiser_joueur):
+      '''
+      retourne la valeur d'un etat donne allant jusqua une pronfondeur donnee ou la fin de la partie
+      '''
+      if profondeur == 0 :
+          return self.valeur(etat, True)
+      elif self.etat_final(etat, []) :
+          value = (profondeur + 1) * 1000
+          return -value if maximiser_joueur else value
+      if maximiser_joueur:
+          valeur_max = -inf
+          for mouv, new_etat in self.suivants(etat):
+            valeur = self.alpha_beta(new_etat, profondeur - 1, alpha, beta, False)
+            valeur_max = max(valeur_max, valeur)
+            alpha = max(alpha, valeur)
+            if beta <= alpha:
+                break
+          return valeur_max
+      else :
+          valeur_min = inf
+          for mouv, new_etat in self.suivants(etat):
+            valeur = self.alpha_beta(new_etat, profondeur - 1, alpha, beta, False)
+            valeur_min = min(valeur_min, valeur)
+            beta = min(beta, valeur)
+            if beta <= alpha:
+                break
+          return valeur_min
+
+
+  def alpha_beta_cache(self, etat, profondeur, alpha, beta, maximiser_joueur, cache):
+      '''
+      retourne la valeur d'un etat donne allant jusqua une pronfondeur donnee ou la fin de la partie
+      '''
+      est_fin, raison = self.etat_final(etat, [])
+      if etat in cache:
+        print(cache, etat)
+        return cache[etat]
+      elif profondeur == 0 :
+          return self.valeur(etat, True)
+      elif est_fin :
+          if raison == 'Match nul':
+            return 0
+          print(etat, profondeur)
+          value = (profondeur + 1) * 1000
+          return -value if maximiser_joueur else value
+        
+      if maximiser_joueur:
+          valeur_max = -inf
+          for mouv, new_etat in self.suivants(etat):
+            valeur = self.alpha_beta_cache(new_etat, profondeur - 1, alpha, beta, False, cache)
+            cache[new_etat] = valeur
+            valeur_max = max(valeur_max, valeur)
+            alpha = max(alpha, valeur)
+            if beta <= alpha:
+                break
+          return valeur_max
+      else :
+          valeur_min = inf
+          for mouv, new_etat in self.suivants(etat):
+            valeur = self.alpha_beta_cache(new_etat, profondeur - 1, alpha, beta, True, cache)
+            cache[new_etat] = valeur
+            valeur_min = min(valeur_min, valeur)
+            beta = min(beta, valeur)
+            if beta <= alpha:
+                break
+          return valeur_min
+
+  
+  
   def construire_dict_mouvs(self,position, prof_max,etat):
     """renvoie dict_mouvs tel que chaque position pouvant être jouée jusqu'à la profondeur 3 soit associé à chaque posiiton pouvant être jouée à partir de cette position
 
@@ -476,7 +547,7 @@ class Echecs(Jeu) :
 
     nouvelle_prof(position, 0,etat, prof_max)
     return dict_mouvs
-
+  '''
   def graphe_jeu(self,etat, position) :
     """crée un graphe des possibilités de jeu après avoie joué à position en dernier
 
@@ -562,3 +633,4 @@ class Echecs(Jeu) :
 e = Echecs()
 etat = e.charger('Nouvelle_partie.txt')
 mouv = e.joueur_alphabeta(etat)
+'''

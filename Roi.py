@@ -6,8 +6,8 @@ class Roi(Piece):
 
   def __init__(self,position : tuple,est_blanc) : 
     super().__init__(position,est_blanc)
-    #self.est_echec = est_echec
     self.nom = 'R' if est_blanc else 'r'
+    self.valeur = 0
 
   def coups_possibles(self, etat, verif_echec : bool = False) -> set:
     '''
@@ -32,16 +32,14 @@ class Roi(Piece):
     :return: set avec tous les coups adverses possibles
     '''
     coups = set()
-    for piece in etat.plateau.values() : 
+    for position, piece in etat.plateau.items() : 
       if piece.est_blanc != self.est_blanc : 
-        coups = coups | piece.coups_possibles(etat, False)
+        coups |= piece.coups_possibles(etat, False)
     return coups  
 
   def est_echec(self, etat : EtatEchecs):
     '''verifie si le roi est en echec'''
-    if tuple(self.position) in self.coups_adverses(etat):
-      return True
-    return False
+    return tuple(self.position) in self.coups_adverses(etat)
     
   def met_en_echec(self, etat : EtatEchecs, old_pos : tuple, new_pos : tuple):
     '''
@@ -54,8 +52,8 @@ class Roi(Piece):
     '''
     if old_pos not in etat.plateau:
       raise AttributeError('Erreur dans la position de la piece')
-    etat1 = copy.deepcopy(etat)
-    piece = etat1.plateau.pop(old_pos)
+    etat1 = etat.copie_peu_profonde()
+    piece = copy.copy(etat1.plateau.pop(old_pos))
     piece.position = list(new_pos)
     etat1.plateau[new_pos] = piece
     if isinstance(piece, Roi):
