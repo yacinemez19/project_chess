@@ -96,7 +96,7 @@ class Echecs(Jeu) :
     for piece in etat.plateau.values():
       if piece.est_blanc == joueur_est_blanc and piece.coups_possibles(etat, True):
         return False, False
-    roi = self.roi_blanc if joueur_est_blanc else etat.roi_noir
+    roi = etat.roi_blanc if joueur_est_blanc else etat.roi_noir
     return True, roi.est_echec(etat)
 
   def etat_final(self, etat, historique) : 
@@ -390,7 +390,6 @@ class Echecs(Jeu) :
 
       for mouvement, etat_suivant in coups_possibles:
           valeur = self.alpha_beta_cache(etat_suivant, profondeur - 1, alpha, beta, not etat.est_blanc, self._cache)
-          print(len(self._cache))
           if etat.est_blanc and valeur == profondeur * 1000:
               return mouvement
 
@@ -556,7 +555,6 @@ class Echecs(Jeu) :
       '''
       est_fin, raison = self.etat_final(etat, [])
       if etat in cache.keys():
-        print(len(cache))
         return cache[etat]
       elif profondeur == 0 :
           return self.valeur(etat, True)
