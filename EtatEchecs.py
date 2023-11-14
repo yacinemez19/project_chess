@@ -22,7 +22,7 @@ class EtatEchecs(EtatJeu):
       for y in range(8):
         for x in range(8):
           p = self.plateau.get((x,7-y), '.')
-          txt += str(p) + ' | '
+          txt += p.str() + ' | '
         txt += '\n'
       return txt
     

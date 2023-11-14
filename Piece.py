@@ -16,6 +16,9 @@ class Piece(ABC):
         return position in self.coups_possibles(self,etat)
     
     def __str__(self):
+        pass
+    
+    def __repr__(self):
         return self.nom
     
     def __eq__(self, other : Piece) -> bool:

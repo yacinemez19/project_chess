@@ -29,3 +29,9 @@ class Cavalier(Piece):
             if not verif_echec or not roi.met_en_echec(etat,tuple(self.position), (x+a,y+b)):
               coups.add((x+b,y+a))
     return coups
+  
+  def __str__(self):
+    if self.nom == "C" :
+      return "♘"
+    else : 
+      return "♞"

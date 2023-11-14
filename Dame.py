@@ -26,3 +26,9 @@ class Dame(Piece):
                     coups.add((x+(i*n),y+(j*n))) 
 
         return coups
+    
+    def __str__(self):
+        if self.nom == "D" :
+            return "♕"
+        else : 
+            return "♛"

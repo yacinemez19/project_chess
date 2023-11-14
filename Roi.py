@@ -60,3 +60,9 @@ class Roi(Piece):
       #si la piece est le roi alors est_echec doit verifier si le roi a la nouvelle position est mit en echec sans changer la position du vrai roi
       return piece.est_echec(etat1)
     return self.est_echec(etat1)
+  
+  def __str__(self):
+    if self.nom == "R" :
+      return "♔"
+    else : 
+      return "♚"
