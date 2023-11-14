@@ -6,9 +6,10 @@ from Fou import *
 from Dame import *
 from Roi import *
 from Cavalier import *
-import math
+from time import time
 import copy
 import sys
+
 
 # crée des erreurs pour les deux interactions avec l'utilisateur
 class InputError1(Exception) : 
@@ -30,7 +31,8 @@ class Echecs(Jeu) :
   _profondeur = 3
   _cache = {}
   _cache_mouvements = {}
-
+  colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+  
   def traduire(self, mouvement:str) -> list[tuple[int,int]]:
     '''
     Traduis le mouvement du type e2-e4 en liste de tuple
@@ -38,15 +40,14 @@ class Echecs(Jeu) :
     :mouvement: Le mouvement du type e2-e4
     :return: [ancienne position, nouvelle position]
     '''
-    colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
     mouv_str = [x.strip() for x in mouvement]
     
     try: 
       # vérifie qu'il s'agit d'un déplacement
-      if not mouv_str[0] in colonnes : 
+      if not mouv_str[0] in self.colonnes : 
         raise MovementImpossibleError
-      position1 = (colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
-      position2 = (colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
+      position1 = (self.colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
+      position2 = (self.colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
       if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
         raise IndexError
     except: 
@@ -54,6 +55,15 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
+  def traduire_inverse(self, mouvement: list[tuple[int]])->str:
+    '''
+    traduit un mouvement de type [position1, position2] en un str de type e2-e4
+    '''
+    position1, position2 = mouvement
+    x1, y1 = position1
+    x2, y2 = position2
+    return self.colonnes[x1] + str(y1) + '-' + self.colonnes[x2] + str(y2)
+    
   def deplacer(self, mouvement : list[tuple, tuple], etat : EtatEchecs) -> EtatEchecs :
     """
     Renvoie un état du jeu ayant pris en compte le déplacement d'une pièce
@@ -63,8 +73,6 @@ class Echecs(Jeu) :
     :return: État du jeu modifié
     """
     e1 = etat.copie_peu_profonde()
-     # if mouvement not in self.mouvements_autorises(e1, e1.est_blanc):
-     #   raise MovementError
     piece = copy.copy(e1.plateau.pop(mouvement[0], None))
     if piece is None or piece.est_blanc != etat.est_blanc:
       raise PieceNotExistError
@@ -81,9 +89,9 @@ class Echecs(Jeu) :
     :joueur: est_blanc
     :return: [[position1, position2]] si [position1,position2] mouvement possible pour ce joueur
     '''
-    #if etat in self._cache_mouvements :
-    #  print(len(self._cache_mouvements))
-    #  return self._cache_mouvements[etat]
+    if etat in self._cache_mouvements :
+      print(len(self._cache_mouvements))
+      return self._cache_mouvements[etat]
     mouvs = []
     liste_coups_possibles = self.get_liste_coups_possibles(etat, etat.est_blanc)
     for (x,y) in liste_coups_possibles : 
@@ -348,7 +356,11 @@ class Echecs(Jeu) :
         return self.traduire(mouv)
         
     if joueur == "IA" : 
-      return self.joueur_alpha_beta(etat, self._profondeur)
+      start = time()
+      coup_ia = self.joueur_alpha_beta(etat, self._profondeur)
+      end = time()
+      print(self.traduire_inverse(coup_ia), ' en ', end-start, ' secondes')
+      return coup_ia
   
   def evaluer_coup(self, coup: tuple[list[tuple,tuple], EtatEchecs], etat: EtatEchecs) -> float:
     '''
@@ -536,7 +548,6 @@ class Echecs(Jeu) :
       elif est_fin :
           if raison == 'Match nul':
             return 0
-          print(etat, profondeur)
           value = (profondeur + 1) * 100000
           return -value if maximiser_joueur else value
       if maximiser_joueur:
@@ -572,7 +583,6 @@ class Echecs(Jeu) :
       elif est_fin :
           if raison == 'Match nul':
             return 0
-          print(etat, profondeur)
           value = (profondeur + 1) * 100000
           return -value if maximiser_joueur else value
       
