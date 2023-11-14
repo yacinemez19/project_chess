@@ -207,7 +207,12 @@ class Echecs(Jeu) :
           x = j
           y = 7 - i
           plateau[x, y] = self.str_en_piece(p, [x, y])
-    etat = EtatEchecs(True, 0, plateau) #True car quand on charge la partie on sait pas si blanc ou noir commence
+    titre = chemin.split("/")
+    if titre[-1][0] == B :
+      joueur = True
+    else :
+      joueur = False
+    etat = EtatEchecs(joueur, 0, plateau) 
     etat.roi_blanc = self.recherche_roi(etat, True)
     etat.roi_noir = self.recherche_roi(etat, False)
     if etat.roi_blanc is None or etat.roi_noir is None:
