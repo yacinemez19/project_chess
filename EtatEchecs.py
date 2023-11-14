@@ -30,10 +30,10 @@ class EtatEchecs(EtatJeu):
       txt = ''
       for y in range(8):
         for x in range(8):
-          p = self.plateau.get((x,7-y), '.')
-          txt += str(p)
+          p = self.plateau.get((x,7-y), None)
+          txt += repr(p) if p else '.'
         txt += '\n'
-      txt += str(self.est_blanc)
+      txt += 'B' if self.est_blanc else 'N'
       return txt
 
     def __eq__(self, other : EtatEchecs) -> bool:

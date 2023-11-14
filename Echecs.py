@@ -7,6 +7,8 @@ from Dame import *
 from Roi import *
 from Cavalier import *
 from time import time
+from os import path
+from random import randint
 import copy
 import sys
 
@@ -25,6 +27,9 @@ class PieceNotExistError(Exception):
   pass
 
 class MovementImpossibleError(Exception):
+  pass
+
+class WrongFileError(Exception):
   pass
 
 class Echecs(Jeu) : 
@@ -62,7 +67,7 @@ class Echecs(Jeu) :
     position1, position2 = mouvement
     x1, y1 = position1
     x2, y2 = position2
-    return self.colonnes[x1] + str(y1) + '-' + self.colonnes[x2] + str(y2)
+    return self.colonnes[x1] + str(y1+1) + '-' + self.colonnes[x2] + str(y2+1)
     
   def deplacer(self, mouvement : list[tuple, tuple], etat : EtatEchecs) -> EtatEchecs :
     """
@@ -220,19 +225,24 @@ class Echecs(Jeu) :
     fichier = open(chemin, 'r')
     etatTxt = fichier.read()
     etatTxt = etatTxt.split()
+    couleur_debut = etatTxt.pop(-1) #la derniere ligne devra contenir la couleur de celui qui commence (B pour blanc, sinon c'est le noir)
+    if len(etatTxt) != 8 :
+      raise WrongFileError('Trop ou pas assez de lignes dans le fichier a charger')
     plateau = dict()
     for i, ligne in enumerate(etatTxt):
+      if len(ligne) != 8 :
+        raise WrongFileError('Trop ou pas assez de pieces sur une ligne dans le fichier a charger')
       for j, p in enumerate(ligne):
         if p != '.':
           x = j
           y = 7 - i
-          plateau[x, y] = self.str_en_piece(p, [x, y])
+          plateau[x, y] = self.str_en_piece(p, (x, y))
     titre = chemin.split("/")
     if titre[-1][0] == "B" :
       joueur = True
     else :
       joueur = False
-    etat = EtatEchecs(joueur, 0, plateau) 
+    etat = EtatEchecs(couleur_debut == 'B', 0, plateau) 
     etat.roi_blanc = self.recherche_roi(etat, True)
     etat.roi_noir = self.recherche_roi(etat, False)
     if etat.roi_blanc is None or etat.roi_noir is None:
@@ -253,9 +263,12 @@ class Echecs(Jeu) :
     :param etat: etat de la partie a sauvegarder
     :param nom: nom qu'on veut donner au fichier de sauvegarde
     '''
-    fichier = open(nom, 'w')
-    fichier.write()
-    
+    if path.isfile(nom): 
+      nom += str(randint(0,1000))
+    fichier = open(nom, 'w+')
+    print(repr(etat))
+    fichier.write(repr(etat))
+    print('Le fichier a ete enregistre sous le nom ', nom)
     return None
 
   # recueille les choix de l'utilisateur en début de partie
@@ -297,6 +310,7 @@ class Echecs(Jeu) :
       # affiche le mode d'emploi
       elif choix1 == 'help' : 
           self.afficher_aide()
+          self.debut_partie()
 
       # Si l'input ne fait pas partie des choix, lève une erreur
       else :
@@ -347,6 +361,10 @@ class Echecs(Jeu) :
       if mouv == "help" : 
         self.afficher_aide() 
       elif mouv == "quit" : 
+        sys.exit()
+      elif mouv == "save" :
+        nom = input('Donner le nom que vous voulez donner a votre fichier')
+        self.enregister(etat, nom)
         sys.exit()
       elif mouv == "abandon" : 
         if etat.est_blanc:
@@ -487,6 +505,8 @@ class Echecs(Jeu) :
 
       centre = (3.5, 3.5)  # Position centrale de l'échiquier
 
+      nb_tours_blanches = 0 #on initialise le nombre de tours pour encourager leur connexion
+      nb_tours_noires = 0
       for position, piece in etat.plateau.items():
           # Calculer la distance euclidienne entre la position de la pièce et le centre
           distance_centre = ((position[0] - centre[0]) ** 2 + (position[1] - centre[1]) ** 2) ** 0.5
@@ -496,7 +516,17 @@ class Echecs(Jeu) :
 
           # Ajouter le bonus à la valeur en fonction de la couleur de la pièce
           valeur += bonus_centre if piece.est_blanc else -bonus_centre
+          
+          if isinstance(piece, Tour):
+            if piece.est_blanc :
+              nb_tours_blanches += 1
+            else :
+              nb_tours_noires += 1
 
+      if nb_tours_blanches == 2:
+          valeur += 0.2
+      if nb_tours_noires == 2:
+          valeur -= 0.2
       return valeur
 
 
