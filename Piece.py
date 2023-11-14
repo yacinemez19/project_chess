@@ -26,4 +26,4 @@ class Piece(ABC):
     
     def __hash__(self):
         # Utilisez une combinaison de valeurs immuables qui résume l'état de l'objet
-        return hash((self.est_blanc, self.position))
+        return hash((self.est_blanc, self.position, self.nom))

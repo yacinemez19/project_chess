@@ -24,7 +24,7 @@ class Cavalier(Piece):
             if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x+a,y+b)):
               coups.add((x+a,y+b))
         if mouv2 is None or mouv2.est_blanc != self.est_blanc:
-          piece_en_prise = etat.plateau.get((x+a,y+b), None)
+          piece_en_prise = etat.plateau.get((x+b,y+a), None)
           if etat.est_case(x+b,y+a) and (piece_en_prise is None or piece_en_prise.est_blanc != self.est_blanc):
             if not verif_echec or not roi.met_en_echec(etat,tuple(self.position), (x+a,y+b)):
               coups.add((x+b,y+a))

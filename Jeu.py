@@ -20,7 +20,7 @@ class Jeu:
         "retourne la valeur de etat pour joueur "
         pass
     def est_final(self, etat):
-        return not self.mouvements_autorises(etat)
+        return not etat.mouvements
     def joueur(self, etat):
         "retourne le joueur qui doit jouer dans cet etat"
         return etat.doit_jouer
