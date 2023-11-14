@@ -1,24 +1,14 @@
 @startuml
-class EtatJeu {
+class Cavalier {
+    coups_possibles()
     __str__()
-        joueur
-    valeur
-    plateau
-    mouvements
+        valeur
     __init__()
 }
-class EtatEchecs {
-    copie_peu_profonde()
+class Dame {
+    coups_possibles()
     __str__()
-    __repr__()
-    __str__()
-    est_case()
-        est_blanc
-    Valeur
-    plateau
-    roi_blanc
-    roi_noir
-    mouvements
+        valeur
     __init__()
 }
 class InputError1 {
@@ -36,8 +26,12 @@ class PieceNotExistError {
 class MovementImpossibleError {
         __init__()
 }
+class WrongFileError {
+        __init__()
+}
 class Echecs {
     traduire()
+    traduire_inverse()
     deplacer()
     mouvements_autorises()
     verif_echec_mat_pat()
@@ -52,6 +46,7 @@ class Echecs {
     choisir_partie()
     afficher_aide()
     strategie()
+    evaluer_coup()
     joueur_alpha_beta()
     jouer_coup()
     partie()
@@ -61,12 +56,38 @@ class Echecs {
     valeur()
     alpha_beta()
     alpha_beta_cache()
-    construire_dict_mouvs()
-    nouvelle_prof()
-    graphe_jeu()
-    alphabeta_valeur()
-    joueur_alphabeta()
         __init__()
+}
+class EtatEchecs {
+    copie_peu_profonde()
+    __str__()
+    __repr__()
+    __eq__()
+    __ne__()
+    __hash__()
+    __str__()
+    est_case()
+        est_blanc
+    Valeur
+    plateau
+    roi_blanc
+    roi_noir
+    mouvements
+    __init__()
+}
+class EtatJeu {
+    __str__()
+        joueur
+    valeur
+    plateau
+    mouvements
+    __init__()
+}
+class Fou {
+    coups_possibles()
+    __str__()
+        valeur
+    __init__()
 }
 class Jeu {
     mouvements_autorises()
@@ -87,6 +108,9 @@ class Piece {
     coups_possibles()
     coup_est_possible()
     __str__()
+    __repr__()
+    __eq__()
+    __hash__()
         position
     est_blanc
     nom
@@ -94,21 +118,7 @@ class Piece {
 }
 class Pion {
     coups_possibles()
-        valeur
-    __init__()
-}
-class Cavalier {
-    coups_possibles()
-        valeur
-    __init__()
-}
-class Dame {
-    coups_possibles()
-        valeur
-    __init__()
-}
-class Fou {
-    coups_possibles()
+    __str__()
         valeur
     __init__()
 }
@@ -117,26 +127,29 @@ class Roi {
     coups_adverses()
     est_echec()
     met_en_echec()
+    __str__()
         valeur
     __init__()
 }
 class Tour {
     coups_possibles()
+    __str__()
         valeur
     __init__()
 }
-EtatJeu <|-- EtatEchecs
+Piece <|-- Cavalier
+Piece <|-- Dame
 Exception <|-- InputError1
 Exception <|-- KingNotFoundError
 Exception <|-- InputError2
 Exception <|-- PieceNotExistError
 Exception <|-- MovementImpossibleError
+Exception <|-- WrongFileError
 Jeu <|-- Echecs
+EtatJeu <|-- EtatEchecs
+Piece <|-- Fou
 ABC <|-- Piece
 Piece <|-- Pion
-Piece <|-- Cavalier
-Piece <|-- Dame
-Piece <|-- Fou
 Piece <|-- Roi
 Piece <|-- Tour
 @enduml

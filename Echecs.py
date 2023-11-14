@@ -60,7 +60,7 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def traduire_inverse(self, mouvement: list[tuple[int]])->str:
+  def traduire_inverse(self, mouvement: list[tuple[int,int]])->str:
     '''
     traduit un mouvement de type [position1, position2] en un str de type e2-e4
     '''
@@ -105,7 +105,7 @@ class Echecs(Jeu) :
     #self._cache_mouvements[etat] = mouvs
     return mouvs
   
-  def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool):
+  def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool) -> bool, bool:
     '''
       verifie si un joueur d'une couleur donnee n'est pas en echec et mat ou en pat
       renvoie False, False s'il n'y a ni echec ni pat
@@ -174,7 +174,7 @@ class Echecs(Jeu) :
               coups.append(coup)
       if coups == [] :
           etat_final = True
-    '''
+      '''
     if etat_final == True and raison is None:
       raison = "Match nul"
     return etat_final, raison
@@ -326,7 +326,7 @@ class Echecs(Jeu) :
 
 
   # démarre la partie avec les joueurs choisis par l'utilisateur
-  def choisir_partie(self,etat, choix) : 
+  def choisir_partie(self,etat: EtatEchecs, choix: str) -> list[list[tuple]]: 
     '''commence la partie selon les choix de joueur (choix2) de l'utilisateur
     :choix: choix2 du menu, str == 'j', 'i' ou 'ii'
     :return: p, historique des mouvements, list[list[tuple]]
@@ -570,7 +570,7 @@ class Echecs(Jeu) :
   @lru_cache(maxsize=None)
   def alpha_beta(self, etat, profondeur, alpha, beta, maximiser_joueur):
       '''
-      retourne la valeur d'un etat donne allant jusqua une pronfondeur donnee ou la fin de la partie
+      Retourne la valeur d'un état donné allant jusqu'à une profondeur donnée ou la fin de la partie
       '''
       est_fin, raison = self.etat_final(etat, [])
       if profondeur == 0 :
@@ -603,7 +603,7 @@ class Echecs(Jeu) :
 
   def alpha_beta_cache(self, etat, profondeur, alpha, beta, maximiser_joueur, cache):
       '''
-      retourne la valeur d'un etat donne allant jusqua une pronfondeur donnee ou la fin de la partie
+      Retourne la valeur d'un état donné allant jusqu'à une profondeur donnée ou la fin de la partie
       '''
       est_fin, raison = self.etat_final(etat, [])
       if etat in cache.keys():
