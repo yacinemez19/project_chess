@@ -410,7 +410,7 @@ class Echecs(Jeu) :
     for mouv, etat_suivant in tab_suivants :
       valeur_suivants.append(self.alpha_beta(etat_suivant, profondeur, -inf, inf, not etat.est_blanc))
       #on arrete si on trouve un echec et mat en un coup
-      if (valeur_suivants[-1] == profondeur * 1000 and etat.est_blanc) or (valeur_suivants[-1] == -profondeur * 1000 and not etat.est_blanc):
+      if (valeur_suivants[-1] == profondeur * 100000 and etat.est_blanc) or (valeur_suivants[-1] == -profondeur * 100000 and not etat.est_blanc):
         break
     meilleure_valeur = max(valeur_suivants) if etat.est_blanc else min(valeur_suivants)
     return tab_suivants[valeur_suivants.index(meilleure_valeur)][0]
@@ -517,7 +517,7 @@ class Echecs(Jeu) :
       if profondeur == 0 :
           return self.valeur(etat, True)
       elif self.etat_final(etat, []) :
-          value = (profondeur + 1) * 1000
+          value = (profondeur + 1) * 100000
           return -value if maximiser_joueur else value
       if maximiser_joueur:
           valeur_max = -inf
@@ -553,7 +553,7 @@ class Echecs(Jeu) :
           if raison == 'Match nul':
             return 0
           print(etat, profondeur)
-          value = (profondeur + 1) * 1000
+          value = (profondeur + 1) * 100000
           return -value if maximiser_joueur else value
         
       if maximiser_joueur:

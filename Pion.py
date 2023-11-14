@@ -17,7 +17,7 @@ class Pion(Piece):
         est_premier_coups = y == 1 if self.est_blanc else y == 6
         dir = 1 if self.est_blanc else -1
 
-        if est_premier_coups and not (x, y+2*dir) in etat.plateau:
+        if est_premier_coups and not (x, y+2*dir) in etat.plateau and not (x, y+dir) in etat.plateau:
             if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x,y+(2*dir))):
                 coups.add((x,y+(2*dir)))
 
