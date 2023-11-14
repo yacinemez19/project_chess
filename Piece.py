@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 
 class Piece(ABC):
@@ -16,3 +17,10 @@ class Piece(ABC):
     
     def __str__(self):
         return self.nom
+    
+    def __eq__(self, other : Piece) -> bool:
+        return self.position == other.position and self.est_blanc == other.est_blanc
+    
+    def __hash__(self):
+        # Utilisez une combinaison de valeurs immuables qui résume l'état de l'objet
+        return hash((self.est_blanc, self.position))
