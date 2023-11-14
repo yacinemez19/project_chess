@@ -218,8 +218,13 @@ class Echecs(Jeu) :
         if p != '.':
           x = j
           y = 7 - i
-          plateau[x, y] = self.str_en_piece(p, (x, y))
-    etat = EtatEchecs(True, 0, plateau) #True car quand on charge la partie on sait pas si blanc ou noir commence
+          plateau[x, y] = self.str_en_piece(p, [x, y])
+    titre = chemin.split("/")
+    if titre[-1][0] == "B" :
+      joueur = True
+    else :
+      joueur = False
+    etat = EtatEchecs(joueur, 0, plateau) 
     etat.roi_blanc = self.recherche_roi(etat, True)
     etat.roi_noir = self.recherche_roi(etat, False)
     if etat.roi_blanc is None or etat.roi_noir is None:
@@ -269,7 +274,7 @@ class Echecs(Jeu) :
     try : 
       # nouvelle partie
       if choix1 == 'n' : 
-        etat = self.charger('Nouvelle_partie.txt')
+        etat = self.charger('BNouvelle_partie.txt')
         self.choisir_partie(etat, choix2)
       # partie chargée
       elif choix1 == 'a' :

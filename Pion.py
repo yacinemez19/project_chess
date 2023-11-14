@@ -32,3 +32,9 @@ class Pion(Piece):
                     if not verif_echec or not roi.met_en_echec(etat, tuple(self.position), (x+i,y+dir)):
                         coups.add((x+i,y+dir))
         return coups
+    
+    def __str__(self):
+        if self.nom == "P" :
+            return "♙"
+        else : 
+            return "♟︎"

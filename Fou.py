@@ -27,5 +27,10 @@ class Fou(Piece):
                     coups.add((x+(i*n),y+(j*n))) 
         return coups
 
+    def __str__(self):
+        if self.nom == "F" :
+            return "♗"
+        else : 
+            return "♝"
                 
         
