@@ -21,9 +21,10 @@ class EtatEchecs(EtatJeu):
       txt = ''
       for y in range(8):
         for x in range(8):
+          txt +=' | '
           p = self.plateau.get((x,7-y), '.')
-          txt += str(p) + ' | '
-        txt += '\n'
+          txt += str(p)
+        txt+= ' |\n +-------------------------------+\n'
       return txt
     
     def __repr__(self):

@@ -4,12 +4,13 @@ from math import inf
 from EtatEchecs import *
 
 partie = Echecs()
-etat = partie.charger('test_eval_statique.txt')
+etat = partie.charger('test_cavalier_check_mate')
 print(etat)
 print(partie.eval_statique(etat))
-piece = etat.plateau.get((5,2))
-print(piece)
-print(piece.coups_possibles(etat))
+print(partie.etat_final(etat, []))
+print(partie.joueur_alpha_beta(etat, 2))
+print(etat.plateau[(4,1)].coups_possibles(etat, True))
+
 '''
 cache = {}
 etat.est_blanc = True
