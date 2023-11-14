@@ -65,12 +65,42 @@ def test_partie_IAs() : # pas fini
     durees.append(fin-depart)
     
     depart = time.time()
-    mouv2, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
-    fin = timre.time()
-    assert mouv2 = []
+    mouv2, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
+    fin = time.time()
+    assert mouv2 == []
+    
+    durees.append(fin-depart)
+    
+    depart = time.time()
+    mouv3, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
+    fin = time.time()
+    assert mouv3 == []
+    
+    durees.append(fin-depart)
+    
+    depart = time.time()
+    mouv4, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
+    fin = time.time()
+    assert mouv4 == []
+    
+    durees.append(fin-depart)
+    
+    depart = time.time()
+    mouv5, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
+    fin = time.time()
+    assert mouv5 == []
     
     durees.append(fin-depart)
     
