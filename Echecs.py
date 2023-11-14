@@ -268,6 +268,10 @@ class Echecs(Jeu) :
     fichier = open(nom, 'w+')
     print(repr(etat))
     fichier.write(repr(etat))
+    if etat.joueur == True :
+      fichier.write("B")
+    else :
+      fichier.write("N")
     print('Le fichier a ete enregistre sous le nom ', nom)
     return None
 
