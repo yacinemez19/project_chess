@@ -132,7 +132,7 @@ class Echecs(Jeu) :
     if self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, False):
       return True, 'Match nul'
     elif self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, True):
-      raison = 'Echec et mat blanc' if etat.est_blanc else 'Echec et mat noir'
+      raison = 'Echec et mat noir' if etat.est_blanc else 'Echec et mat blanc'
       return True, raison
 
     # état final par manque de matériel
@@ -237,11 +237,6 @@ class Echecs(Jeu) :
           x = j
           y = 7 - i
           plateau[x, y] = self.str_en_piece(p, (x, y))
-    titre = chemin.split("/")
-    if titre[-1][0] == "B" :
-      joueur = True
-    else :
-      joueur = False
     etat = EtatEchecs(couleur_debut == 'B', 0, plateau) 
     etat.roi_blanc = self.recherche_roi(etat, True)
     etat.roi_noir = self.recherche_roi(etat, False)
@@ -249,11 +244,11 @@ class Echecs(Jeu) :
       raise KingNotFoundError
     return etat
   
-  def afficher(self, etat) -> None:
+  def afficher(self, etat : EtatEchecs) -> None:
     '''
     affiche le plateau suivant l'etat donne 
     '''
-    print(etat, '_______________________________', '\na | b | c | d | e | f | g | h |')
+    print(etat,'a | b | c | d | e | f | g | h |')
     return None
 
   def enregister(self, etat, nom) -> None:
