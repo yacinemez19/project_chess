@@ -49,16 +49,13 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouv : list[tuple, tuple], etat : EtatEchecs) :
     """
     :etat: etat du jeu
     :mouv: [position1,position2]
     :return: état modifié
     """
     e1 = etat.copie_peu_profonde()
-     # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
-    piece = copy.copy(e1.plateau.pop(mouv[0], None))
     if piece is None or piece.est_blanc != etat.est_blanc:
       raise PieceNotExistError
     if mouv[1] not in piece.coups_possibles(etat, True):
@@ -113,7 +110,6 @@ class Echecs(Jeu) :
     # état final par manque de matériel
     if len(etat.plateau.keys()) <= 4 : 
       compteur_blanc = 0
-      for x in etat.plateau.keys() : 
         if x.est_blanc : 
           compteur_blanc += 1
 
@@ -121,7 +117,6 @@ class Echecs(Jeu) :
       if compteur_blanc <= 2 : 
         liste = []
         for piece in etat.plateau.values():
-          liste = isinstance(piece, Roi) or isinstance(piece, Cavalier) or isinstance(piece, Fou)
         etat_final = False not in liste
 
       # s'il y a moins de quatre pièces, dont 2 sont des cavaliers de même couleur, fin de partie
@@ -166,7 +161,6 @@ class Echecs(Jeu) :
     return coups 
 
   @staticmethod
-  def str_en_piece(c : str, pos : [int, int]) -> Piece:
     '''
     Prend en argument le nom d'une piece et sa position et renvoie la piece
     '''
@@ -339,9 +333,7 @@ class Echecs(Jeu) :
     if joueur == "IA" : 
       return self.joueur_alpha_beta(etat, self._profondeur)
   
-  def joueur_alpha_beta(self, etat : EtatEchecs, profondeur : int):
     '''
-    retourne le meilleur coup selon minimax a une profondeur donnee
     '''
     assert profondeur > 0
     tab_suivants = self.suivants(etat)

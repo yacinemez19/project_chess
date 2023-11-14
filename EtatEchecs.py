@@ -1,4 +1,6 @@
+from __future__ import annotations
 from EtatJeu import EtatJeu
+
 
 class EtatEchecs(EtatJeu):
     def __init__(self, Joueur: bool, Valeur: int, Plateau):
@@ -33,6 +35,16 @@ class EtatEchecs(EtatJeu):
         txt += '\n'
       txt += str(self.est_blanc)
       return txt
+
+    def __eq__(self, other : EtatEchecs) -> bool:
+      return self.plateau == other.plateau and self.est_blanc == other.est_blanc
+    
+    def __ne__(self, other : EtatEchecs) -> bool:
+       return not self.__eq__(other)
+    
+    def __hash__(self) -> int:
+        # Utilisez une combinaison des valeurs de hachage des attributs nécessaires
+        return hash((frozenset(self.plateau.items()), self.est_blanc))
 
     '''
     def __str__(self):

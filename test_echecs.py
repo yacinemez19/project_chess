@@ -1,13 +1,41 @@
 import pytest
 
-from Echecs import Echecs
+from Echecs import Echecs, PieceNotExistError, MovementImpossibleError
 from EtatEchecs import EtatEchecs
-from Echecs import MovementImpossibleError
 
-def test_traduire():
+@pytest.fixture
+def exemple_jeu():
     jeu = Echecs()
+    return jeu
+
+@pytest.fixture
+def exemple_etat(exemple_jeu):
+    etat = exemple_jeu.charger('test.txt')
+    return etat
+
+def test_traduire(exemple_jeu):
     mouvement_valide = "a2-b3"
-    assert jeu.traduire(mouvement_valide) == [(0, 1), (1, 2)]
+    assert exemple_jeu.traduire(mouvement_valide) == [(0, 1), (1, 2)]
     mouvement_invalide = "z4-i9"
-    assert jeu.traduire(mouvement_invalide) == "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"
+    assert exemple_jeu.traduire(mouvement_invalide) == "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"
+    
+def test_deplacer_valide(exemple_jeu, exemple_etat):
+    mouvement_valide = [(0,1),(0,2)]
+    nouvel_etat = exemple_jeu.deplacer(mouvement_valide, exemple_etat)
+    with pytest.raises(KeyError): # S'assure qu'aucune pièce ne se situe dans la position initiale du plateau
+        nouvel_etat.plateau[mouvement_valide[0]]
+    piece = nouvel_etat.plateau[mouvement_valide[1]]
+    assert piece.position == mouvement_valide[1]
+    
+def test_deplacer_invalide(exemple_jeu, exemple_etat):
+    mouvement_invalide = [(0,2),(0,3)] # Invalide car aucune pièce n'est présente en 0,2
+    with pytest.raises(PieceNotExistError):
+        nouvel_etat = exemple_jeu.deplacer(mouvement_invalide, exemple_etat)
+        
+def test_deplacer_impossible(exemple_jeu, exemple_etat):
+    mouvement_impossible = [(0,1),(1,1)] # Impossible car il y a déjà une pièce en 1,1 et le pion ne se déplace pas latéralement
+    with pytest.raises(MovementImpossibleError):
+        nouvel_etat = exemple_jeu.deplacer(mouvement_impossible, exemple_etat)
+
+
     
