@@ -30,7 +30,7 @@ def test_echec_et_mat():
     fin2 = time.time()
     assert mouv2 == [(0,1),(1,1)]
     
-    return (fin1-debut1,fin2-debut2)
+    return (fin1-depart1,fin2-depart2)
 
 def capture_pion() : 
     
@@ -38,29 +38,30 @@ def capture_pion() :
     etat = e.charger('Btest_capture_pion.txt')
     mouv = e.joueur_alphabeta(etat)
     fin1 = time.time()
-    assert mouv = [(7,6),(7,1)]
+    assert mouv == [(7,6),(7,1)]
     
     depart2 = time.time()
     etat2 = e.charger('Ntest_eviter_capture_pion_2.txt')
     mouv2 = e.joueur_alphabeta(etat2)
     fin2 = time.time()
-    assert mouv2 = [(7,1),(7,2)]
+    assert mouv2 == [(7,1),(7,2)]
     
-    return (fin1-debut1,fin2-debut2)
+    return (fin1-depart1,fin2-depart2)
     
 def test_partie_IAs() : # pas fini
     
     etat = e.charger('BNouvelle_partie.txt')
+    e = Echecs()
     
     durees = []
     
     depart = time.time()
-    mouv1, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
-    fin = timre.time()
-    assert mouv1 = []
+    mouv1, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
+    fin = time.time()
+    assert mouv1 == []
     
     durees.append(fin-depart)
     
