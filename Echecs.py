@@ -30,8 +30,11 @@ class Echecs(Jeu) :
   _profondeur = 2
 
   def traduire(self, mouvement:str) -> list[tuple[int,int]]:
-    ''':mouvement: "mouvement"
-    :return: [ancienne position, nouvelle postion]
+    '''
+    Traduis le mouvement du type e2-e4 en liste de tuple
+    
+    :mouvement: Le mouvement du type e2-e4
+    :return: [ancienne position, nouvelle position]
     '''
     colonnes =  ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
     mouv_str = [x.strip() for x in mouvement]
@@ -49,22 +52,24 @@ class Echecs(Jeu) :
     
     return [position1, position2]
   
-  def deplacer(self, mouv : list[tuple, tuple], etat : EtatEchecs) :
+  def deplacer(self, mouvement : list[tuple, tuple], etat : EtatEchecs) -> EtatEchecs :
     """
-    :etat: etat du jeu
-    :mouv: [position1,position2]
-    :return: état modifié
+    Renvoie un état du jeu ayant pris en compte le déplacement d'une pièce
+    
+    :etat: État du jeu
+    :mouvement: [position1,position2]
+    :return: État du jeu modifié
     """
     e1 = etat.copie_peu_profonde()
-     # if mouv not in self.mouvements_autorises(e1, e1.est_blanc):
+     # if mouvement not in self.mouvements_autorises(e1, e1.est_blanc):
      #   raise MovementError
-    piece = copy.copy(e1.plateau.pop(mouv[0], None))
+    piece = copy.copy(e1.plateau.pop(mouvement[0], None))
     if piece is None or piece.est_blanc != etat.est_blanc:
       raise PieceNotExistError
-    if mouv[1] not in piece.coups_possibles(etat, True):
+    if mouvement[1] not in piece.coups_possibles(etat, True):
       raise MovementImpossibleError
-    piece.position = mouv[1]
-    e1.plateau[(mouv[1])] = piece
+    piece.position = mouvement[1]
+    e1.plateau[(mouvement[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
     return e1
       
