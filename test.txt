@@ -6,3 +6,4 @@ ppp.pppp
 .....P..
 PPP.P.PP
 TCFDRFCT
+B

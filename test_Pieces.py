@@ -2,31 +2,53 @@ import pytest
 
 from Echecs import Echecs
 from EtatEchecs import *
-from Roi import *
-from Fou import *
 from Pion import *
+from Tour import *
+from Fou import *
+from Dame import *
+from Roi import *
+from Cavalier import *
 
 def test_coups_possibles():
     partie = Echecs()
     etat = partie.charger('test.txt')
-    
+    #Roi
     for piece in etat.plateau.values():
         if piece.est_blanc and type(piece) == Roi:
             roi = piece
-    assert roi.position == [4,0] and roi.est_blanc is True
+    assert roi.position == (4,0) and roi.est_blanc is True
     assert roi.coups_possibles(etat, True) == {(3,1),(5,1)}
-    
+    #Fou
     fou = None
     for piece in etat.plateau.values():
         if piece.est_blanc and type(piece) == Fou:
             fou = piece
-    assert fou.position == [5,0]
+    assert fou.position == (5,0)
     assert fou.coups_possibles(etat, True) == set()
-    
-    pion = None
+    #Pion
     pion = etat.plateau[(5,2)]
-    assert pion.position == [5,2]
+    assert pion.position == (5,2)
     assert pion.coups_possibles(etat, True) == {(5,3),(4,3)}
+    #Tour
+    for piece in etat.plateau.values():
+        if not piece.est_blanc and type(piece) == Tour:
+            tour = piece
+    assert tour.position == (7, 7)
+    assert tour.coups_possibles(etat, True) == {(6,7)}
+    #Cavalier
+    cavalier = None
+    for piece in etat.plateau.values():
+        if piece.est_blanc and type(piece) == Cavalier:
+            cavalier = piece
+    assert cavalier.position == (5, 7)
+    assert cavalier.coups_possibles(etat, True) == {(4, 5), (6, 5), (7, 6), (7, 8)}
+    #Dame
+    dame = None
+    for piece in etat.plateau.values():
+        if piece.est_blanc and type(piece) == Dame:
+            dame = piece
+    assert dame.position == (4, 7)
+    assert dame.coups_possibles(etat, True) == {(3, 6), (5, 6), (3, 7), (5, 7), (3, 8), (4, 6), (5, 8), (4, 8)}
 
 def test_est_echec():
     partie = Echecs()
