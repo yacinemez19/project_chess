@@ -31,7 +31,6 @@ def test_echec_et_mat(e):
     fin2 = time.time()
     assert mouv2 == [(0,6),(1,6)]
     
-    return (fin1-depart1,fin2-depart2)
 
 def capture_pion(e) : 
     
@@ -47,30 +46,17 @@ def capture_pion(e) :
     fin2 = time.time()
     assert mouv2 == [(7,6),(7,5)]
     
-    return (fin1-depart1,fin2-depart2)
+
     
-def test__debut_partie_IAs(e) : 
-    
-    etat = e.charger('BNouvelle_partie.txt')
-    durees = []
-    
-    for i in range(3) :
-        depart = time.time()
-        
-        mouv2 = e.joueur_alpha_beta(etat, 3)
-        
-        mouv, etat = e.jouer_coup("IA", "IA", etat)
-        etat.roi_blanc = e.recherche_roi(etat, True)
-        etat.roi_noir = e.recherche_roi(etat, False)
-        etat.Valeur = e.eval_statique(etat)
-        
-        fin = time.time()
-        
-        assert mouv == mouv2
-    
-        durees.append(fin-depart)
-    
-    return durees
+def test_mat_2_coups(e) : 
+    pass
+
+def test_capture_2_coups(e) :
+    pass
+
+def test_fourchette(e):
+    pass
+
 
 
     
