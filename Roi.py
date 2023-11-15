@@ -57,7 +57,7 @@ class Roi(Piece):
     piece.position = list(new_pos)
     etat1.plateau[new_pos] = piece
     if isinstance(piece, Roi):
-      #si la piece est le roi alors est_echec doit verifier si le roi a la nouvelle position est mit en echec sans changer la position du vrai roi
+      #si la piece est le roi alors est_echec doit verifier si le roi à la nouvelle position est mis en echec sans changer la position du vrai roi
       return piece.est_echec(etat1)
     return self.est_echec(etat1)
   
