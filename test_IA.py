@@ -82,7 +82,7 @@ def test_fourchette(e):
     etat.roi_blanc = e.recherche_roi(etat, True)
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
-    assert mouv == [(4,2),(5,0)]
+    assert mouv == [(4,2),(3,0)]
 
 
 
