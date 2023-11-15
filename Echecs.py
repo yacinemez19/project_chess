@@ -105,7 +105,7 @@ class Echecs(Jeu) :
     #self._cache_mouvements[etat] = mouvs
     return mouvs
   
-  def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool) -> bool, bool:
+  def verif_echec_mat_pat(self, etat : EtatEchecs, joueur_est_blanc : bool) -> bool:
     '''
       verifie si un joueur d'une couleur donnee n'est pas en echec et mat ou en pat
       renvoie False, False s'il n'y a ni echec ni pat
