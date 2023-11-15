@@ -44,22 +44,22 @@ def test_mat_2_coups(e) :
     
     etat = e.charger('test_mat_en_2_coups.txt')
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     assert mouv == [(1,2),(0,0)]
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     assert mouv == [(1,1),(0,0)]
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     assert mouv == [(1,3),(2,2)]
 
 
@@ -67,21 +67,21 @@ def test_fourchette(e):
     
     etat = e.charger('test_fourchette.txt')
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     assert mouv == [(5,4),(4,2)]
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     
-    mouv, etat = self.jouer_coup("IA", "IA", etat)
-    etat.roi_blanc = self.recherche_roi(etat, True)
-    etat.roi_noir = self.recherche_roi(etat, False)
-    etat.valeur = self.eval_statique(etat)
+    mouv, etat = e.jouer_coup("IA", "IA", etat)
+    etat.roi_blanc = e.recherche_roi(etat, True)
+    etat.roi_noir = e.recherche_roi(etat, False)
+    etat.valeur = e.eval_statique(etat)
     assert mouv == [(4,2),(5,0)]
 
 
