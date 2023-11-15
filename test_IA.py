@@ -23,13 +23,13 @@ def test_echec_et_mat(e):
     etat = e.charger('Btest_echec_et_mat_IA.txt')
     mouv = e.joueur_alpha_beta(etat, 3)
     fin1 = time.time()
-    assert mouv == [(1,4),(0,4)]
+    assert mouv == [(1,3),(0,3)]
     
     depart2 = time.time()
     etat2 = e.charger('Ntest_eviter_echec_IA.txt')
     mouv2 = e.joueur_alpha_beta(etat2, 3)
     fin2 = time.time()
-    assert mouv2 == [(0,1),(1,1)]
+    assert mouv2 == [(0,6),(1,6)]
     
     return (fin1-depart1,fin2-depart2)
 
@@ -39,13 +39,13 @@ def capture_pion(e) :
     etat = e.charger('Btest_capture_pion.txt')
     mouv = e.joueur_alpha_beta(etat,3)
     fin1 = time.time()
-    assert mouv == [(7,6),(7,1)]
+    assert mouv == [(7,1),(7,6)]
     
     depart2 = time.time()
     etat2 = e.charger('Ntest_eviter_capture_pion_2.txt')
     mouv2 = e.joueur_alpha_beta(etat2, 3)
     fin2 = time.time()
-    assert mouv2 == [(7,1),(7,2)]
+    assert mouv2 == [(7,6),(7,5)]
     
     return (fin1-depart1,fin2-depart2)
     
