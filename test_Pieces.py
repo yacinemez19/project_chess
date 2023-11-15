@@ -11,44 +11,32 @@ from Cavalier import *
 
 def test_coups_possibles():
     partie = Echecs()
-    etat = partie.charger('test.txt')
     #Roi
-    for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Roi:
-            roi = piece
-    assert roi.position == (4,0) and roi.est_blanc is True
-    assert roi.coups_possibles(etat, True) == {(3,1),(5,1)}
+    etat = partie.charger('tests_pieces/test_roi.txt')
+    roi = etat.plateau[(4,4)]
+    assert roi.coups_possibles(etat, True) == {(5, 5), (3, 4), (4, 3), (5, 4), (4, 5), (3, 3), (5, 3), (3, 5)}
     #Fou
-    fou = None
-    for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Fou:
-            fou = piece
-    assert fou.position == (5,0)
-    assert fou.coups_possibles(etat, True) == set()
+    etat = partie.charger('tests_pieces/test_fou.txt')
+    fou = etat.plateau[(4,4)]
+    assert fou.coups_possibles(etat, True) == {(6, 2), (5, 5), (7, 1), (7, 7), (0, 0), (1, 1), (5, 3), (1, 7), (3, 3), (2, 6), (2, 2), (6, 6), (3, 5)}
     #Pion
-    pion = etat.plateau[(5,2)]
-    assert pion.position == (5,2)
-    assert pion.coups_possibles(etat, True) == {(5,3),(4,3)}
+    etat = partie.charger('tests_pieces/test_pion.txt')
+    pion = etat.plateau[(4,4)]
+    assert pion.coups_possibles(etat, True) == {(4, 3)}
     #Tour
-    for piece in etat.plateau.values():
-        if not piece.est_blanc and type(piece) == Tour:
-            tour = piece
-    assert tour.position == (7, 7)
-    assert tour.coups_possibles(etat, True) == {(6,7)}
+    etat = partie.charger('tests_pieces/test_tour.txt')
+    tour = etat.plateau[(4,4)]
+    assert tour.coups_possibles(etat, True) == {(7, 4), (2, 4), (4, 0), (0, 4), (3, 4), (4, 3), (5, 4), (4, 6), (6, 4), (1, 4), (4, 2), (4, 5), (4, 1), (4, 7)}
     #Cavalier
-    cavalier = None
-    for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Cavalier:
-            cavalier = piece
-    assert cavalier.position == (5, 7)
-    assert cavalier.coups_possibles(etat, True) == {(4, 5), (6, 5), (7, 6), (7, 8)}
+    etat = partie.charger('tests_pieces/test_cavalier.txt')
+    cavalier = etat.plateau[(4,4)]
+    assert cavalier.coups_possibles(etat, True) == {(6, 5), (2, 3), (2, 5), (5, 6), (3, 6), (3, 2), (6, 3), (5, 2)}
     #Dame
-    dame = None
-    for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Dame:
-            dame = piece
-    assert dame.position == (4, 7)
-    assert dame.coups_possibles(etat, True) == {(3, 6), (5, 6), (3, 7), (5, 7), (3, 8), (4, 6), (5, 8), (4, 8)}
+    etat = partie.charger('tests_pieces/test_dame.txt')
+    reine = etat.plateau[(4,4)]
+    print(reine.coups_possibles(etat, True))
+    assert reine.coups_possibles(etat, True) == {(4, 0), (3, 4), (4, 3), (5, 4), (4, 6), (2, 2), (7, 4), (6, 2), (7, 1), (7, 7), (4, 2), (4, 5), (3, 3), (5, 3), (2, 4), (0, 4), (6, 4), (4, 1), (4, 7), (3, 5), (5, 5), (0, 0), (1, 1), (1, 4), (1, 7), (2, 6), (6, 6)}
+
 
 def test_est_echec():
     partie = Echecs()

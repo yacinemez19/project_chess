@@ -1,6 +1,6 @@
 import pytest
 
-from Echecs import Echecs, PieceNotExistError, MovementImpossibleError
+from Echecs import Echecs, PieceNotExistError, MovementImpossibleError, WrongFileError
 from EtatEchecs import EtatEchecs
 
 @pytest.fixture
@@ -36,6 +36,12 @@ def test_deplacer_impossible(exemple_jeu, exemple_etat):
     mouvement_impossible = [(0,1),(1,1)] # Impossible car il y a déjà une pièce en 1,1 et le pion ne se déplace pas latéralement
     with pytest.raises(MovementImpossibleError):
         nouvel_etat = exemple_jeu.deplacer(mouvement_impossible, exemple_etat)
+
+def test_charger(exemple_jeu):
+    '''Teste si un fichier corrompu renvoie bien une erreur WrongFileError'''
+    with pytest.raises(WrongFileError):
+        exemple_jeu.charger('tests_echecs/test_charger.txt')
+    
 
 
     
