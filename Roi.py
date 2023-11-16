@@ -42,9 +42,9 @@ class Roi(Piece):
       new_x, new_y = x + i, y + j
       piece_visee = plateau.get((new_x, new_y), None)
       while etat.est_case(new_x, new_y) and not piece_visee:
-        piece_visee = plateau.get((new_x, new_y), None)
         n += 1
         new_x, new_y = x + i*n, y + j*n
+        piece_visee = plateau.get((new_x, new_y), None)
         
       if piece_visee and piece_visee.est_blanc != self.est_blanc and (isinstance(piece_visee, Tour) or isinstance(piece_visee, Dame)):
         return True
@@ -56,9 +56,9 @@ class Roi(Piece):
         new_x, new_y = x + i, y + j
         piece_visee = plateau.get((new_x, new_y), None)
         while etat.est_case(new_x, new_y) and not piece_visee:
-          piece_visee = plateau.get((new_x, new_y), None)
           n += 1
           new_x, new_y = x + i*n, y + j*n
+          piece_visee = plateau.get((new_x, new_y), None)
           
         if piece_visee and piece_visee.est_blanc != self.est_blanc and (isinstance(piece_visee, Fou) or isinstance(piece_visee, Dame)):
           return True
@@ -106,7 +106,7 @@ class Roi(Piece):
       raise AttributeError('Erreur dans la position de la piece')
     etat1 = etat.copie_peu_profonde()
     piece = copy.copy(etat1.plateau.pop(old_pos))
-    piece.position = list(new_pos)
+    piece.position = new_pos
     etat1.plateau[new_pos] = piece
     if isinstance(piece, Roi):
       #si la piece est le roi alors est_echec doit verifier si le roi a la nouvelle position est mit en echec sans changer la position du vrai roi

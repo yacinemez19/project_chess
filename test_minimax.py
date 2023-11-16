@@ -8,7 +8,7 @@ partie = Echecs()
 etat = partie.charger('wiwi')
 print(etat)
 print(partie.etat_final(etat, []))
-print(etat.plateau[(0,6)].est_echec(etat))
+print(partie.mouvements_autorises(etat))
 '''
 cache = {}
 etat.est_blanc = True
