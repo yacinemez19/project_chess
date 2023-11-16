@@ -159,13 +159,17 @@ class Echecs(Jeu) :
       
     if len(historique) >= 6 :
         #règle des trois coups
-      liste = []
-      for a in historique[:-1:2]:
-        for b in historique[:-2:2] : 
-          if (historique[-1],historique[-2]) == (a,b) :
-              liste.append(True)
-      if len(liste) >= 3 :
-        etat_final = True
+        
+      positions_vues = {}  # Dictionnaire pour stocker les positions vues avec le nombre de répétitions
+
+      for coup in historique:
+        position_actuelle = (coup[0][0][0],coup[0][0][1],coup[0][1][0],coup[0][1][1])
+        positions_vues[position_actuelle] = positions_vues.get(position_actuelle, 0) + 1
+
+        # Si la position actuelle a été atteinte trois fois, état final
+        if positions_vues[position_actuelle] == 3:
+            etat_final = True
+            break
       '''
       # règle des 50 coups
       coups = []
