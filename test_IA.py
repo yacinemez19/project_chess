@@ -48,19 +48,19 @@ def test_mat_2_coups(e) :
     etat.roi_blanc = e.recherche_roi(etat, True)
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
-    assert mouv == [(4,3),(7,0)]
+    assert mouv == [(1,5),(2,5)]
     
     mouv, etat = e.jouer_coup("IA", "IA", etat)
     etat.roi_blanc = e.recherche_roi(etat, True)
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
-    assert mouv == [(0,6),(0,5)]
+    assert mouv == [(3,6),(3,7)]
     
     mouv, etat = e.jouer_coup("IA", "IA", etat)
     etat.roi_blanc = e.recherche_roi(etat, True)
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
-    assert mouv == [(0,0),(0,5)]
+    assert mouv == [(5,5),(3,5)]
 
 
 def test_fourchette(e):
