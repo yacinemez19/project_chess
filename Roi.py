@@ -110,6 +110,7 @@ class Roi(Piece):
     piece = copy.copy(etat1.plateau.pop(old_pos))
     piece.position = new_pos
     etat1.plateau[new_pos] = piece
+
     if isinstance(piece, Roi):
       #si la piece est le roi alors est_echec doit verifier si le roi a la nouvelle position est mit en echec sans changer la position du vrai roi
       return piece.est_echec(etat1)

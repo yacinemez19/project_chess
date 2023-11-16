@@ -60,7 +60,6 @@ def test_mat_2_coups(e) :
     etat.valeur = e.eval_statique(etat)
     assert mouv == [(5,5),(3,5)]
 
-
 def test_fourchette(e):
     
     etat = e.charger('test_fourchette.txt')

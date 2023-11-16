@@ -87,6 +87,11 @@ class Echecs(Jeu) :
     piece.position = mouvement[1]
     e1.plateau[(mouvement[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
+    if isinstance(piece, Roi):
+      if piece.est_blanc:
+        e1.roi_blanc = piece
+      else :
+        e1.roi_noir = piece
     return e1
       
   def mouvements_autorises(self, etat : EtatEchecs) -> list[tuple,tuple] : 
@@ -189,7 +194,7 @@ class Echecs(Jeu) :
     coups = {} 
     for piece in etat.plateau.values() :
       if piece.est_blanc == est_blanc : 
-        for coup in piece.coups_possibles(etat, True): 
+        for coup in piece.coups_possibles(etat, True):
           coups.setdefault(coup,set()).add(piece.position)
     return coups 
 
