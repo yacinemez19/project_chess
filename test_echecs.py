@@ -10,7 +10,7 @@ def exemple_jeu():
 
 @pytest.fixture
 def exemple_etat(exemple_jeu):
-    etat = exemple_jeu.charger('/tests_echecs/test.txt')
+    etat = exemple_jeu.charger('tests_echecs/test.txt')
     return etat
 
 def test_traduire(exemple_jeu):
