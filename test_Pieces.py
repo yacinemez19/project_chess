@@ -41,22 +41,15 @@ def test_coups_possibles():
 def test_est_echec():
     partie = Echecs()
     etat = partie.charger('testechec.txt')
-    roi = None
-    for piece in etat.plateau.values():
-        if piece.est_blanc and isinstance(piece,Roi):
-            roi = piece
-    assert roi.position == [3,1] and roi.est_blanc is True
+    roi = etat.plateau[(3,1)]
     assert roi.est_echec(etat) is True
 
 def test_coup_echec():
     partie = Echecs()
     etat = partie.charger('test_coup_echec.txt')
-    roi = None
-    for piece in etat.plateau.values():
-        if piece.est_blanc and type(piece) == Roi:
-            roi = piece
-    assert roi.position == [4,0] and roi.est_blanc is True
-    assert (3, 1) in etat.plateau[(4,2)].coups_possibles(etat) 
+    roi = etat.plateau[(4,0)]
+    assert isinstance(roi, Roi)
+    assert (3, 1) in etat.plateau[(4,2)].coups_possibles(etat) # On vérifie que le fou noir peut aller dans la case menacée
     assert roi.met_en_echec(etat, tuple(roi.position), (3,1))
     assert roi.coups_possibles(etat, True) == set()
 
@@ -72,7 +65,7 @@ def test_pat():
     etat = partie.charger('test_pat.txt')
     etat.est_blanc = False
     roi = etat.plateau[(6,7)]
-    assert roi.position == [6,7] and not roi.est_blanc
+    assert roi.position == (6,7) and not roi.est_blanc
     assert not roi.est_echec(etat) 
     assert roi.coups_possibles(etat, True) == set()
     assert partie.etat_final(etat, []) == (True, 'Match nul')
