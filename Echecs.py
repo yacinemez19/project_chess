@@ -159,10 +159,13 @@ class Echecs(Jeu) :
       
     if len(historique) >= 6 :
         #règle des trois coups
-      for a in historique[::2]:
-        for b in historique[1::2] : 
+      liste = []
+      for a in historique[:-1:2]:
+        for b in historique[:-2:2] : 
           if (historique[-1],historique[-2]) == (a,b) :
-              etat_final == True
+              liste.append(True)
+      if len(liste) >= 3 :
+        etat_final = True
       '''
       # règle des 50 coups
       coups = []
