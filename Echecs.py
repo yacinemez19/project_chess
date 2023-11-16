@@ -49,13 +49,13 @@ class Echecs(Jeu) :
     
     try: 
       # vérifie qu'il s'agit d'un déplacement
-      if not mouv_str[0] in self.colonnes : 
+      if not mouv_str[0] in self.colonnes :
         raise MovementImpossibleError
       position1 = (self.colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
       position2 = (self.colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
       if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
         raise IndexError
-    except: 
+    except:
       return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
     
     return [position1, position2]
@@ -164,13 +164,17 @@ class Echecs(Jeu) :
       
     if len(historique) >= 6 :
         #règle des trois coups
-      liste = []
-      for a in historique[:-1:2]:
-        for b in historique[:-2:2] : 
-          if (historique[-1],historique[-2]) == (a,b) :
-              liste.append(True)
-      if len(liste) >= 3 :
-        etat_final = True
+        
+      positions_vues = {}  # Dictionnaire pour stocker les positions vues avec le nombre de répétitions
+
+      for coup in historique:
+        position_actuelle = (coup[0][0][0],coup[0][0][1],coup[0][1][0],coup[0][1][1])
+        positions_vues[position_actuelle] = positions_vues.get(position_actuelle, 0) + 1
+
+        # Si la position actuelle a été atteinte trois fois, état final
+        if positions_vues[position_actuelle] == 3:
+            etat_final = True
+            break
       '''
       # règle des 50 coups
       coups = []
