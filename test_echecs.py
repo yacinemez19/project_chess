@@ -1,5 +1,5 @@
 import pytest
-
+from io import StringIO
 from Echecs import Echecs, PieceNotExistError, MovementImpossibleError, WrongFileError, KingNotFoundError
 from EtatEchecs import EtatEchecs
 
@@ -30,14 +30,14 @@ def test_deplacer_valide(exemple_jeu, exemple_etat):
     assert piece.position == mouvement_valide[1]
     
 def test_deplacer_invalide(exemple_jeu, exemple_etat):
-    mouvement_invalide = [(0,2),(0,3)] # Invalide car aucune pièce n'est présente en 0,2
+    mouvement_invalide = [(0,2),(0,3)] # Invalide car aucune pièce n'est présente en (0,2)
     with pytest.raises(PieceNotExistError):
-        nouvel_etat = exemple_jeu.deplacer(mouvement_invalide, exemple_etat)
+        exemple_etat = exemple_jeu.deplacer(mouvement_invalide, exemple_etat)
         
 def test_deplacer_impossible(exemple_jeu, exemple_etat):
     mouvement_impossible = [(0,1),(1,1)] # Impossible car il y a déjà une pièce en 1,1 et le pion ne se déplace pas latéralement
     with pytest.raises(MovementImpossibleError):
-        nouvel_etat = exemple_jeu.deplacer(mouvement_impossible, exemple_etat)
+        exemple_etat = exemple_jeu.deplacer(mouvement_impossible, exemple_etat)
 
 def test_charger(exemple_jeu):
     '''Teste si un fichier corrompu renvoie bien une erreur WrongFileError'''
@@ -48,8 +48,28 @@ def test_charger(exemple_jeu):
     with pytest.raises(KingNotFoundError):
         exemple_jeu.charger('tests_echecs/test_pasderoi.txt')
         
-def test_afficher(exemple_jeu,exemple_etat):
-    assert exemple_jeu.afficher(exemple_etat) == ""
-
+def test_afficher(capfd,exemple_jeu,exemple_etat):
+    exemple_jeu.afficher(exemple_etat)
+    captured = capfd.readouterr()
+    expected_output = (
+        " | ♜ | ♞ | ♝ | ♛ | . | ♝ | . | ♜ |\n"
+       + " +-------------------------------+\n "
+       + "| ♟︎ | ♟︎ | ♟︎ | . | ♟︎ | ♟︎ | ♟︎ | ♟︎ |\n "
+       + "+-------------------------------+\n "
+       + "| . | . | . | ♟︎ | . | . | . | . |\n "
+       + "+-------------------------------+\n "
+       + "| . | . | . | . | . | . | . | . |\n "
+       + "+-------------------------------+\n "
+       + "| . | . | . | ♙ | ♚ | . | . | . |\n "
+       + "+-------------------------------+\n "
+       + "| . | . | . | . | . | ♙ | . | . |\n "
+       + "+-------------------------------+\n "
+       + "| ♙ | ♙ | ♙ | . | ♙ | . | ♙ | ♙ |\n "
+       + "+-------------------------------+\n "
+       + "| ♖ | . | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ |"
+       + "\n +-------------------------------+"
+       + "\n a | b | c | d | e | f | g | h |\n"
+    )
+    assert captured[0] == expected_output
 
     
