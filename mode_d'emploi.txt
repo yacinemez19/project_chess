@@ -1,0 +1,10 @@
+Pour reprendre une ancienne partie, entrez le chemin du fichier, qui doit être un fichier txt du même format que le fichier BNouvelle_partie.txt.
+Si vous voulez reprendre une partie que vous avez enregistre à partir de ce programme d'échecs, vous pouvez appeler directement le nom du fichier, sans oublier l'extension .txt.
+
+A tout moment dans le jeu, vous pouvez entrer dans le terminal a la place d'un mouvement :
+- quit si vous souhaitez quitter la partie sans l'enregistrer
+- save si vous souhaitez enregistrer votre partie
+- abandon si vous souhaitez abandonner
+
+Tout mouvement doit etre dans le format "e4-f5", meme les mouvements de capture.
+Quand vous capturez une piece, entrez le mouvement que fait votre piece.

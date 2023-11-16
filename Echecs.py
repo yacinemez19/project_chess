@@ -251,7 +251,7 @@ class Echecs(Jeu) :
     print(etat,'a | b | c | d | e | f | g | h |')
     return None
 
-  def enregister(self, etat, nom) -> None:
+  def enregistrer(self, etat, nom) -> None:
     '''
     sauvegarde l'etat de la partie dans un fichier donne
     
@@ -263,7 +263,7 @@ class Echecs(Jeu) :
     fichier = open(nom, 'w+')
     print(repr(etat))
     fichier.write(repr(etat))
-    if etat.joueur == True :
+    if etat.est_blanc == True :
       fichier.write("B")
     else :
       fichier.write("N")
@@ -309,7 +309,7 @@ class Echecs(Jeu) :
       # affiche le mode d'emploi
       elif choix1 == 'help' : 
           self.afficher_aide()
-          self.debut_partie()
+          sys.exit()
 
       # Si l'input ne fait pas partie des choix, lève une erreur
       else :
@@ -341,7 +341,7 @@ class Echecs(Jeu) :
         raise InputError2
     return None
       
-  def afficher_aide() : 
+  def afficher_aide(self) : 
     ''' affiche le manuel d'utilisation du jeu'''
     with open("mode_d'emploi.txt", 'r') as f: 
       for ligne in f : 
@@ -359,11 +359,23 @@ class Echecs(Jeu) :
       mouv = input("Quel mouvement voulez-vous jouer ? ")
       if mouv == "help" : 
         self.afficher_aide() 
+        choix = input("Voulez-vous quitter le jeu sans enregistrer(q) ou reprendre la partie(r) ?")
+        if choix == "q" :
+          sys.exit()
+        elif choix == "r" :
+          self.enregistrer(etat, "partie_en_cours.txt")
+          print("Pour reprendre la partie, chargez 'partie_en_cours.txt'")
+          sys.exit()
+        else :
+          print("Votre commande n'est pas valide.")
+          sys.exit()
+          print("Pour reprendre la partie, chargez 'partie_en_cours.txt'")
+          sys.exit()
       elif mouv == "quit" : 
         sys.exit()
       elif mouv == "save" :
         nom = input('Donner le nom que vous voulez donner a votre fichier')
-        self.enregister(etat, nom)
+        self.enregistrer(etat, nom)
         sys.exit()
       elif mouv == "abandon" : 
         if etat.est_blanc:
