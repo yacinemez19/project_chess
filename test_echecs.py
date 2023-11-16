@@ -10,7 +10,7 @@ def exemple_jeu():
 
 @pytest.fixture
 def exemple_etat(exemple_jeu):
-    etat = exemple_jeu.charger('test.txt')
+    etat = exemple_jeu.charger('tests_echecs/test.txt')
     return etat
 
 def test_traduire(exemple_jeu):
@@ -68,7 +68,7 @@ def test_afficher(capfd,exemple_jeu,exemple_etat):
        + "+-------------------------------+\n "
        + "| ♖ | . | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ |"
        + "\n +-------------------------------+"
-       + "\n a | b | c | d | e | f | g | h |\n"
+       + "\n  a | b | c | d | e | f | g | h |\n"
     )
     assert captured[0] == expected_output
 

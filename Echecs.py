@@ -260,7 +260,7 @@ class Echecs(Jeu) :
     '''
     affiche le plateau suivant l'etat donne 
     '''
-    print(etat,'a | b | c | d | e | f | g | h |')
+    print(etat,' a | b | c | d | e | f | g | h |')
     return None
 
   def enregistrer(self, etat, nom) -> None:
@@ -314,7 +314,7 @@ class Echecs(Jeu) :
             fichier = input("Donnez le chemin du fichier à charger. ")
             etat = self.charger(fichier)
         except :
-            print("Votre chemin ou votre fichier n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Votre fichier doit contenir 9 lignes, avec B sur la dernière ligne si c'est à blanc de jouer et N sinon. Il faut qu'il y ait 8 pièces ou points par ligne. Pour plus d'informations, allez dans help.")
+            print("\nVotre chemin ou votre fichier n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Votre fichier doit contenir 9 lignes, avec B sur la dernière ligne si c'est à blanc de jouer et N sinon. Il faut qu'il y ait 8 pièces ou points par ligne. Pour plus d'informations, allez dans help.\n")
             self.debut_partie()
         self.choisir_partie(etat, choix2)
             
@@ -515,7 +515,7 @@ class Echecs(Jeu) :
       etat.valeur = self.eval_statique(etat)
       print(etat.valeur)
       est_fin, raison = self.etat_final(etat, historique)
-    print(etat)
+    self.afficher(etat)
     self.fin_partie(raison)  
     return None
   
