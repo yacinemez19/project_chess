@@ -11,8 +11,7 @@ class Pion(Piece):
 
     def coups_possibles(self, etat : EtatEchecs, verif_echec : bool = False) -> set:
         roi = etat.roi_blanc if self.est_blanc else etat.roi_noir
-        x = self.position[0]
-        y = self.position[1]
+        x, y = self.position
         coups = set()
         est_premier_coups = y == 1 if self.est_blanc else y == 6
         dir = 1 if self.est_blanc else -1

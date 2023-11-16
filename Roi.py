@@ -88,7 +88,9 @@ class Roi(Piece):
     #recherche d'un pion sur les 2 case diagonales
     dir = 1 if self.est_blanc else -1
     pion_gauche, pion_droit = plateau.get((x+1, y+dir), None), plateau.get((x-1, y+dir), None)
-    return (pion_gauche and isinstance(pion_gauche, Pion) and pion_gauche.est_blanc != self.est_blanc) or (pion_droit and isinstance(pion_droit, Pion) and pion_droit.est_blanc != self.est_blanc)
+    if (pion_gauche and isinstance(pion_gauche, Pion) and pion_gauche.est_blanc != self.est_blanc) or (pion_droit and isinstance(pion_droit, Pion) and pion_droit.est_blanc != self.est_blanc):
+      return True
+    return False
 
         
         

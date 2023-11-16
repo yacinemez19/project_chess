@@ -128,10 +128,10 @@ class Echecs(Jeu) :
     etat_final = False
       # vérifie s'il y a échec et mat(fonctionne pas j'ai remplace par la methode verif_echec_et_mat)
       # mon code est temporaire juste pour les test
-
-    if self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, False):
+    est_echec_mat_pat = self.verif_echec_mat_pat(etat, etat.est_blanc)
+    if est_echec_mat_pat == (True, False):
       return True, 'Match nul'
-    elif self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, True):
+    elif est_echec_mat_pat == (True, True):
       raison = 'Echec et mat noir' if etat.est_blanc else 'Echec et mat blanc'
       return True, raison
 

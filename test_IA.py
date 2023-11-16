@@ -39,10 +39,7 @@ def capture_pion(e) :
     
 
 def test_mat_2_coups(e) : 
-<<<<<<< Updated upstream
     
-=======
->>>>>>> Stashed changes
     etat = e.charger('test_mat_en_2_coups.txt')
     
     mouv, etat = e.jouer_coup("IA", "IA", etat)
@@ -62,13 +59,8 @@ def test_mat_2_coups(e) :
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
     assert mouv == [(5,5),(3,5)]
-<<<<<<< Updated upstream
 
 
-=======
-    
-test_mat_2_coups(Echecs())
->>>>>>> Stashed changes
 def test_fourchette(e):
     
     etat = e.charger('test_fourchette.txt')
