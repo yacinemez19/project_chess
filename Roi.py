@@ -43,7 +43,7 @@ class Roi(Piece):
     
   def met_en_echec(self, etat : EtatEchecs, old_pos : tuple, new_pos : tuple):
     '''
-    methode qui verifie si un coup joue par un joueur met son propre roi en echec
+    Méthode qui vérifie si un coup joué par un joueur met son propre roi en échec
     :param etat: etat du jeu
     :param old_pos: ancienne position de la piece
     :param new_pos: nouvelle position de la piece
