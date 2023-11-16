@@ -54,7 +54,7 @@ class Roi(Piece):
       raise AttributeError('Erreur dans la position de la piece')
     etat1 = etat.copie_peu_profonde()
     piece = copy.copy(etat1.plateau.pop(old_pos))
-    piece.position = list(new_pos)
+    piece.position = new_pos
     etat1.plateau[new_pos] = piece
     if isinstance(piece, Roi):
       #si la piece est le roi alors est_echec doit verifier si le roi à la nouvelle position est mis en echec sans changer la position du vrai roi

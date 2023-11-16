@@ -491,7 +491,7 @@ class Echecs(Jeu) :
       etat.valeur = self.eval_statique(etat)
       print(etat.valeur)
       est_fin, raison = self.etat_final(etat, historique)
-  
+    print(etat)
     self.fin_partie(raison)  
     return None
   
@@ -563,7 +563,7 @@ class Echecs(Jeu) :
       print("Pat au joueur noir")
     sys.exit()
       
-  def valeur(self, etat, joueur):
+  def valeur(self, etat):
     return self.eval_statique(etat)
   
   @lru_cache(maxsize=None)
@@ -573,7 +573,7 @@ class Echecs(Jeu) :
       '''
       est_fin, raison = self.etat_final(etat, [])
       if profondeur == 0 :
-          return self.valeur(etat, True)
+          return self.valeur(etat)
       elif est_fin :
           if raison == 'Match nul':
             return 0
@@ -593,43 +593,6 @@ class Echecs(Jeu) :
       
       for mouv, etat_suivant in self.suivants(etat):
         valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, False)
-        valeur_min = min(valeur_min, valeur)
-        beta = min(beta, valeur)
-        if beta <= alpha:
-            break
-      return valeur_min
-
-
-  def alpha_beta_cache(self, etat, profondeur, alpha, beta, maximiser_joueur, cache):
-      '''
-      Retourne la valeur d'un état donné allant jusqu'à une profondeur donnée ou la fin de la partie
-      '''
-      est_fin, raison = self.etat_final(etat, [])
-      if etat in cache.keys():
-        return cache[etat]
-      elif profondeur == 0 :
-          return self.valeur(etat, True)
-      elif est_fin :
-          if raison == 'Match nul':
-            return 0
-          value = (profondeur + 1) * 100000
-          return -value if maximiser_joueur else value
-      
-      coups_suivants = self.suivants(etat)
-      if maximiser_joueur:
-          valeur_max = -(profondeur + 1) * 100000
-          for mouv, etat_suivant in coups_suivants:
-            valeur = self.alpha_beta_cache(etat_suivant, profondeur - 1, alpha, beta, False, cache)
-            cache[etat_suivant] = valeur
-            valeur_max = max(valeur_max, valeur)
-            alpha = max(alpha, valeur)
-            if beta <= alpha:
-                break
-          return valeur_max
-      valeur_min = (profondeur + 1) * 100000
-      for mouv, etat_suivant in self.suivants(etat):
-        valeur = self.alpha_beta_cache(etat_suivant, profondeur - 1, alpha, beta, True, cache)
-        cache[etat_suivant] = valeur
         valeur_min = min(valeur_min, valeur)
         beta = min(beta, valeur)
         if beta <= alpha:

@@ -1,6 +1,6 @@
 from Piece import *
 from EtatEchecs import *
-from Roi import *
+ 
 
 class Fou(Piece):
     def __init__(self, position : tuple, est_blanc) -> None:

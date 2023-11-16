@@ -1,6 +1,6 @@
 from Piece import *
 from EtatEchecs import *
-from Roi import *
+ 
 
 class Pion(Piece):
     def __init__(self, position, est_blanc : bool) -> None:
