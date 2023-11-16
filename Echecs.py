@@ -301,7 +301,7 @@ class Echecs(Jeu) :
     try : 
       # nouvelle partie
       if choix1 == 'n' : 
-        etat = self.charger('BNouvelle_partie.txt')
+        etat = self.charger('Nouvelle_partie.txt')
         self.choisir_partie(etat, choix2)
       # partie chargée
       elif choix1 == 'a' :

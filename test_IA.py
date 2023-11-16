@@ -18,22 +18,22 @@ def e() :
 
 def test_echec_et_mat(e):
     
-    etat = e.charger('tests_IA/Btest_echec_et_mat_IA.txt')
+    etat = e.charger('tests_IA/test_echec_et_mat_IA.txt')
     mouv = e.joueur_alpha_beta(etat, 3)
     assert mouv == [(1,3),(0,3)]
     
-    etat2 = e.charger('tests_IA/Ntest_eviter_echec_IA.txt')
+    etat2 = e.charger('tests_IA/test_eviter_echec_IA.txt')
     mouv2 = e.joueur_alpha_beta(etat2, 3)
     assert mouv2 == [(0,6),(1,6)]
     
 
 def capture_pion(e) : 
     
-    etat = e.charger('tests_IA/Btest_capture_pion.txt')
+    etat = e.charger('tests_IA/test_capture_pion.txt')
     mouv = e.joueur_alpha_beta(etat,3)
     assert mouv == [(7,1),(7,6)]
     
-    etat2 = e.charger('tests_IA/Ntest_eviter_capture_pion_2.txt')
+    etat2 = e.charger('tests_IA/test_eviter_capture_pion_2.txt')
     mouv2 = e.joueur_alpha_beta(etat2, 3)
     assert mouv2 == [(7,6),(7,5)]
     
