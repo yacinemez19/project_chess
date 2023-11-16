@@ -260,7 +260,7 @@ class Echecs(Jeu) :
     '''
     affiche le plateau suivant l'etat donne 
     '''
-    print(etat,'a | b | c | d | e | f | g | h |')
+    print(etat,' a | b | c | d | e | f | g | h |')
     return None
 
   def enregistrer(self, etat, nom) -> None:
@@ -515,7 +515,7 @@ class Echecs(Jeu) :
       etat.valeur = self.eval_statique(etat)
       print(etat.valeur)
       est_fin, raison = self.etat_final(etat, historique)
-    print(etat)
+    self.afficher(etat)
     self.fin_partie(raison)  
     return None
   
