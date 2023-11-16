@@ -49,13 +49,13 @@ class Echecs(Jeu) :
     
     try: 
       # vérifie qu'il s'agit d'un déplacement
-      if not mouv_str[0] in self.colonnes : 
+      if not mouv_str[0] in self.colonnes :
         raise MovementImpossibleError
       position1 = (self.colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
       position2 = (self.colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
       if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
         raise IndexError
-    except: 
+    except:
       return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
     
     return [position1, position2]
