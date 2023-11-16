@@ -39,12 +39,8 @@ def capture_pion(e) :
     
 
 def test_mat_2_coups(e) : 
-<<<<<<< HEAD
     
     etat = e.charger('tests_IA/test_mat_en_2_coups.txt')
-=======
-    etat = e.charger('test_mat_en_2_coups.txt')
->>>>>>> 1b9a3427ede762c6bb4476bfaaa3882bd0187234
     
     mouv, etat = e.jouer_coup("IA", "IA", etat)
     etat.roi_blanc = e.recherche_roi(etat, True)
@@ -63,12 +59,8 @@ def test_mat_2_coups(e) :
     etat.roi_noir = e.recherche_roi(etat, False)
     etat.valeur = e.eval_statique(etat)
     assert mouv == [(5,5),(3,5)]
-<<<<<<< HEAD
 
 
-=======
-    
->>>>>>> 1b9a3427ede762c6bb4476bfaaa3882bd0187234
 def test_fourchette(e):
     
     etat = e.charger('tests_IA/test_fourchette.txt')
