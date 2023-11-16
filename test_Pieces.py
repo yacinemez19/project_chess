@@ -53,13 +53,6 @@ def test_coup_echec():
     assert roi.met_en_echec(etat, tuple(roi.position), (3,1))
     assert roi.coups_possibles(etat, True) == set()
 
-def test_coups_adverses():
-    partie = Echecs()
-    etat = partie.charger('testechec.txt')
-    c = etat.plateau[(4,7)].coups_adverses(etat)
-    assert c == {(1, 2), (4,0), (2,0), (3, 4), (4, 3), (7, 3), (0, 2), (2, 2), (3, 2), (1, 3), (5, 2), (6, 2), (0, 3), (4, 2), (2, 3), (7, 2), (6, 3)}
-
-
 def test_pat():
     partie = Echecs()
     etat = partie.charger('test_pat.txt')

@@ -87,6 +87,11 @@ class Echecs(Jeu) :
     piece.position = mouvement[1]
     e1.plateau[(mouvement[1])] = piece
     e1.est_blanc = not(e1.est_blanc)
+    if isinstance(piece, Roi):
+      if piece.est_blanc:
+        e1.roi_blanc = piece
+      else :
+        e1.roi_noir = piece
     return e1
       
   def mouvements_autorises(self, etat : EtatEchecs) -> list[tuple,tuple] : 
@@ -128,10 +133,10 @@ class Echecs(Jeu) :
     etat_final = False
       # vérifie s'il y a échec et mat(fonctionne pas j'ai remplace par la methode verif_echec_et_mat)
       # mon code est temporaire juste pour les test
-
-    if self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, False):
+    est_echec_mat_pat = self.verif_echec_mat_pat(etat, etat.est_blanc)
+    if est_echec_mat_pat == (True, False):
       return True, 'Match nul'
-    elif self.verif_echec_mat_pat(etat, etat.est_blanc) == (True, True):
+    elif est_echec_mat_pat == (True, True):
       raison = 'Echec et mat noir' if etat.est_blanc else 'Echec et mat blanc'
       return True, raison
 
@@ -193,7 +198,7 @@ class Echecs(Jeu) :
     coups = {} 
     for piece in etat.plateau.values() :
       if piece.est_blanc == est_blanc : 
-        for coup in piece.coups_possibles(etat, True): 
+        for coup in piece.coups_possibles(etat, True):
           coups.setdefault(coup,set()).add(piece.position)
     return coups 
 
