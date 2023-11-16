@@ -432,7 +432,7 @@ class Echecs(Jeu) :
       coups_possibles = list(self.suivants(etat))
 
       # Triez les coups en fonction de leur score
-      coups_possibles.sort(key=lambda coup: self.evaluer_coup(coup, etat), reverse=True)
+      coups_possibles.sort(key=lambda coup: self.evaluer_coup(coup, etat), reverse=etat.est_blanc)
 
       for mouvement, etat_suivant in coups_possibles:
           valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, not etat.est_blanc)
@@ -441,7 +441,7 @@ class Echecs(Jeu) :
 
           elif not etat.est_blanc and valeur == -profondeur * 100000:
               return mouvement
-
+          
           if etat.est_blanc and valeur > alpha:
               alpha = valeur
               meilleur_coup = mouvement
@@ -584,13 +584,18 @@ class Echecs(Jeu) :
       Retourne la valeur d'un état donné allant jusqu'à une profondeur donnée ou la fin de la partie
       '''
       est_fin, raison = self.etat_final(etat, [])
-      if profondeur == 0 :
-          return self.valeur(etat)
-      elif est_fin :
+      if est_fin :
           if raison == 'Match nul':
             return 0
           value = (profondeur + 1) * 100000
           return -value if maximiser_joueur else value
+      elif profondeur == 0 :
+          return self.valeur(etat)
+      # Obtenier la liste des coups possibles
+      coups_possibles = list(self.suivants(etat))
+
+      # Trier les coups en fonction de leur score
+      coups_possibles.sort(key=lambda coup: self.evaluer_coup(coup, etat), reverse=maximiser_joueur)
       if maximiser_joueur:
           valeur_max = -(profondeur + 1) * 100000
           for mouv, etat_suivant in self.suivants(etat):
@@ -604,7 +609,7 @@ class Echecs(Jeu) :
       valeur_min = (profondeur + 1) * 100000
       
       for mouv, etat_suivant in self.suivants(etat):
-        valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, False)
+        valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, True)
         valeur_min = min(valeur_min, valeur)
         beta = min(beta, valeur)
         if beta <= alpha:

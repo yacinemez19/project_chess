@@ -5,12 +5,10 @@ from EtatEchecs import *
 
 partie = Echecs()
 partie = Echecs()
-etat = partie.charger('test_alpha_beta.txt')
+etat = partie.charger('wiwi')
 print(etat)
-s = time.time()
-print(partie.joueur_alpha_beta(etat, 3))
-e = time.time()
-print(s-e)
+print(partie.etat_final(etat, []))
+print(etat.plateau[(0,6)].est_echec(etat))
 '''
 cache = {}
 etat.est_blanc = True
