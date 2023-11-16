@@ -302,7 +302,7 @@ class Echecs(Jeu) :
             fichier = input("Donnez le chemin du fichier à charger. ")
             etat = self.charger(fichier)
         except :
-            print("Votre chemin n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Pour plus d'informations, allez dans help.")
+            print("Votre chemin ou votre fichier n'est pas valide. Si le fichier est dans le dossier du programme, donnez le nom du fichier. Sinon, donnez le chemin. Votre fichier doit contenir 9 lignes, avec B sur la dernière ligne si c'est à blanc de jouer et N sinon. Il faut qu'il y ait 8 pièces ou points par ligne. Pour plus d'informations, allez dans help.")
             self.debut_partie()
         self.choisir_partie(etat, choix2)
             
