@@ -1,6 +1,6 @@
 import pytest
 
-from Echecs import Echecs, PieceNotExistError, MovementImpossibleError, WrongFileError
+from Echecs import Echecs, PieceNotExistError, MovementImpossibleError, WrongFileError, KingNotFoundError
 from EtatEchecs import EtatEchecs
 
 @pytest.fixture
@@ -18,6 +18,8 @@ def test_traduire(exemple_jeu):
     assert exemple_jeu.traduire(mouvement_valide) == [(0, 1), (1, 2)]
     mouvement_invalide = "z4-i9"
     assert exemple_jeu.traduire(mouvement_invalide) == "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"
+    mouvement_vide = ""
+    assert exemple_jeu.traduire(mouvement_vide) == "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"
     
 def test_deplacer_valide(exemple_jeu, exemple_etat):
     mouvement_valide = [(0,1),(0,2)]
@@ -40,8 +42,14 @@ def test_deplacer_impossible(exemple_jeu, exemple_etat):
 def test_charger(exemple_jeu):
     '''Teste si un fichier corrompu renvoie bien une erreur WrongFileError'''
     with pytest.raises(WrongFileError):
-        exemple_jeu.charger('tests_echecs/test_charger.txt')
-    
+        exemple_jeu.charger('tests_echecs/test_chargercolonne.txt')
+    with pytest.raises(WrongFileError):
+        exemple_jeu.charger('tests_echecs/test_chargerligne.txt')
+    with pytest.raises(KingNotFoundError):
+        exemple_jeu.charger('tests_echecs/test_pasderoi.txt')
+        
+def test_afficher(exemple_jeu,exemple_etat):
+    assert exemple_jeu.afficher(exemple_etat) == ""
 
 
     

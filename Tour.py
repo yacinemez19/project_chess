@@ -10,8 +10,7 @@ class Tour(Piece):
 
     def coups_possibles(self, etat : EtatJeu, verif_echec : bool = False) -> set:
         roi = etat.roi_blanc if self.est_blanc else etat.roi_noir
-        x = self.position[0]
-        y = self.position[1]
+        x, y = self.position
         coups = set()
 
         for i,j in [(1,0), (-1, 0), (0, 1), (0, -1)]:

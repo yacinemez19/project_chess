@@ -49,13 +49,13 @@ class Echecs(Jeu) :
     
     try: 
       # vérifie qu'il s'agit d'un déplacement
-      if not mouv_str[0] in self.colonnes : 
+      if not mouv_str[0] in self.colonnes :
         raise MovementImpossibleError
       position1 = (self.colonnes.index(mouv_str[0]),int(mouv_str[1])-1)
       position2 = (self.colonnes.index(mouv_str[3]),int(mouv_str[4])-1)
       if int(mouv_str[1]) > 8 or int(mouv_str[4]) > 8 :
         raise IndexError
-    except: 
+    except:
       return "Votre mouvement n'est pas valide. Veuillez respecter le format : type a6-b3 pour un mouvement et type Ca6-b3 pour une capture, en respectant la taille 8x8 du plateau. Pour plus d'informations sur le format, appeler help"   
     
     return [position1, position2]
@@ -591,6 +591,8 @@ class Echecs(Jeu) :
       Retourne la valeur d'un état donné allant jusqu'à une profondeur donnée ou la fin de la partie
       '''
       est_fin, raison = self.etat_final(etat, [])
+      if est_fin:
+        self.etat_final(etat,[])
       if est_fin :
           if raison == 'Match nul':
             return 0
@@ -605,7 +607,7 @@ class Echecs(Jeu) :
       coups_possibles.sort(key=lambda coup: self.evaluer_coup(coup, etat), reverse=maximiser_joueur)
       if maximiser_joueur:
           valeur_max = -(profondeur + 1) * 100000
-          for mouv, etat_suivant in self.suivants(etat):
+          for mouv, etat_suivant in coups_possibles:
             valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, False)
             valeur_max = max(valeur_max, valeur)
             alpha = max(alpha, valeur)
@@ -615,7 +617,7 @@ class Echecs(Jeu) :
         
       valeur_min = (profondeur + 1) * 100000
       
-      for mouv, etat_suivant in self.suivants(etat):
+      for mouv, etat_suivant in coups_possibles:
         valeur = self.alpha_beta(etat_suivant, profondeur - 1, alpha, beta, True)
         valeur_min = min(valeur_min, valeur)
         beta = min(beta, valeur)
